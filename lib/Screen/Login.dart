@@ -56,7 +56,7 @@ class _LoginState extends State<Login> {
                   fontWeight: FontWeight.bold,
                   fontStyle: FontStyle.normal,
                   decoration: TextDecoration.none,
-                  fontFamily: 'Montserrat',
+                  fontFamily: 'Arial',
                 ),
                 textAlign: TextAlign.center,
               ),
