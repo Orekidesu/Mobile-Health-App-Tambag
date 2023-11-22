@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>API_KEY</key>
+	<string>AIzaSyCztcFZWgTVQ-dxPdgKakjKHqkWjFDxtEg</string>
+	<key>GCM_SENDER_ID</key>
+	<string>934811114997</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.example.mobileHealthAppTambag.RunnerTests</string>
+	<key>PROJECT_ID</key>
+	<string>mobile-health-app-tambag</string>
+	<key>STORAGE_BUCKET</key>
+	<string>mobile-health-app-tambag.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:934811114997:ios:20d678883f99fdf001d4bc</string>
+</dict>
+</plist>

@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "934811114997",
+    "project_id": "mobile-health-app-tambag",
+    "storage_bucket": "mobile-health-app-tambag.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:934811114997:android:c8e5e837b6a011b701d4bc",
+        "android_client_info": {
+          "package_name": "com.example.mobile_health_app_tambag"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBxEYAI3KaKHN2bxH-NyXb7dhKPzazWRaI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
