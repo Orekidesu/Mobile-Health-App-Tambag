@@ -25,6 +25,7 @@ class Login extends StatefulWidget {
 
 class _LoginState extends State<Login> {
   static const Color periwinkleColor = Color.fromARGB(255, 103, 103, 186);
+  static const Color periwinkleColorLight = Color.fromARGB(255, 139, 139, 177);
   static const Color backgroundColor = Color.fromRGBO(245, 248, 255, 1.0);
 
   TextEditingController usernameController = TextEditingController();
@@ -42,31 +43,31 @@ class _LoginState extends State<Login> {
             children: [
               const Image(
                 image: AssetImage('assets/tambag.png'),
-                width: 200.0,
-                height: 150.0,
+                width: 250.0,
+                height: 200.0,
                 fit: BoxFit.cover,
               ),
-              const SizedBox(height: 25),
+              const SizedBox(height: 20),
               const Text(
                 'TAMBAG',
                 style: TextStyle(
                   color: periwinkleColor,
-                  fontSize: 35.0,
-                  fontWeight: FontWeight.w900,
+                  fontSize: 40.0,
+                  fontWeight: FontWeight.bold,
                   fontStyle: FontStyle.normal,
                   decoration: TextDecoration.none,
-                  fontFamily: 'Arial',
+                  fontFamily: 'Montserrat',
                 ),
                 textAlign: TextAlign.center,
               ),
               SizedBox(
-                width: 200.0,
+                width: 290.0,
                 child: RichText(
                   textAlign: TextAlign.center,
                   text: const TextSpan(
                     style: TextStyle(
-                      color: periwinkleColor,
-                      fontSize: 16.0,
+                      color: periwinkleColorLight,
+                      fontSize: 20.0,
                       fontWeight: FontWeight.normal,
                       fontStyle: FontStyle.normal,
                       decoration: TextDecoration.none,
@@ -82,7 +83,7 @@ class _LoginState extends State<Login> {
               ),
               const SizedBox(height: 20),
               SizedBox(
-                width: 220,
+                width: 260,
                 child: TextField(
                   controller: usernameController,
                   obscureText: true,
@@ -95,7 +96,7 @@ class _LoginState extends State<Login> {
                     floatingLabelBehavior: FloatingLabelBehavior.never, // Make the label not float
                     filled: true, // Set to true for a filled background
                     fillColor: periwinkleColor, 
-                    contentPadding: const EdgeInsets.symmetric(vertical: 5.0, horizontal: 68.0), // Adjust padding
+                    contentPadding: const EdgeInsets.symmetric(vertical: 5.0, horizontal: 90.0), // Adjust padding
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(30.0), // Set the border radius
                     ),
@@ -104,7 +105,7 @@ class _LoginState extends State<Login> {
               ),
               const SizedBox(height: 10),
               SizedBox(
-                width: 220, // Set the desired width
+                width: 260, // Set the desired width
                 child: TextField(
                   controller: passwordController,
                   obscureText: true,
@@ -117,7 +118,7 @@ class _LoginState extends State<Login> {
                     floatingLabelBehavior: FloatingLabelBehavior.never, // Make the label not float
                     filled: true, // Set to true for a filled background
                     fillColor: periwinkleColor, // Set the background color
-                    contentPadding: const EdgeInsets.symmetric(vertical: 5.0, horizontal: 70.0), // Adjust padding
+                    contentPadding: const EdgeInsets.symmetric(vertical: 5.0, horizontal: 90.0), // Adjust padding
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(30.0), // Set the border radius
                     ),
@@ -125,13 +126,26 @@ class _LoginState extends State<Login> {
                 ),
               ),
               const SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: () {
-                  // Add your submit button logic here
-                  String username = usernameController.text;
-                  String password = passwordController.text;
-                },
-                child: const Text('Login'),
+              SizedBox(
+                width: 150.0, // Set the desired width
+                height: 50.0, // Set the desired height
+                child: ElevatedButton(
+                  onPressed: () {
+                    // Add your submit button logic here
+                    String username = usernameController.text;
+                    String password = passwordController.text;
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.white, // Set the background color
+                  ),
+                  child: const Text(
+                    'Login',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold, // Set the text to bold
+                      color: periwinkleColor, // Set the font color
+                    ),
+                  ),
+                ),
               ),
             ],
           ),
