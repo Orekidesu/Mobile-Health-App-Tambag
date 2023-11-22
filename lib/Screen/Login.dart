@@ -117,7 +117,7 @@ class _LoginState extends State<Login> {
                     floatingLabelBehavior: FloatingLabelBehavior.never, // Make the label not float
                     filled: true, // Set to true for a filled background
                     fillColor: periwinkleColor, // Set the background color
-                    contentPadding: EdgeInsets.symmetric(vertical: 5.0, horizontal: 70.0), // Adjust padding
+                    contentPadding: const EdgeInsets.symmetric(vertical: 5.0, horizontal: 70.0), // Adjust padding
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(30.0), // Set the border radius
                     ),
@@ -131,7 +131,7 @@ class _LoginState extends State<Login> {
                   String username = usernameController.text;
                   String password = passwordController.text;
                 },
-                child: const Text('Submit'),
+                child: const Text('Login'),
               ),
             ],
           ),
