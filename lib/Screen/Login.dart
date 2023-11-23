@@ -1,9 +1,6 @@
 // ignore: file_names
 import 'package:flutter/material.dart';
-
-void main() {
-  runApp(const MyApp());
-}
+import 'Dashboard.dart';
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -30,6 +27,8 @@ class _LoginState extends State<Login> {
 
   TextEditingController usernameController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
+
+  void submitdatabase(String username, String password) {}
 
   @override
   Widget build(BuildContext context) {
@@ -61,7 +60,7 @@ class _LoginState extends State<Login> {
                 textAlign: TextAlign.center,
               ),
               SizedBox(
-                width: 290.0,
+                width: 220.0,
                 child: RichText(
                   textAlign: TextAlign.center,
                   text: const TextSpan(
@@ -86,19 +85,26 @@ class _LoginState extends State<Login> {
                 width: 260,
                 child: TextField(
                   controller: usernameController,
-                  obscureText: true,
-                  decoration:  InputDecoration(
+                  obscureText: false,
+                  style: const TextStyle(
+                    color: Colors.white, // Set the text color to white
+                  ),
+                  decoration: InputDecoration(
                     labelText: 'Username',
                     labelStyle: const TextStyle(
-                      color: Color.fromARGB(229, 255, 255, 255), // Set the label text color
+                      color: Color.fromARGB(
+                          229, 255, 255, 255), // Set the label text color
                     ),
                     alignLabelWithHint: true, // Align label with the hint text
-                    floatingLabelBehavior: FloatingLabelBehavior.never, // Make the label not float
+                    floatingLabelBehavior:
+                        FloatingLabelBehavior.never, // Make the label not float
                     filled: true, // Set to true for a filled background
-                    fillColor: periwinkleColor, 
-                    contentPadding: const EdgeInsets.symmetric(vertical: 5.0, horizontal: 30.0), // Adjust padding
+                    fillColor: periwinkleColor,
+                    contentPadding: const EdgeInsets.symmetric(
+                        vertical: 5.0, horizontal: 30.0), // Adjust padding
                     border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(30.0), // Set the border radius
+                      borderRadius:
+                          BorderRadius.circular(30.0), // Set the border radius
                     ),
                   ),
                 ),
@@ -109,18 +115,25 @@ class _LoginState extends State<Login> {
                 child: TextField(
                   controller: passwordController,
                   obscureText: true,
+                  style: const TextStyle(
+                    color: Colors.white, // Set the text color to white
+                  ),
                   decoration: InputDecoration(
                     labelText: 'Password',
                     labelStyle: const TextStyle(
-                      color: Color.fromARGB(229, 255, 255, 255), // Set the label text color
+                      color: Color.fromARGB(
+                          229, 255, 255, 255), // Set the label text color
                     ),
                     alignLabelWithHint: true, // Align label with the hint text
-                    floatingLabelBehavior: FloatingLabelBehavior.never, // Make the label not float
+                    floatingLabelBehavior:
+                        FloatingLabelBehavior.never, // Make the label not float
                     filled: true, // Set to true for a filled background
                     fillColor: periwinkleColor, // Set the background color
-                    contentPadding: const EdgeInsets.symmetric(vertical: 5.0, horizontal: 30.0), // Adjust padding
+                    contentPadding: const EdgeInsets.symmetric(
+                        vertical: 5.0, horizontal: 30.0), // Adjust padding
                     border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(30.0), // Set the border radius
+                      borderRadius:
+                          BorderRadius.circular(30.0), // Set the border radius
                     ),
                   ),
                 ),
@@ -131,9 +144,34 @@ class _LoginState extends State<Login> {
                 height: 50.0, // Set the desired height
                 child: ElevatedButton(
                   onPressed: () {
-                    // Add your submit button logic here
                     String username = usernameController.text;
                     String password = passwordController.text;
+
+                    // Call the function and show a dialog
+                    submitdatabase(username, password);
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                          title: Text('Login Submitted'),
+                          content: Text(
+                              'Your login information has been submitted.'),
+                          actions: <Widget>[
+                            ElevatedButton(
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => Dashboard(),
+                                  ),
+                                );
+                              },
+                              child: Text('OK'),
+                            ),
+                          ],
+                        );
+                      },
+                    );
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.white, // Set the background color
