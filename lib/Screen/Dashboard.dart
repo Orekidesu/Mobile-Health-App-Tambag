@@ -1,11 +1,10 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:flutter/material.dart';
-import 'package:mobile_health_app_tambag/Screen/Patient_profile.dart';
-import 'package:mobile_health_app_tambag/Screen/addProfilePage.dart';
 import 'Masterlist.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'Login.dart';
+import 'Follow_up.dart';
 
 class Patient {
   final String id;
@@ -40,9 +39,10 @@ class _DashboardState extends State<Dashboard> {
 
   int tappedCardIndex = -1;
   bool isSnackbarVisible = false;
+  String patientId = '';
+
 
   late CollectionReference patientsCollection;
-
   @override
   void initState() {
     super.initState();
@@ -98,7 +98,7 @@ class _DashboardState extends State<Dashboard> {
         action: SnackBarAction(
           label: 'Sign Out',
           onPressed: () {
-            //Signout to
+            //Signout to 
             FirebaseAuth.instance.signOut();
             signout();
           },
@@ -181,7 +181,7 @@ class _DashboardState extends State<Dashboard> {
                   future: getAllPatients(),
                   builder: (context, snapshot) {
                     if (snapshot.hasError) {
-                      return Text('Error: ${snapshot.error}');
+                      return Text('Error: ${snapshot.error}');  
                     } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
                       return const Text('No patients available.');
                     } else {
@@ -285,12 +285,12 @@ class _DashboardState extends State<Dashboard> {
                                           radius: 20,
                                           child: ElevatedButton(
                                             onPressed: () {
-                                              // Handle the button tap
-                                              Navigator.push(
+                                                Navigator.push(
                                                 context,
                                                 MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      const Patient_Profile(),
+                                                  builder: (context) => Follow_up(
+                                                     patientId: patient.id.toString(),
+                                                  ),
                                                 ),
                                               );
                                             },
@@ -309,7 +309,7 @@ class _DashboardState extends State<Dashboard> {
                                           radius: 20,
                                           child: ElevatedButton(
                                             onPressed: () {
-                                              // Handle the button tap
+                                            
                                             },
                                             style: ElevatedButton.styleFrom(
                                               padding: const EdgeInsets.all(0),
@@ -348,14 +348,7 @@ class _DashboardState extends State<Dashboard> {
                       icon: const Icon(Icons.add),
                       color: Colors.white,
                       onPressed: () {
-                        // Navigate to the add profile page
-                        Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) =>
-                                AddProfilePage(), // Replace with your login page widget
-                          ),
-                        );
+                        // Add any additional logic as needed
                       },
                     ),
                   ),
