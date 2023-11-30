@@ -1,11 +1,11 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:flutter/material.dart';
+import 'package:mobile_health_app_tambag/Screen/Patient_profile.dart';
 import 'package:mobile_health_app_tambag/Screen/addProfilePage.dart';
 import 'Masterlist.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'Login.dart';
-import 'Follow_up.dart';
 
 class Patient {
   final String id;
@@ -40,8 +40,6 @@ class _DashboardState extends State<Dashboard> {
 
   int tappedCardIndex = -1;
   bool isSnackbarVisible = false;
-  String patientId = '';
-
 
   late CollectionReference patientsCollection;
 
@@ -183,7 +181,7 @@ class _DashboardState extends State<Dashboard> {
                   future: getAllPatients(),
                   builder: (context, snapshot) {
                     if (snapshot.hasError) {
-                      return Text('Error: ${snapshot.error}');  
+                      return Text('Error: ${snapshot.error}');
                     } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
                       return const Text('No patients available.');
                     } else {
@@ -287,12 +285,12 @@ class _DashboardState extends State<Dashboard> {
                                           radius: 20,
                                           child: ElevatedButton(
                                             onPressed: () {
-                                                Navigator.push(
+                                              // Handle the button tap
+                                              Navigator.push(
                                                 context,
                                                 MaterialPageRoute(
-                                                  builder: (context) => Follow_up(
-                                                     patientId: patient.id.toString(),
-                                                  ),
+                                                  builder: (context) =>
+                                                      const Patient_Profile(),
                                                 ),
                                               );
                                             },
@@ -311,7 +309,7 @@ class _DashboardState extends State<Dashboard> {
                                           radius: 20,
                                           child: ElevatedButton(
                                             onPressed: () {
-                                            
+                                              // Handle the button tap
                                             },
                                             style: ElevatedButton.styleFrom(
                                               padding: const EdgeInsets.all(0),
