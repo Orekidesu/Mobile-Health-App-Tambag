@@ -46,7 +46,8 @@ class _LoginState extends State<Login> {
       );
       final user = userCredential.user;
       // Successfully logged in, get additional user information
-      Map<String, dynamic> userInfo = await getUserInfo(user!.uid);
+      // ignore: unnecessary_cast
+      Map<String, dynamic> userInfo = await getUserInfo(user!.uid as String);
 
       // You can now access first_name, middle_name, last_name from userInfo map
       String firstName = userInfo['first_name'] ?? '';
@@ -54,17 +55,16 @@ class _LoginState extends State<Login> {
       String lastName = userInfo['last_name'] ?? '';
 
       // Show success notification and auto-close
-      showSuccessNotification(userCredential.user, firstName, middleName, lastName);
+      showSuccessNotification(firstName, middleName, lastName);
         } on FirebaseAuthException catch (e) {
           // Handle specific FirebaseAuth exceptions
           showErrorNotification(e.message);
         } catch (e) {
-          // Handle other exceptions
-          print('Error: $e');
+          showErrorNotification(e as String?);
         }
       }
 
-    void showSuccessNotification(User? user, String firstName, String middleName, String lastName) {
+    void showSuccessNotification(String firstName, String middleName, String lastName) {
       Fluttertoast.showToast(
         msg: 'Login Successful\nWelcome to Tambag App!\n$firstName $middleName $lastName',
         toastLength: Toast.LENGTH_LONG,

@@ -21,6 +21,7 @@ class Dashboard extends StatefulWidget {
 }
 
 class _DashboardState extends State<Dashboard> {
+  //Constants Color
   static const Color backgroundColor = Color.fromRGBO(245, 248, 255, 1.0);
   static const Color periwinkleColor = Color.fromARGB(255, 103, 103, 186);
   static const Color rose = Color.fromRGBO(230, 192, 201, 1.0);
@@ -95,6 +96,7 @@ class _DashboardState extends State<Dashboard> {
         action: SnackBarAction(
           label: 'Sign Out',
           onPressed: () {
+            //Signout to 
             FirebaseAuth.instance.signOut();
             signout();
           },
@@ -176,10 +178,8 @@ class _DashboardState extends State<Dashboard> {
                 child: FutureBuilder<List<Patient>>(
                   future: getAllPatients(),
                   builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return const Text('Loading....');
-                    } else if (snapshot.hasError) {
-                      return Text('Error: ${snapshot.error}');
+                    if (snapshot.hasError) {
+                      return Text('Error: ${snapshot.error}');  
                     } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
                       return const Text('No patients available.');
                     } else {
@@ -409,14 +409,17 @@ class _DashboardState extends State<Dashboard> {
                     ),
                     child: const Padding(
                       padding: EdgeInsets.all(3.0),
-                      child: Text(
-                        'Medication\nMasterlist',
-                        textAlign: TextAlign
-                            .center, // Center the text within the container
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: periwinkleColor,
-                          height: 1.3,
+                      child: SizedBox(
+                        width: 100,
+                        child: Text(
+                          'MEDICATION\nMASTERLIST',
+                          textAlign: TextAlign
+                              .center, // Center the text within the container
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: periwinkleColor,
+                            height: 1.3,
+                          ),
                         ),
                       ),
                     ),
