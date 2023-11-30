@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'Masterlist.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'Login.dart';
+import 'Follow_up.dart';
 
 class Patient {
   final String id;
@@ -38,6 +39,8 @@ class _DashboardState extends State<Dashboard> {
 
   int tappedCardIndex = -1;
   bool isSnackbarVisible = false;
+  String patientId = '';
+
 
   late CollectionReference patientsCollection;
 
@@ -283,7 +286,14 @@ class _DashboardState extends State<Dashboard> {
                                           radius: 20,
                                           child: ElevatedButton(
                                             onPressed: () {
-                                              // Handle the button tap
+                                                Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                  builder: (context) => Follow_up(
+                                                     patientId: patient.id.toString(),
+                                                  ),
+                                                ),
+                                              );
                                             },
                                             style: ElevatedButton.styleFrom(
                                               padding: const EdgeInsets.all(0),
@@ -300,7 +310,7 @@ class _DashboardState extends State<Dashboard> {
                                           radius: 20,
                                           child: ElevatedButton(
                                             onPressed: () {
-                                              // Handle the button tap
+                                            
                                             },
                                             style: ElevatedButton.styleFrom(
                                               padding: const EdgeInsets.all(0),
