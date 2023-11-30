@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:flutter/material.dart';
+import 'package:mobile_health_app_tambag/Screen/addProfilePage.dart';
 import 'Masterlist.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'Login.dart';
@@ -99,7 +100,7 @@ class _DashboardState extends State<Dashboard> {
         action: SnackBarAction(
           label: 'Sign Out',
           onPressed: () {
-            //Signout to 
+            //Signout to
             FirebaseAuth.instance.signOut();
             signout();
           },
@@ -349,7 +350,14 @@ class _DashboardState extends State<Dashboard> {
                       icon: const Icon(Icons.add),
                       color: Colors.white,
                       onPressed: () {
-                        // Add any additional logic as needed
+                        // Navigate to the add profile page
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) =>
+                                AddProfilePage(), // Replace with your login page widget
+                          ),
+                        );
                       },
                     ),
                   ),
