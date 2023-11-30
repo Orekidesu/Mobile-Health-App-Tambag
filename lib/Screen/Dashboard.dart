@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:flutter/material.dart';
+import 'package:mobile_health_app_tambag/Screen/Patient_profile.dart';
 import 'Masterlist.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'Login.dart';
@@ -96,7 +97,7 @@ class _DashboardState extends State<Dashboard> {
         action: SnackBarAction(
           label: 'Sign Out',
           onPressed: () {
-            //Signout to 
+            //Signout to
             FirebaseAuth.instance.signOut();
             signout();
           },
@@ -179,7 +180,7 @@ class _DashboardState extends State<Dashboard> {
                   future: getAllPatients(),
                   builder: (context, snapshot) {
                     if (snapshot.hasError) {
-                      return Text('Error: ${snapshot.error}');  
+                      return Text('Error: ${snapshot.error}');
                     } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
                       return const Text('No patients available.');
                     } else {
@@ -284,6 +285,13 @@ class _DashboardState extends State<Dashboard> {
                                           child: ElevatedButton(
                                             onPressed: () {
                                               // Handle the button tap
+                                              Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      const Patient_Profile(),
+                                                ),
+                                              );
                                             },
                                             style: ElevatedButton.styleFrom(
                                               padding: const EdgeInsets.all(0),
