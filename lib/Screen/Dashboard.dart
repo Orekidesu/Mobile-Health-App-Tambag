@@ -180,7 +180,7 @@ class _DashboardState extends State<Dashboard> {
                   future: getAllPatients(),
                   builder: (context, snapshot) {
                     if (snapshot.hasError) {
-                      return Text('Error: ${snapshot.error}');
+                      return Text('Error: ${snapshot.error}');  
                     } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
                       return const Text('No patients available.');
                     } else {
