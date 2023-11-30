@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:flutter/material.dart';
+import 'package:mobile_health_app_tambag/Screen/addProfilePage.dart';
 import 'Masterlist.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'Login.dart';
@@ -21,6 +22,7 @@ class Dashboard extends StatefulWidget {
 }
 
 class _DashboardState extends State<Dashboard> {
+  //Constants Color
   static const Color backgroundColor = Color.fromRGBO(245, 248, 255, 1.0);
   static const Color periwinkleColor = Color.fromARGB(255, 103, 103, 186);
   static const Color rose = Color.fromRGBO(230, 192, 201, 1.0);
@@ -95,6 +97,7 @@ class _DashboardState extends State<Dashboard> {
         action: SnackBarAction(
           label: 'Sign Out',
           onPressed: () {
+            //Signout to
             FirebaseAuth.instance.signOut();
             signout();
           },
@@ -176,9 +179,7 @@ class _DashboardState extends State<Dashboard> {
                 child: FutureBuilder<List<Patient>>(
                   future: getAllPatients(),
                   builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return const Text('Loading....');
-                    } else if (snapshot.hasError) {
+                    if (snapshot.hasError) {
                       return Text('Error: ${snapshot.error}');
                     } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
                       return const Text('No patients available.');
@@ -339,7 +340,14 @@ class _DashboardState extends State<Dashboard> {
                       icon: const Icon(Icons.add),
                       color: Colors.white,
                       onPressed: () {
-                        // Add any additional logic as needed
+                        // Navigate to the add profile page
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) =>
+                                AddProfilePage(), // Replace with your login page widget
+                          ),
+                        );
                       },
                     ),
                   ),
@@ -409,14 +417,17 @@ class _DashboardState extends State<Dashboard> {
                     ),
                     child: const Padding(
                       padding: EdgeInsets.all(3.0),
-                      child: Text(
-                        'Medication\nMasterlist',
-                        textAlign: TextAlign
-                            .center, // Center the text within the container
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: periwinkleColor,
-                          height: 1.3,
+                      child: SizedBox(
+                        width: 100,
+                        child: Text(
+                          'MEDICATION\nMASTERLIST',
+                          textAlign: TextAlign
+                              .center, // Center the text within the container
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: periwinkleColor,
+                            height: 1.3,
+                          ),
                         ),
                       ),
                     ),
