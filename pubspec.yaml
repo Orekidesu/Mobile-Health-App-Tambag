@@ -37,11 +37,12 @@ dependencies:
   cupertino_icons: ^1.0.2
   firebase_core: ^2.23.0
   cloud_firestore: ^4.13.2
+  firebase_auth: ^4.15.0
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  fluttertoast: ^8.0.8
+  fluttertoast: ^8.2.4
 
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is
@@ -63,7 +64,7 @@ flutter:
 
   # To add assets to your application, add an assets section, like this:
   assets:
-      - assets/tambag.png
+      - assets/
   #   - images/a_dot_ham.jpeg
 
 
