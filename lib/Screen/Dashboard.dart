@@ -1,10 +1,12 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:flutter/material.dart';
+import 'package:mobile_health_app_tambag/Screen/addProfilePage.dart';
 import 'Masterlist.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'Login.dart';
 import 'Follow_up.dart';
+import 'Patient_profile.dart';
 
 class Patient {
   final String id;
@@ -240,34 +242,13 @@ class _DashboardState extends State<Dashboard> {
                                           radius: 20,
                                           child: ElevatedButton(
                                             onPressed: () {
-                                              // Show a Snackbar when the first button is clicked
-                                              if (!isSnackbarVisible) {
-                                                ScaffoldMessenger.of(context)
-                                                    .showSnackBar(
-                                                      SnackBar(
-                                                        content: Text(
-                                                            'Button 1 Clicked. Index: $index'),
-                                                        duration:
-                                                            const Duration(
-                                                                seconds: 2),
-                                                        onVisible: () {
-                                                          // Set the flag to true when the Snackbar is visible
-                                                          setState(() {
-                                                            isSnackbarVisible =
-                                                                true;
-                                                          });
-                                                        },
-                                                      ),
-                                                    )
-                                                    .closed
-                                                    .then((SnackBarClosedReason
-                                                        reason) {
-                                                  // Set the flag to false when the Snackbar is closed
-                                                  setState(() {
-                                                    isSnackbarVisible = false;
-                                                  });
-                                                });
-                                              }
+                                              Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                  builder: (context) => const Patient_Profile(),
+                                                ),
+                                              );
+                                              
                                             },
                                             style: ElevatedButton.styleFrom(
                                               padding: const EdgeInsets.all(0),
@@ -348,7 +329,12 @@ class _DashboardState extends State<Dashboard> {
                       icon: const Icon(Icons.add),
                       color: Colors.white,
                       onPressed: () {
-                        // Add any additional logic as needed
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => AddProfilePage(),
+                          ),
+                        );
                       },
                     ),
                   ),
