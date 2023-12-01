@@ -8,10 +8,12 @@ class follow_up_data {
   final String date;
   final bool isDone;
 
-
-  follow_up_data({required this.physician, required this.facility,required this.date,required this.isDone});
+  follow_up_data(
+      {required this.physician,
+      required this.facility,
+      required this.date,
+      required this.isDone});
 }
-
 
 // ignore: camel_case_types
 class Follow_up extends StatefulWidget {
@@ -28,9 +30,8 @@ class Follow_up extends StatefulWidget {
 
 // ignore: camel_case_types
 class _Follow_upState extends State<Follow_up> {
-  
   DateTime selectedDate = DateTime.now();
-  
+
   Future<void> _selectDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
       context: context,
@@ -62,8 +63,8 @@ class _Follow_upState extends State<Follow_up> {
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
   );
-  
-  void submit(String msg){
+
+  void submit(String msg) {
     print(msg);
   }
 
@@ -72,20 +73,20 @@ class _Follow_upState extends State<Follow_up> {
   late CollectionReference patientsCollection;
   //Function to return all patients
   Future<Map<String, dynamic>> getAllFollowUp() async {
-  try {
-    final docRef = patientsCollection.doc(widget.patientId);
-    final DocumentSnapshot doc = await docRef.get();
+    try {
+      final docRef = patientsCollection.doc(widget.patientId);
+      final DocumentSnapshot doc = await docRef.get();
 
-    if (doc.exists) {
-      final data = doc.data() as Map<String, dynamic>;
-      return data;
-    } else {
+      if (doc.exists) {
+        final data = doc.data() as Map<String, dynamic>;
+        return data;
+      } else {
+        return {}; // or throw an exception based on your error handling strategy
+      }
+    } catch (e) {
       return {}; // or throw an exception based on your error handling strategy
     }
-  } catch (e) {
-    return {}; // or throw an exception based on your error handling strategy
   }
-}
 
 // Function to load follow-up data
   Future<void> loadFollowUpData() async {
@@ -99,14 +100,15 @@ class _Follow_upState extends State<Follow_up> {
     }
   }
 
-
   @override
   void initState() {
     super.initState();
     // Call the function when the widget is initialized
-    patientsCollection = FirebaseFirestore.instance.collection('follow_up_history');
+    patientsCollection =
+        FirebaseFirestore.instance.collection('follow_up_history');
     loadFollowUpData();
   }
+
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
@@ -165,165 +167,222 @@ class _Follow_upState extends State<Follow_up> {
                     ],
                   ),
                 ),
-                const SizedBox(width: 10),   
+                const SizedBox(width: 10),
               ],
             ),
-            const SizedBox(height: 10,),
-            Container(
-  margin: const EdgeInsets.all(8.0),
-  padding: const EdgeInsets.all(10.0),
-  decoration: BoxDecoration(
-    border: Border.all(
-      color: periwinkleColor,  // Set the border color to black
-      width: 2.0,
-    ),
-    borderRadius: BorderRadius.circular(10.0),  // Adjust the radius as needed
-    color: Colors.white,
-  ),
-  // Check if isDone is true before displaying the content
-  child: followUpData['isDone'] == false
-      ? 
-      Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            const SizedBox(width: 25,),
-            const Icon(
-              Icons.info,
-              size: 40.0,
-              color: periwinkleColor,
+            const SizedBox(
+              height: 10,
             ),
-            const SizedBox(width: 10,),
-            Expanded(
-              child: Center(
-                child: RichText(
-                  text: TextSpan(
-                    style: DefaultTextStyle.of(context).style,
-                    children: [
-                      const TextSpan(
-                        text: 'Mo follow-up kang ',
-                        style: TextStyle(fontSize: 15.0, color: periwinkleColor, fontWeight: FontWeight.w100), // Font size for the first part
-                      ),
-                      TextSpan(
-                        text: '${followUpData['physician'] ?? 'N/A'} ',
-                        style: const TextStyle(fontSize: 15.0, color: periwinkleColor, fontWeight: FontWeight.bold), // Font size for the first part
-                      ),
-                      const TextSpan(
-                        text: 'sa\n',
-                        style: TextStyle(fontSize: 15.0, color: periwinkleColor, fontWeight: FontWeight.w100), // Font size for the first part
-                      ),
-                      TextSpan(
-                        text: '${followUpData['facility'] ?? 'N/A '}',
-                        style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15.0, color: periwinkleColor),
-                      ),
-                      const TextSpan(
-                        text: ' sa ',
-                        style: TextStyle(fontSize: 15.0, color: periwinkleColor, fontWeight: FontWeight.w100), // Font size for the first part
-                      ),
-                      const TextSpan(
-                        text: 'umaabot nga \n',
-                        style: TextStyle(fontSize: 15.0, color: periwinkleColor, fontWeight: FontWeight.w100), // Font size for the first part
-                      ),
-                      TextSpan(
-                        text: ' ${followUpData['date'] ?? 'N/A'}\n2023, alas-otso sa buntag',
-                        style: const TextStyle(fontSize: 15.0, color: periwinkleColor, fontWeight: FontWeight.bold), // Font size for the first part
-                      ),
-                    ],
-                  ),
+            Container(
+              margin: const EdgeInsets.all(8.0),
+              padding: const EdgeInsets.all(10.0),
+              decoration: BoxDecoration(
+                border: Border.all(
+                  color: periwinkleColor, // Set the border color to black
+                  width: 2.0,
                 ),
+                borderRadius:
+                    BorderRadius.circular(10.0), // Adjust the radius as needed
+                color: Colors.white,
               ),
-            )
-          ],
-        )
-      : Container(), // If isDone is false, display an empty container
-),
-
+              // Check if isDone is true before displaying the content
+              child: followUpData['isDone'] == false
+                  ? Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        const SizedBox(
+                          width: 25,
+                        ),
+                        const Icon(
+                          Icons.info,
+                          size: 40.0,
+                          color: periwinkleColor,
+                        ),
+                        const SizedBox(
+                          width: 10,
+                        ),
+                        Expanded(
+                          child: Center(
+                            child: RichText(
+                              text: TextSpan(
+                                style: DefaultTextStyle.of(context).style,
+                                children: [
+                                  const TextSpan(
+                                    text: 'Mo follow-up kang ',
+                                    style: TextStyle(
+                                        fontSize: 15.0,
+                                        color: periwinkleColor,
+                                        fontWeight: FontWeight
+                                            .w100), // Font size for the first part
+                                  ),
+                                  TextSpan(
+                                    text:
+                                        '${followUpData['physician'] ?? 'N/A'} ',
+                                    style: const TextStyle(
+                                        fontSize: 15.0,
+                                        color: periwinkleColor,
+                                        fontWeight: FontWeight
+                                            .bold), // Font size for the first part
+                                  ),
+                                  const TextSpan(
+                                    text: 'sa\n',
+                                    style: TextStyle(
+                                        fontSize: 15.0,
+                                        color: periwinkleColor,
+                                        fontWeight: FontWeight
+                                            .w100), // Font size for the first part
+                                  ),
+                                  TextSpan(
+                                    text:
+                                        '${followUpData['facility'] ?? 'N/A '}',
+                                    style: const TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 15.0,
+                                        color: periwinkleColor),
+                                  ),
+                                  const TextSpan(
+                                    text: ' sa ',
+                                    style: TextStyle(
+                                        fontSize: 15.0,
+                                        color: periwinkleColor,
+                                        fontWeight: FontWeight
+                                            .w100), // Font size for the first part
+                                  ),
+                                  const TextSpan(
+                                    text: 'umaabot nga \n',
+                                    style: TextStyle(
+                                        fontSize: 15.0,
+                                        color: periwinkleColor,
+                                        fontWeight: FontWeight
+                                            .w100), // Font size for the first part
+                                  ),
+                                  TextSpan(
+                                    text:
+                                        ' ${followUpData['date'] ?? 'N/A'}\n2023, alas-otso sa buntag',
+                                    style: const TextStyle(
+                                        fontSize: 15.0,
+                                        color: periwinkleColor,
+                                        fontWeight: FontWeight
+                                            .bold), // Font size for the first part
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        )
+                      ],
+                    )
+                  : Container(), // If isDone is false, display an empty container
+            ),
             const SizedBox(height: 10.0),
             const Text(
               'ADD FOLLOW-UP',
-              style: TextStyle(fontSize: 22.0, color: periwinkleColor,fontWeight: FontWeight.bold), // Adjust the font size as needed
+              style: TextStyle(
+                  fontSize: 22.0,
+                  color: periwinkleColor,
+                  fontWeight:
+                      FontWeight.bold), // Adjust the font size as needed
             ),
             const Text(
               'PHYSICIAN:',
-              style: TextStyle(fontSize: 16.0,color: periwinkleColor), // Adjust the font size as needed
+              style: TextStyle(
+                  fontSize: 16.0,
+                  color: periwinkleColor), // Adjust the font size as needed
             ),
-            const SizedBox(height: 10,),
+            const SizedBox(
+              height: 10,
+            ),
             TextField(
-            controller: physicianController,
-            decoration: InputDecoration(
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(10.0), // Adjust the radius as needed
-                borderSide: const BorderSide(
-                  color: periwinkleColor, // Set the border color
-                  width: 4,
-                ),
-              ),
-            ),
-            // Additional properties for the TextField can be added here
-          ),
-          const Text(
-              'FACILITY:',
-              style:  TextStyle(fontSize: 16.0,color: periwinkleColor), // Adjust the font size as needed
-            ),
-            const SizedBox(height: 10,),
-            TextField(
-            controller: physicianController,
-            decoration: InputDecoration(
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(10.0), // Adjust the radius as needed
-                borderSide: const BorderSide(
-                  color: periwinkleColor, // Set the border color
-                  width: 4,
-                ),
-              ),
-            ),
-            // Additional properties for the TextField can be added here
-          ),
-          const Text(
-            'DATE:',
-            style: TextStyle(fontSize: 16.0, color: periwinkleColor), // Adjust the font size as needed
-          ),
-          const SizedBox(height: 10),
-          Container(
-            decoration: BoxDecoration(
-              border: Border.all(color: periwinkleColor), // Add border styling
-              borderRadius: BorderRadius.circular(8.0), // Optional: Add border radius
-            ),
-            padding: EdgeInsets.all(10),
-            child: InkWell(
-              onTap: () => _selectDate(context),
-              child: Row(
-                children: [
-                  const Icon(Icons.calendar_today),
-                  const SizedBox(width: 10),
-                  Text(
-                    '${selectedDate.toLocal()}'.split(' ')[0], // Display selected date
-                    style: const TextStyle(fontSize: 16.0),
+              controller: physicianController,
+              decoration: InputDecoration(
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(
+                      10.0), // Adjust the radius as needed
+                  borderSide: const BorderSide(
+                    color: periwinkleColor, // Set the border color
+                    width: 4,
                   ),
-                ],
+                ),
               ),
+              // Additional properties for the TextField can be added here
             ),
-          ),
-          const SizedBox(height: 15,),
-          Center(
-            child: ElevatedButton(
-              onPressed: () => submit('Hello'),
-              child: const Text("Submit"),
-              style: ElevatedButton.styleFrom(
-                fixedSize: Size(200, 50), // Adjust the width and height as needed
-                backgroundColor: periwinkleColor, // Set the background color
-                foregroundColor: Colors.white, // Set the text color
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8.0), // Set the border radius
-                  side: BorderSide(color: Colors.blue, width: 0), // Set the border color
+            const Text(
+              'FACILITY:',
+              style: TextStyle(
+                  fontSize: 16.0,
+                  color: periwinkleColor), // Adjust the font size as needed
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+            TextField(
+              controller: physicianController,
+              decoration: InputDecoration(
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(
+                      10.0), // Adjust the radius as needed
+                  borderSide: const BorderSide(
+                    color: periwinkleColor, // Set the border color
+                    width: 4,
+                  ),
+                ),
+              ),
+              // Additional properties for the TextField can be added here
+            ),
+            const Text(
+              'DATE:',
+              style: TextStyle(
+                  fontSize: 16.0,
+                  color: periwinkleColor), // Adjust the font size as needed
+            ),
+            const SizedBox(height: 10),
+            Container(
+              decoration: BoxDecoration(
+                border:
+                    Border.all(color: periwinkleColor), // Add border styling
+                borderRadius:
+                    BorderRadius.circular(8.0), // Optional: Add border radius
+              ),
+              padding: EdgeInsets.all(10),
+              child: InkWell(
+                onTap: () => _selectDate(context),
+                child: Row(
+                  children: [
+                    const Icon(Icons.calendar_today),
+                    const SizedBox(width: 10),
+                    Text(
+                      '${selectedDate.toLocal()}'
+                          .split(' ')[0], // Display selected date
+                      style: const TextStyle(fontSize: 16.0),
+                    ),
+                  ],
                 ),
               ),
             ),
-          ),
-
+            const SizedBox(
+              height: 15,
+            ),
+            Center(
+              child: ElevatedButton(
+                onPressed: () => submit('Hello'),
+                child: const Text("Submit"),
+                style: ElevatedButton.styleFrom(
+                  fixedSize:
+                      Size(200, 50), // Adjust the width and height as needed
+                  backgroundColor: periwinkleColor, // Set the background color
+                  foregroundColor: Colors.white, // Set the text color
+                  shape: RoundedRectangleBorder(
+                    borderRadius:
+                        BorderRadius.circular(8.0), // Set the border radius
+                    side: BorderSide(
+                        color: Colors.blue, width: 0), // Set the border color
+                  ),
+                ),
+              ),
+            ),
           ],
         ),
-  
       ),
     );
   }
