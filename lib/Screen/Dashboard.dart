@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:flutter/material.dart';
 import 'package:mobile_health_app_tambag/Screen/Patient_profile.dart';
+import 'package:mobile_health_app_tambag/Screen/Tracker.dart';
 import 'Masterlist.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'Login.dart';
@@ -320,15 +321,14 @@ class _DashboardState extends State<Dashboard> {
                                           radius: 20,
                                           child: ElevatedButton(
                                             onPressed: () {
-                                              // Navigator.push(
-                                              //   context,
-                                              //   MaterialPageRoute(
-                                              //     builder: (context) =>
-                                              //         Patient_Profile(
-                                              //             patientId: patient.id
-                                              //                 .toString()),
-                                              //   ),
-                                              // );
+                                              Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                  builder: (context) => Tracker(
+                                                      patientId: patient.id
+                                                          .toString()),
+                                                ),
+                                              );
                                             },
                                             style: ElevatedButton.styleFrom(
                                               padding: const EdgeInsets.all(0),

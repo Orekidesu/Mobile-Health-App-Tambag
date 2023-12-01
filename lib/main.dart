@@ -6,6 +6,7 @@ import 'package:mobile_health_app_tambag/Screen/Login.dart';
 import 'package:mobile_health_app_tambag/Screen/Dashboard.dart'; // Import Dashboard
 import 'package:mobile_health_app_tambag/Screen/Firebasetest.dart';
 import 'package:mobile_health_app_tambag/Screen/Patient_profile.dart';
+import 'package:mobile_health_app_tambag/Screen/Tracker.dart';
 import 'firebase_options.dart';
 
 Future<void> main() async {
@@ -37,7 +38,7 @@ class MyApp extends StatelessWidget {
           } else {
             if (snapshot.hasData) {
               // User is logged in, navigate to Dashboard.
-              // return Patient_Profile();
+              // return Tracker();
               return Dashboard();
             } else {
               // User is not logged in, navigate to Login.

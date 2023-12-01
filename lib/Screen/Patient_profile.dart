@@ -50,14 +50,14 @@ class _Patient_ProfileState extends State<Patient_Profile> {
       final medicationsSnapshot = await FirebaseFirestore.instance
           .collection('patients')
           .doc(widget.patientId)
-          .collection('medication')
+          .collection('medications')
           .get();
 
       count = 0;
       return medicationsSnapshot.docs.map((medicationDoc) {
         count++;
         return {
-          'name': medicationDoc['name'],
+          'name': medicationDoc['medicationName'],
           'dosage': medicationDoc['dosage'],
           'count': count,
         };
@@ -80,16 +80,15 @@ class _Patient_ProfileState extends State<Patient_Profile> {
                 minHeight: constraints.maxHeight,
               ),
               child: Padding(
-                padding: EdgeInsets.all(
-                    MediaQuery.of(context).size.width < 600 ? 8.0 : 16.0),
+                padding: EdgeInsets.fromLTRB(16, 16, 16, 0),
                 child: Container(
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           const SizedBox(width: 10),
                           Container(
@@ -111,93 +110,67 @@ class _Patient_ProfileState extends State<Patient_Profile> {
                             ),
                           ),
                           const SizedBox(width: 10),
-                          Expanded(
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                CustomTextWidget(
-                                  text1: 'PATIENT',
-                                  text2: '',
-                                  fontSize:
-                                      MediaQuery.of(context).size.width < 600
-                                          ? 20.0
-                                          : 24.0,
-                                ),
-                                CustomTextWidget(
-                                  text1: 'PROFILE',
-                                  text2: '',
-                                  fontSize:
-                                      MediaQuery.of(context).size.width < 600
-                                          ? 20.0
-                                          : 24.0,
-                                ),
-                              ],
-                            ),
-                          ),
+                          CustomTextWidget(
+                              text1: 'PATIENT\nPROFILE', text2: ''),
                           const SizedBox(width: 10),
                         ],
                       ),
-                      Padding(
-                        padding: EdgeInsets.fromLTRB(16.0, 25.0, 16.0, 0.0),
-                        child: Container(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              FutureBuilder<Map<String, dynamic>>(
-                                future: patientData,
-                                builder: (context, snapshot) {
-                                  if (snapshot.connectionState ==
-                                      ConnectionState.waiting) {
-                                    return CircularProgressIndicator();
-                                  } else if (snapshot.hasError) {
-                                    return Text('Error: ${snapshot.error}');
-                                  } else if (!snapshot.hasData ||
-                                      snapshot.data!.isEmpty) {
-                                    return Text('No patient data available.');
-                                  } else {
-                                    final patientInfo = snapshot.data!;
-                                    return Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        CustomTextWidget(
-                                          text1: 'NAME:',
-                                          text2: patientInfo['name'] ?? 'N/A',
-                                        ),
-                                        CustomTextWidget(
-                                          text1: 'AGE:',
-                                          text2: patientInfo['age'] ?? 'N/A',
-                                        ),
-                                        CustomTextWidget(
-                                          text1: 'ADDRESS:',
-                                          text2:
-                                              patientInfo['address'] ?? 'N/A',
-                                        ),
-                                        CustomTextWidget(
-                                          text1: 'PHYSICIAN:',
-                                          text2:
-                                              patientInfo['physician'] ?? 'N/A',
-                                        ),
-                                        CustomTextWidget(
-                                          text1: 'CONTACT NO.:',
-                                          text2:
-                                              patientInfo['contact_number'] ??
-                                                  'N/A',
-                                        ),
-                                      ],
-                                    );
-                                  }
-                                },
-                              ),
-                            ],
-                          ),
+                      Container(
+                        padding: EdgeInsets.fromLTRB(16.0, 10.0, 16.0, 0.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            FutureBuilder<Map<String, dynamic>>(
+                              future: patientData,
+                              builder: (context, snapshot) {
+                                if (snapshot.connectionState ==
+                                    ConnectionState.waiting) {
+                                  return Container();
+                                } else if (snapshot.hasError) {
+                                  return Text('Error: ${snapshot.error}');
+                                } else if (!snapshot.hasData ||
+                                    snapshot.data!.isEmpty) {
+                                  return Text('No patient data available.');
+                                } else {
+                                  final patientInfo = snapshot.data!;
+                                  return Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      CustomTextWidget(
+                                        text1: 'NAME:',
+                                        text2: patientInfo['name'] ?? 'N/A',
+                                      ),
+                                      CustomTextWidget(
+                                        text1: 'AGE:',
+                                        text2: patientInfo['age'] ?? 'N/A',
+                                      ),
+                                      CustomTextWidget(
+                                        text1: 'ADDRESS:',
+                                        text2: patientInfo['address'] ?? 'N/A',
+                                      ),
+                                      CustomTextWidget(
+                                        text1: 'PHYSICIAN:',
+                                        text2:
+                                            patientInfo['physician'] ?? 'N/A',
+                                      ),
+                                      CustomTextWidget(
+                                        text1: 'CONTACT NO.:',
+                                        text2: patientInfo['contact_number'] ??
+                                            'N/A',
+                                      ),
+                                    ],
+                                  );
+                                }
+                              },
+                            ),
+                          ],
                         ),
                       ),
                       // Medications section
                       Container(
                         height:
-                            MediaQuery.of(context).size.width < 600 ? 150 : 280,
+                            MediaQuery.of(context).size.width < 600 ? 300 : 500,
                         margin: EdgeInsets.fromLTRB(0, 20, 0, 0),
                         child: Expanded(
                           child: FutureBuilder<List<Map<String, dynamic>>>(
@@ -205,7 +178,7 @@ class _Patient_ProfileState extends State<Patient_Profile> {
                             builder: (context, snapshot) {
                               if (snapshot.connectionState ==
                                   ConnectionState.waiting) {
-                                return CircularProgressIndicator();
+                                return Container();
                               } else if (snapshot.hasError) {
                                 return Text('Error: ${snapshot.error}');
                               } else if (!snapshot.hasData ||
