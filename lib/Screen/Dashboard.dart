@@ -1,68 +1,68 @@
-// ignore_for_file: file_names, depend_on_referenced_packages
-import 'package:flutter/material.dart';
-import '../Custom_Widgets/Custom_Footer.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import '../Custom_Widgets/Custom_Appbar.dart';
-import 'package:mobile_health_app_tambag/constants/light_constants.dart';
-import '../Custom_Widgets/Custom_List_Firebase.dart';
-import '../functions/custom_functions.dart';
+  // ignore_for_file: file_names, depend_on_referenced_packages
+  import 'package:flutter/material.dart';
+  import '../Custom_Widgets/Custom_Footer.dart';
+  import 'package:cloud_firestore/cloud_firestore.dart';
+  import '../Custom_Widgets/Custom_Appbar.dart';
+  import 'package:mobile_health_app_tambag/constants/light_constants.dart';
+  import '../Custom_Widgets/Custom_List_Firebase.dart';
+  import '../functions/custom_functions.dart';
 
-class Patient {
-  final String id;
-  final String name;
+  class Patient {
+    final String id;
+    final String name;
 
-  Patient({required this.id, required this.name});
-}
-
-class Dashboard extends StatefulWidget {
-  const Dashboard({Key? key}) : super(key: key);
-
-  @override
-  // ignore: library_private_types_in_public_api
-  _DashboardState createState() => _DashboardState();
-}
-
-class _DashboardState extends State<Dashboard> {
-  int tappedCardIndex = -1;
-  bool isSnackbarVisible = false;
-  String patientId = '';
-
-  late CollectionReference patientsCollection;
-  @override
-  void initState() {
-    super.initState();
-    patientsCollection = FirebaseFirestore.instance.collection('patients');
+    Patient({required this.id, required this.name});
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: Container(
-        color: backgroundColor,
-        padding: const EdgeInsets.all(16.0),
-        child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Custom_Appbar(
-                Baranggay: "Baranggay Guadalupe",
-                icon: Icons.logout,
-                hasbackIcon: false,
-                iconColor: Colors.white,
-                hasRightIcon: true,
-                Distination: () => showSignOutDialog(context),
-              ),
-              const SizedBox(height: 10),
-              Expanded(
-                child: Custom_List_Firebase(),
-              ),
-              const SizedBox(height: 20),
-              ProfileAndMasterlistRow(),
-            ],
+  class Dashboard extends StatefulWidget {
+    const Dashboard({Key? key}) : super(key: key);
+
+    @override
+    // ignore: library_private_types_in_public_api
+    _DashboardState createState() => _DashboardState();
+  }
+
+  class _DashboardState extends State<Dashboard> {
+    int tappedCardIndex = -1;
+    bool isSnackbarVisible = false;
+    String patientId = '';
+
+    late CollectionReference patientsCollection;
+    @override
+    void initState() {
+      super.initState();
+      patientsCollection = FirebaseFirestore.instance.collection('patients');
+    }
+
+    @override
+    Widget build(BuildContext context) {
+      return Scaffold(
+        body: Container(
+          color: backgroundColor,
+          padding: const EdgeInsets.all(16.0),
+          child: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Custom_Appbar(
+                  Baranggay: "Baranggay Guadalupe",
+                  icon: Icons.logout,
+                  hasbackIcon: false,
+                  iconColor: Colors.white,
+                  hasRightIcon: true,
+                  Distination: () => showSignOutDialog(context),
+                ),
+                const SizedBox(height: 10),
+                Expanded(
+                  child: Custom_List_Firebase(),
+                ),
+                const SizedBox(height: 20),
+                ProfileAndMasterlistRow(),
+              ],
+            ),
           ),
         ),
-      ),
-    );
+      );
+    }
   }
-}

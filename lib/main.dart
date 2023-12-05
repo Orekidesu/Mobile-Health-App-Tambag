@@ -33,7 +33,6 @@ class MyApp extends StatelessWidget {
             return const CircularProgressIndicator(); // Display loading indicator while checking authentication state.
           } else {
             if (snapshot.hasData) {
-              // User is logged in, navigate to Dashboard.
               // return Patient_Profile();
               return const Dashboard();
             } else {
