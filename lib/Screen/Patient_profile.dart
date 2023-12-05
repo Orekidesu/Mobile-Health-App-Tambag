@@ -5,6 +5,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:mobile_health_app_tambag/Screen/Dashboard.dart';
 import 'package:mobile_health_app_tambag/custom_widgets/text_widget_info.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:mobile_health_app_tambag/functions/custom_functions.dart';
+import '../constants/light_constants.dart';
+import '../Custom_Widgets/Custom_Appbar.dart';
 
 class Patient_Profile extends StatefulWidget {
   final String patientId;
@@ -88,34 +91,13 @@ class _Patient_ProfileState extends State<Patient_Profile> {
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const SizedBox(width: 10),
-                          Container(
-                            decoration: BoxDecoration(
-                              color: periwinkleColor,
-                              borderRadius: BorderRadius.circular(30.0),
-                            ),
-                            child: IconButton(
-                              icon: const Icon(Icons.arrow_back),
-                              color: Colors.white,
-                              onPressed: () {
-                                Navigator.pushReplacement(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => const Dashboard(),
-                                  ),
-                                );
-                              },
-                            ),
-                          ),
-                          const SizedBox(width: 10),
-                          CustomTextWidget(
-                              text1: 'PATIENT\nPROFILE', text2: ''),
-                          const SizedBox(width: 10),
-                        ],
+                      Custom_Appbar(
+                        Baranggay: "PROFILE",
+                        Apptitle: "PATIENT",
+                        hasbackIcon: true,
+                        hasRightIcon: false,
+                        iconColor: Colors.white,
+                        DistinationBack: () => goToPage(context, const Dashboard()),
                       ),
                       Container(
                         padding: EdgeInsets.fromLTRB(16.0, 10.0, 16.0, 0.0),
@@ -194,8 +176,7 @@ class _Patient_ProfileState extends State<Patient_Profile> {
                                     return CardWithIcon(
                                       icon: FontAwesomeIcons.pills,
                                       title:
-                                          "MEDICATION ${medication['count']}\n${medication['name']}" ??
-                                              'N/A',
+                                          "MEDICATION ${medication['count']}\n${medication['name']}",
                                       subtitle: medication['dosage'] ?? 'N/A',
                                     );
                                   }).toList(),

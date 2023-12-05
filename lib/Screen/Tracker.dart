@@ -2,6 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:mobile_health_app_tambag/Screen/Dashboard.dart';
 import 'package:mobile_health_app_tambag/custom_widgets/text_widget_info.dart';
+import '../Custom_Widgets/CustomActionButton.dart';
+import '../constants/light_constants.dart';
+import '../Custom_Widgets/Custom_Appbar.dart';
+import '../functions/custom_functions.dart';
 
 class Tracker extends StatefulWidget {
   final String patientId;
@@ -12,8 +16,9 @@ class Tracker extends StatefulWidget {
 }
 
 class _TrackerState extends State<Tracker> {
-  static const Color backgroundColor = Color.fromRGBO(245, 248, 255, 1.0);
-  static const Color periwinkleColor = Color.fromARGB(255, 103, 103, 186);
+  TextEditingController reminderController = TextEditingController();
+  TextEditingController contraindicationController = TextEditingController();
+  TextEditingController dietController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -26,38 +31,13 @@ class _TrackerState extends State<Tracker> {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Container(
-                    decoration: BoxDecoration(
-                      color: periwinkleColor,
-                      borderRadius: BorderRadius.circular(30.0),
-                    ),
-                    child: IconButton(
-                      icon: const Icon(Icons.arrow_back),
-                      color: Colors.white,
-                      onPressed: () {
-                        Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const Dashboard(),
-                          ),
-                        );
-                      },
-                    ),
-                  ),
-                  SizedBox(
-                    width: 10.0,
-                  ),
-                  Container(
-                      margin: EdgeInsets.only(top: 10.0),
-                      child: CustomTextWidget(
-                        text1: 'TRACKER',
-                        text2: '',
-                      ))
-                ],
+              Custom_Appbar(
+                Baranggay: "TRACKER",
+                Apptitle: "PATIENT",
+                hasbackIcon: true,
+                hasRightIcon: false,
+                iconColor: Colors.white,
+                DistinationBack: () => goToPage(context, const Dashboard()),
               ),
               Container(
                 padding: EdgeInsets.fromLTRB(16, 10.0, 16.0, 0.0),
@@ -89,7 +69,7 @@ class _TrackerState extends State<Tracker> {
                   child: Card(
                     shape: RoundedRectangleBorder(
                       side: const BorderSide(
-                        color: Colors.blue,
+                        color: periwinkleColor,
                         width: 2.0,
                       ),
                       borderRadius: BorderRadius.circular(20.0),
@@ -148,17 +128,13 @@ class _TrackerState extends State<Tracker> {
               ),
 
               Expanded(
-                flex: 3,
+                flex: 4,
                 child: Container(
                   padding: EdgeInsets.only(top: 16.0),
                   margin: EdgeInsets.only(bottom: 25.0),
                   height: 200,
                   child: Card(
                     shape: RoundedRectangleBorder(
-                      side: const BorderSide(
-                        color: Colors.blue,
-                        width: 2.0,
-                      ),
                       borderRadius: BorderRadius.circular(20.0),
                     ),
                     color: periwinkleColor,
@@ -168,53 +144,94 @@ class _TrackerState extends State<Tracker> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            SizedBox(height: 16),
-                            TextFormField(
-                              decoration: InputDecoration(
-                                labelText: 'Reminders',
-                                fillColor: backgroundColor,
-                                filled: true,
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(10.0),
-                                ),
-                                focusedBorder: OutlineInputBorder(
-                                  borderSide:
-                                      BorderSide(color: periwinkleColor),
-                                  borderRadius: BorderRadius.circular(10.0),
-                                ),
-                              ),
+                            
+                            const Text(
+                              'Reminder:',
+                              style: TextStyle(
+                                  fontSize: 16.0,
+                                  color:
+                                      backgroundColor), // Adjust the font size as needed
                             ),
-                            SizedBox(height: 16),
-                            TextFormField(
-                              decoration: InputDecoration(
-                                labelText: 'Contraindications',
-                                fillColor: backgroundColor,
-                                filled: true,
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(10.0),
-                                ),
-                                focusedBorder: OutlineInputBorder(
-                                  borderSide:
-                                      BorderSide(color: periwinkleColor),
-                                  borderRadius: BorderRadius.circular(10.0),
-                                ),
-                              ),
+                            const SizedBox(
+                              height: 10,
                             ),
-                            SizedBox(height: 16),
-                            TextFormField(
+                            TextField(
+                              controller: reminderController,
                               decoration: InputDecoration(
-                                labelText: 'Diet',
-                                fillColor: backgroundColor,
                                 filled: true,
+                                fillColor: Colors
+                                    .white, // Set the background color to white
                                 border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(10.0),
-                                ),
-                                focusedBorder: OutlineInputBorder(
-                                  borderSide:
-                                      BorderSide(color: periwinkleColor),
-                                  borderRadius: BorderRadius.circular(10.0),
+                                  borderRadius: BorderRadius.circular(
+                                      10.0), // Adjust the radius as needed
+                                  borderSide: const BorderSide(
+                                    color:
+                                        backgroundColor, // Set the border color
+                                    width: 4,
+                                  ),
                                 ),
                               ),
+                              // Additional properties for the TextField can be added here
+                            ),
+                            const SizedBox(
+                              height: 10,
+                            ),
+                            const Text(
+                              'Contraindication:',
+                              style: TextStyle(
+                                  fontSize: 16.0,
+                                  color:
+                                      backgroundColor), // Adjust the font size as needed
+                            ),
+                            const SizedBox(
+                              height: 10,
+                            ),
+                            TextField(
+                              controller: contraindicationController,
+                              decoration: InputDecoration(
+                                filled: true,
+                                fillColor: Colors
+                                    .white, // Set the background color to white
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(
+                                      10.0), // Adjust the radius as needed
+                                  borderSide: const BorderSide(
+                                    color:
+                                        backgroundColor, // Set the border color
+                                    width: 4,
+                                  ),
+                                ),
+                              ),
+                              // Additional properties for the TextField can be added here
+                            ),
+                            const SizedBox(
+                              height: 10,
+                            ),
+                            const Text(
+                              'Diet:',
+                              style: TextStyle(
+                                  fontSize: 16.0,
+                                  color:
+                                      backgroundColor), // Adjust the font size as needed
+                            ),
+                            const SizedBox(
+                              height: 10,
+                            ),
+                            TextField(
+                              controller: dietController,
+                              decoration: InputDecoration(
+                                filled: true,
+                                fillColor: Colors
+                                    .white, // Set the background color to white
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(10.0),
+                                  borderSide: const BorderSide(
+                                    color: backgroundColor,
+                                    width: 4,
+                                  ),
+                                ),
+                              ),
+                              // Additional properties for the TextField can be added here
                             ),
                           ],
                         ),
@@ -223,25 +240,15 @@ class _TrackerState extends State<Tracker> {
                   ),
                 ),
               ),
-
-              Expanded(
-                  child: Row(
+              Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
-                  ElevatedButton(
+                  CustomActionButton(
                     onPressed: () {},
-                    child: Text(
-                      'PRINT',
-                      style: TextStyle(
-                          color: Colors.white, fontWeight: FontWeight.bold),
-                    ),
-                    style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.all(
-                          Color.fromARGB(255, 103, 103, 186)),
-                    ),
-                  )
+                    buttonText: "PRINT",
+                  ),
                 ],
-              ))
+              )
             ],
           ),
         ),

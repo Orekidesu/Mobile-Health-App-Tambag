@@ -24,7 +24,10 @@ class _CustomDropdownState extends State<CustomDropdown> {
       height: 60,
       width: 40,
       decoration: BoxDecoration(
-        border: Border.all(color: periwinkleColor),
+        border: Border.all(
+          color: periwinkleColor,
+          width: 2.0, // Set the desired border thickness
+        ),
         borderRadius: BorderRadius.circular(8.0),
       ),
       padding: const EdgeInsets.all(10),

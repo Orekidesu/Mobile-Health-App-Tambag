@@ -4,7 +4,7 @@
   import 'package:cloud_firestore/cloud_firestore.dart';
   import '../Custom_Widgets/Custom_Appbar.dart';
   import 'package:mobile_health_app_tambag/constants/light_constants.dart';
-  import '../Custom_Widgets/Custom_List_Firebase.dart';
+  import '../Custom_Widgets/Dashboard_List_Firebase.dart';
   import '../functions/custom_functions.dart';
 
   class Patient {
@@ -47,6 +47,7 @@
               children: [
                 Custom_Appbar(
                   Baranggay: "Baranggay Guadalupe",
+                  Apptitle: "TAMBAG",
                   icon: Icons.logout,
                   hasbackIcon: false,
                   iconColor: Colors.white,
@@ -54,8 +55,8 @@
                   Distination: () => showSignOutDialog(context),
                 ),
                 const SizedBox(height: 10),
-                Expanded(
-                  child: Custom_List_Firebase(),
+                const Expanded(
+                  child: Dashboard_List_Firebase(),
                 ),
                 const SizedBox(height: 20),
                 ProfileAndMasterlistRow(),

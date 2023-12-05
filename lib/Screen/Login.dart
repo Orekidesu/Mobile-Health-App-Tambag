@@ -1,12 +1,12 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+// ignore: file_names
+// ignore_for_file: depend_on_referenced_packages, file_names, duplicate_ignore
+
 import 'package:flutter/material.dart';
 import '../functions/custom_functions.dart';
 import 'Dashboard.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import '../constants/light_constants.dart';
-import '../Custom_Widgets/Custom_Toast.dart';
-import '../Custom_Widgets/Custom_Dialog.dart';
 
 
 class Login extends StatefulWidget {
@@ -38,8 +38,6 @@ class _LoginState extends State<Login> {
     // Modify the submitDatabase method
   Future<void> submitDatabase(BuildContext context,String email, String password) async {
     try {
-      print(email);
-      print(password);
       await FirebaseAuth.instance.signInWithEmailAndPassword(
         email: email,
         password: password,

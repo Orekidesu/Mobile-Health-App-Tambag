@@ -1,16 +1,21 @@
+// ignore_for_file: camel_case_types, library_private_types_in_public_api
+
 import 'package:flutter/material.dart';
+import 'package:mobile_health_app_tambag/Screen/Tracker.dart';
 import '../Screen/Dashboard.dart';
 import '../Screen/Follow_up.dart';
 import '../Screen/Patient_profile.dart';
 import '../constants/light_constants.dart';
 import '../Firebase_Query/Firebase_Functions.dart';
 
-class Custom_List_Firebase extends StatefulWidget {
+class Dashboard_List_Firebase extends StatefulWidget {
+  const Dashboard_List_Firebase({super.key});
+
   @override
-  _Custom_List_FirebaseState createState() => _Custom_List_FirebaseState();
+  _Dashboard_List_FirebaseState createState() => _Dashboard_List_FirebaseState();
 }
 
-class _Custom_List_FirebaseState extends State<Custom_List_Firebase> {
+class _Dashboard_List_FirebaseState extends State<Dashboard_List_Firebase> {
   int tappedCardIndex = -1; // Initialize with an invalid index
 
   @override
@@ -106,7 +111,7 @@ class PatientCard extends StatelessWidget {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => const Patient_Profile(),
+                            builder: (context) => Patient_Profile(patientId: patient.id),
                           ),
                         );
                       },
@@ -148,7 +153,16 @@ class PatientCard extends StatelessWidget {
                     backgroundColor: lightblue,
                     radius: 20,
                     child: ElevatedButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => Tracker(
+                              patientId: patient.id.toString(),
+                            ),
+                          ),
+                        );
+                      },
                       style: ElevatedButton.styleFrom(
                         padding: const EdgeInsets.all(0),
                         shape: const CircleBorder(),

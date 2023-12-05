@@ -5,6 +5,7 @@ import 'Custom_ButtonRound.dart';
 
 class Custom_Appbar extends StatefulWidget {
   final String Baranggay;
+  final String Apptitle; 
   final Color? iconColor;
   final IconData? icon;
   final bool hasbackIcon;
@@ -14,6 +15,7 @@ class Custom_Appbar extends StatefulWidget {
 
   const Custom_Appbar({
     Key? key,
+    required this.Apptitle,
     this.Distination,
     this.iconColor,
     this.DistinationBack,
@@ -41,9 +43,9 @@ class _Custom_AppbarState extends State<Custom_Appbar> {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text(
-                'TAMBAG',
-                style: TextStyle(
+              Text(
+                widget.Apptitle,
+                style: const TextStyle(
                   color: periwinkleColor,
                   fontSize: 20.0,
                   fontWeight: FontWeight.bold,

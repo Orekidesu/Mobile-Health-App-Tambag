@@ -214,6 +214,7 @@ class _Follow_upState extends State<Follow_up> {
           children: [
             Custom_Appbar(
               Baranggay: "Baranggay Guadalupe",
+              Apptitle: "TAMBAG",
               hasbackIcon: true,
               hasRightIcon: false,
               iconColor: Colors.white,
@@ -413,7 +414,7 @@ class _Follow_upState extends State<Follow_up> {
                             onPressed: () {
                               submitFollowUpData();
                             },
-                            buttonText: "Submit",
+                            buttonText: "SUBMIT",
                           ),
                             ),
                           ],
