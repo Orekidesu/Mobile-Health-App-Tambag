@@ -1,17 +1,29 @@
+// ignore_for_file: non_constant_identifier_names
+
 import 'package:flutter/material.dart';
+import 'package:mobile_health_app_tambag/Custom_Widgets/CustomActionButton.dart';
+import 'package:mobile_health_app_tambag/functions/custom_functions.dart';
+import '../Custom_Widgets/Custom_dropdown.dart';
 import 'Dashboard.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import '../constants/light_constants.dart';
+import '../Custom_Widgets/Custom_Appbar.dart';
+import '../Custom_Widgets/Followup_widget.dart';
 
-class follow_up_data {
+class FollowUpData {
   final String physician;
   final String facility;
-  final String date;
+  final String day;
+  final String year;
+  final String month;
   final bool isDone;
 
-  follow_up_data(
+  FollowUpData(
       {required this.physician,
       required this.facility,
-      required this.date,
+      required this.day,
+      required this.month,
+      required this.year,
       required this.isDone});
 }
 
@@ -30,43 +42,83 @@ class Follow_up extends StatefulWidget {
 
 // ignore: camel_case_types
 class _Follow_upState extends State<Follow_up> {
-  DateTime selectedDate = DateTime.now();
+  // Create a TextEditingController
+  TextEditingController physicianController = TextEditingController();
+  TextEditingController facilityController = TextEditingController();
 
-  Future<void> _selectDate(BuildContext context) async {
-    final DateTime? picked = await showDatePicker(
-      context: context,
-      initialDate: selectedDate,
-      firstDate: DateTime(2000),
-      lastDate: DateTime(2101),
-    );
+  String selectedMonth = 'Enero';
+  String selectedDay = '1';
+  String selectedYear = '2023';
+  String selectedTime = 'alas-otso sa buntag';
 
-    if (picked != null && picked != selectedDate) {
-      setState(() {
-        selectedDate = picked;
+  // Function to submit follow-up data to Firestore
+  Future<void> submitFollowUpData() async {
+    try {
+      await patientsCollection.doc(widget.patientId).set({
+        'physician': physicianController.text,
+        'facility': facilityController.text,
+        'day': selectedDay,
+        'month': selectedMonth,
+        'year': selectedYear,
+        'time': selectedTime,
+        'isDone': false, // Assuming the follow-up is not done initially
       });
+
+      // Refresh the UI by loading the updated data
+      loadFollowUpData();
+
+      // Optional: Show a success message or navigate to another screen
+      showSuccessSnackbar();
+    } catch (e) {
+      // Handle errors, e.g., show an error message
+      showFailedSnackbar();
     }
   }
 
-  // Create a TextEditingController
-  TextEditingController physicianController = TextEditingController();
-  // Constants Color
-  static const Color backgroundColor = Color.fromRGBO(245, 248, 255, 1.0);
-  static const Color periwinkleColor = Color.fromARGB(255, 103, 103, 186);
-  static const Color rose = Color.fromRGBO(230, 192, 201, 1.0);
-  static const Color lightyellow = Color.fromRGBO(255, 229, 167, 1.0);
-  static const Color lightblue = Color.fromRGBO(167, 215, 246, 1.0);
-  static const LinearGradient periwinkleGradient = LinearGradient(
-    colors: [
-      Color.fromARGB(255, 103, 103, 186),
-      Color.fromARGB(255, 103, 103, 186)
-    ],
-    begin: Alignment.topLeft,
-    end: Alignment.bottomRight,
-  );
+  // Function to submit follow-up data to Firestore
+  Future<void> MarkAsDone() async {
+    try {
+      await patientsCollection.doc(widget.patientId).set({
+        'isDone': true, // Assuming the follow-up is not done initially
+      });
 
-  void submit(String msg) {
-    print(msg);
+      // Refresh the UI by loading the updated data
+      loadFollowUpData();
+
+      // Optional: Show a success message or navigate to another screen
+      showSuccessMarkDoneSnackbar();
+    } catch (e) {
+      // Handle errors, e.g., show an error message
+      showFailedSnackbar();
+    }
   }
+
+  List<String> Month = [
+    'Enero',
+    'Pebrero',
+    'Marso',
+    'Abril',
+    'Mayo',
+    'Hunyo',
+    'Hulyo',
+    'Agosto',
+    'Setyembre',
+    'Oktubre',
+    'Nobyembre',
+    'Disyembre',
+  ];
+
+  List<String> Time = [
+    'alas-otso sa buntag',
+    'alas-dyis sa buntag',
+    'alas-unsi sa buntag',
+    'alas-dose sa buntag',
+    'ala-una sa buntag',
+    'alas-dos sa hapon',
+    'alas-tres sa hapon',
+    'alas-kwatro sa hapon',
+    'alas-singko sa hapon',
+  ];
 
   Map<String, dynamic> followUpData = {};
 
@@ -86,6 +138,48 @@ class _Follow_upState extends State<Follow_up> {
     } catch (e) {
       return {}; // or throw an exception based on your error handling strategy
     }
+  }
+
+  void showFailedSnackbar() {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: const Text('Error submitting follow-up data'),
+        duration: const Duration(seconds: 3),
+        behavior: SnackBarBehavior.floating, // Make the SnackBar taller
+        shape: RoundedRectangleBorder(
+          // Customize the shape
+          borderRadius: BorderRadius.circular(15.0),
+        ),
+      ),
+    );
+  }
+
+  void showSuccessSnackbar() {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: const Text('Follow-up data submitted successfully'),
+        duration: const Duration(seconds: 3),
+        behavior: SnackBarBehavior.floating, // Make the SnackBar taller
+        shape: RoundedRectangleBorder(
+          // Customize the shape
+          borderRadius: BorderRadius.circular(15.0),
+        ),
+      ),
+    );
+  }
+
+  void showSuccessMarkDoneSnackbar() {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: const Text('Successfully Marked Done'),
+        duration: const Duration(seconds: 3),
+        behavior: SnackBarBehavior.floating, // Make the SnackBar taller
+        shape: RoundedRectangleBorder(
+          // Customize the shape
+          borderRadius: BorderRadius.circular(15.0),
+        ),
+      ),
+    );
   }
 
 // Function to load follow-up data
@@ -118,57 +212,12 @@ class _Follow_upState extends State<Follow_up> {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                const SizedBox(width: 10),
-                Container(
-                  decoration: BoxDecoration(
-                    gradient: periwinkleGradient,
-                    borderRadius: BorderRadius.circular(30.0),
-                  ),
-                  child: IconButton(
-                    icon: const Icon(Icons.arrow_back),
-                    color: Colors.white,
-                    onPressed: () {
-                      // Navigate to the login page
-                      Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) =>
-                              const Dashboard(), // Replace with your login page widget
-                        ),
-                      );
-                    },
-                  ),
-                ),
-                const SizedBox(width: 10),
-                const Expanded(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'TAMBAG',
-                        style: TextStyle(
-                          color: periwinkleColor,
-                          fontSize: 20.0,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      Text(
-                        'Baranggay Guadalupe',
-                        style: TextStyle(
-                          color: periwinkleColor,
-                          fontSize: 15.0,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                const SizedBox(width: 10),
-              ],
+            Custom_Appbar(
+              Baranggay: "Baranggay Guadalupe",
+              hasbackIcon: true,
+              hasRightIcon: false,
+              iconColor: Colors.white,
+              DistinationBack: () => goToPage(context, const Dashboard()),
             ),
             const SizedBox(
               height: 10,
@@ -187,200 +236,196 @@ class _Follow_upState extends State<Follow_up> {
               ),
               // Check if isDone is true before displaying the content
               child: followUpData['isDone'] == false
-                  ? Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
+                  ? Column(
                       children: [
-                        const SizedBox(
-                          width: 25,
-                        ),
-                        const Icon(
-                          Icons.info,
-                          size: 40.0,
-                          color: periwinkleColor,
-                        ),
-                        const SizedBox(
-                          width: 10,
-                        ),
-                        Expanded(
-                          child: Center(
-                            child: RichText(
-                              text: TextSpan(
-                                style: DefaultTextStyle.of(context).style,
-                                children: [
-                                  const TextSpan(
-                                    text: 'Mo follow-up kang ',
-                                    style: TextStyle(
-                                        fontSize: 15.0,
-                                        color: periwinkleColor,
-                                        fontWeight: FontWeight
-                                            .w100), // Font size for the first part
-                                  ),
-                                  TextSpan(
-                                    text:
-                                        '${followUpData['physician'] ?? 'N/A'} ',
-                                    style: const TextStyle(
-                                        fontSize: 15.0,
-                                        color: periwinkleColor,
-                                        fontWeight: FontWeight
-                                            .bold), // Font size for the first part
-                                  ),
-                                  const TextSpan(
-                                    text: 'sa\n',
-                                    style: TextStyle(
-                                        fontSize: 15.0,
-                                        color: periwinkleColor,
-                                        fontWeight: FontWeight
-                                            .w100), // Font size for the first part
-                                  ),
-                                  TextSpan(
-                                    text:
-                                        '${followUpData['facility'] ?? 'N/A '}',
-                                    style: const TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 15.0,
-                                        color: periwinkleColor),
-                                  ),
-                                  const TextSpan(
-                                    text: ' sa ',
-                                    style: TextStyle(
-                                        fontSize: 15.0,
-                                        color: periwinkleColor,
-                                        fontWeight: FontWeight
-                                            .w100), // Font size for the first part
-                                  ),
-                                  const TextSpan(
-                                    text: 'umaabot nga \n',
-                                    style: TextStyle(
-                                        fontSize: 15.0,
-                                        color: periwinkleColor,
-                                        fontWeight: FontWeight
-                                            .w100), // Font size for the first part
-                                  ),
-                                  TextSpan(
-                                    text:
-                                        ' ${followUpData['date'] ?? 'N/A'}\n2023, alas-otso sa buntag',
-                                    style: const TextStyle(
-                                        fontSize: 15.0,
-                                        color: periwinkleColor,
-                                        fontWeight: FontWeight
-                                            .bold), // Font size for the first part
-                                  ),
-                                ],
-                              ),
-                            ),
+                        FollowUpWidget(followUpData: followUpData),
+                        const SizedBox(height: 20.0),
+                        Center(
+                          child: CustomActionButton(
+                            onPressed: () {
+                              MarkAsDone();
+                            },
+                            buttonText: "Mark as Done",
                           ),
-                        )
+                        ),
                       ],
                     )
-                  : Container(), // If isDone is false, display an empty container
+                  : const Center(
+                      child: Text("No Appointment Available"),
+                    ), // If isDone is false, display an empty container
             ),
-            const SizedBox(height: 10.0),
-            const Text(
-              'ADD FOLLOW-UP',
-              style: TextStyle(
-                  fontSize: 22.0,
-                  color: periwinkleColor,
-                  fontWeight:
-                      FontWeight.bold), // Adjust the font size as needed
-            ),
-            const Text(
-              'PHYSICIAN:',
-              style: TextStyle(
-                  fontSize: 16.0,
-                  color: periwinkleColor), // Adjust the font size as needed
-            ),
-            const SizedBox(
-              height: 10,
-            ),
-            TextField(
-              controller: physicianController,
-              decoration: InputDecoration(
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(
-                      10.0), // Adjust the radius as needed
-                  borderSide: const BorderSide(
-                    color: periwinkleColor, // Set the border color
-                    width: 4,
-                  ),
-                ),
-              ),
-              // Additional properties for the TextField can be added here
-            ),
-            const Text(
-              'FACILITY:',
-              style: TextStyle(
-                  fontSize: 16.0,
-                  color: periwinkleColor), // Adjust the font size as needed
-            ),
-            const SizedBox(
-              height: 10,
-            ),
-            TextField(
-              controller: physicianController,
-              decoration: InputDecoration(
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(
-                      10.0), // Adjust the radius as needed
-                  borderSide: const BorderSide(
-                    color: periwinkleColor, // Set the border color
-                    width: 4,
-                  ),
-                ),
-              ),
-              // Additional properties for the TextField can be added here
-            ),
-            const Text(
-              'DATE:',
-              style: TextStyle(
-                  fontSize: 16.0,
-                  color: periwinkleColor), // Adjust the font size as needed
-            ),
-            const SizedBox(height: 10),
             Container(
-              decoration: BoxDecoration(
-                border:
-                    Border.all(color: periwinkleColor), // Add border styling
-                borderRadius:
-                    BorderRadius.circular(8.0), // Optional: Add border radius
-              ),
-              padding: EdgeInsets.all(10),
-              child: InkWell(
-                onTap: () => _selectDate(context),
-                child: Row(
-                  children: [
-                    const Icon(Icons.calendar_today),
-                    const SizedBox(width: 10),
-                    Text(
-                      '${selectedDate.toLocal()}'
-                          .split(' ')[0], // Display selected date
-                      style: const TextStyle(fontSize: 16.0),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            const SizedBox(
-              height: 15,
-            ),
-            Center(
-              child: ElevatedButton(
-                onPressed: () => submit('Hello'),
-                child: const Text("Submit"),
-                style: ElevatedButton.styleFrom(
-                  fixedSize:
-                      Size(200, 50), // Adjust the width and height as needed
-                  backgroundColor: periwinkleColor, // Set the background color
-                  foregroundColor: Colors.white, // Set the text color
-                  shape: RoundedRectangleBorder(
-                    borderRadius:
-                        BorderRadius.circular(8.0), // Set the border radius
-                    side: BorderSide(
-                        color: Colors.blue, width: 0), // Set the border color
-                  ),
-                ),
-              ),
-            ),
+                child: followUpData['isDone'] == true
+                    ? Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const SizedBox(height: 10.0),
+                            const Text(
+                              'ADD FOLLOW-UP',
+                              style: TextStyle(
+                                  fontSize: 22.0,
+                                  color: periwinkleColor,
+                                  fontWeight: FontWeight
+                                      .bold), // Adjust the font size as needed
+                            ),
+                            const Text(
+                              'PHYSICIAN:',
+                              style: TextStyle(
+                                  fontSize: 16.0,
+                                  color:
+                                      periwinkleColor), // Adjust the font size as needed
+                            ),
+                            const SizedBox(
+                              height: 10,
+                            ),
+                            TextField(
+                              controller: physicianController,
+                              decoration: InputDecoration(
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(
+                                      10.0), // Adjust the radius as needed
+                                  borderSide: const BorderSide(
+                                    color:
+                                        periwinkleColor, // Set the border color
+                                    width: 4,
+                                  ),
+                                ),
+                              ),
+                              // Additional properties for the TextField can be added here
+                            ),
+                            const Text(
+                              'FACILITY:',
+                              style: TextStyle(
+                                  fontSize: 16.0,
+                                  color:
+                                      periwinkleColor), // Adjust the font size as needed
+                            ),
+                            const SizedBox(
+                              height: 10,
+                            ),
+                            TextField(
+                              controller: facilityController,
+                              decoration: InputDecoration(
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(
+                                      10.0), // Adjust the radius as needed
+                                  borderSide: const BorderSide(
+                                    color:
+                                        periwinkleColor, // Set the border color
+                                    width: 4,
+                                  ),
+                                ),
+                              ),
+                              // Additional properties for the TextField can be added here
+                            ),
+                            const Text(
+                              'DATE:',
+                              style: TextStyle(
+                                  fontSize: 16.0,
+                                  color:
+                                      periwinkleColor), // Adjust the font size as needed
+                            ),
+                            const SizedBox(height: 10),
+                            Row(
+                              children: [
+                                // Month Dropdown
+                                Expanded(
+                                    flex: 2,
+                                    child: CustomDropdown(
+                                      items: Month,
+                                      value: selectedMonth,
+                                      onChanged: (String newValue) {
+                                        setState(() {
+                                          selectedMonth = newValue;
+                                        });
+                                      },
+                                    )),
+                                const SizedBox(width: 10),
+
+                                // Day Dropdown
+                                Expanded(
+                                  flex: 1,
+                                  child: CustomDropdown(
+                                    items: List<String>.generate(
+                                        31, (index) => (index + 1).toString()),
+                                    value: selectedDay,
+                                    onChanged: (String newValue) {
+                                      setState(() {
+                                        selectedDay = newValue;
+                                      });
+                                    },
+                                  ),
+                                ),
+                                const SizedBox(width: 10),
+                                // Year Dropdown
+                                Expanded(
+                                  flex: 1,
+                                  child: CustomDropdown(
+                                    items: List<String>.generate(10,
+                                        (index) => (2023 - index).toString()),
+                                    value: selectedYear,
+                                    onChanged: (String newValue) {
+                                      setState(() {
+                                        selectedYear = newValue;
+                                      });
+                                    },
+                                  ),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(
+                              height: 10,
+                            ),
+                            const Text(
+                              'Time:',
+                              style: TextStyle(
+                                  fontSize: 16.0,
+                                  color:
+                                      periwinkleColor), // Adjust the font size as needed
+                            ),
+                            const SizedBox(height: 10),
+                            Row(
+                              children: [
+                                // Hour Dropdown
+                                Expanded(
+                                  child: CustomDropdown(
+                                    items: Time,
+                                    value: selectedTime,
+                                    onChanged: (String newValue) {
+                                      setState(() {
+                                        selectedTime = newValue;
+                                      });
+                                    },
+                                  ),
+                                ),
+                                const SizedBox(width: 10),
+                              ],
+                            ),
+                            const SizedBox(
+                              height: 15,
+                            ),
+                            Center(
+                              child: 
+                              CustomActionButton(
+                            onPressed: () {
+                              submitFollowUpData();
+                            },
+                            buttonText: "Submit",
+                          ),
+                            ),
+                          ],
+                        ),
+                      )
+                    : const Expanded(
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [Text("There's a Ongoing Appointment")],
+                        ),
+                      ))
           ],
         ),
       ),

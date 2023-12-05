@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mobile_health_app_tambag/Screen/Dashboard.dart';
+import '../constants/light_constants.dart';
 
 class AddProfilePage extends StatefulWidget {
   @override
@@ -12,20 +13,6 @@ class _AddProfilePageState extends State<AddProfilePage> {
   TextEditingController addressController = TextEditingController();
   TextEditingController medicationController = TextEditingController();
 
-  //Constants Color
-  static const Color backgroundColor = Color.fromRGBO(245, 248, 255, 1.0);
-  static const Color periwinkleColor = Color.fromARGB(255, 103, 103, 186);
-  static const Color rose = Color.fromRGBO(230, 192, 201, 1.0);
-  static const Color lightyellow = Color.fromRGBO(255, 229, 167, 1.0);
-  static const Color lightblue = Color.fromRGBO(167, 215, 246, 1.0);
-  static const LinearGradient periwinkleGradient = LinearGradient(
-    colors: [
-      Color.fromARGB(255, 103, 103, 186),
-      Color.fromARGB(255, 103, 103, 186)
-    ],
-    begin: Alignment.topLeft,
-    end: Alignment.bottomRight,
-  );
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -206,7 +193,7 @@ class _AddProfilePageState extends State<AddProfilePage> {
               color: Colors.white,
               onPressed: () {
                 // Navigate to the add profile page
-                Navigator.pushReplacement(
+                Navigator.push(
                   context,
                   MaterialPageRoute(
                     builder: (context) =>

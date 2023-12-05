@@ -1,12 +1,8 @@
-import 'dart:html';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart'; // Import Firebase Auth
 import 'package:mobile_health_app_tambag/Screen/Login.dart';
 import 'package:mobile_health_app_tambag/Screen/Dashboard.dart'; // Import Dashboard
-import 'package:mobile_health_app_tambag/Screen/Firebasetest.dart';
-import 'package:mobile_health_app_tambag/Screen/Patient_profile.dart';
-import 'package:mobile_health_app_tambag/Screen/Tracker.dart';
 import 'firebase_options.dart';
 
 Future<void> main() async {
@@ -15,7 +11,7 @@ Future<void> main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -34,15 +30,14 @@ class MyApp extends StatelessWidget {
         stream: FirebaseAuth.instance.authStateChanges(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return CircularProgressIndicator(); // Display loading indicator while checking authentication state.
+            return const CircularProgressIndicator(); // Display loading indicator while checking authentication state.
           } else {
             if (snapshot.hasData) {
-              // User is logged in, navigate to Dashboard.
-              // return Tracker();
-              return Dashboard();
+              // return Patient_Profile();
+              return const Dashboard();
             } else {
               // User is not logged in, navigate to Login.
-              return Login();
+              return const Login();
             }
           }
         },

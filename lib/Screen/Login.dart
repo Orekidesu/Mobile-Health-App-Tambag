@@ -1,8 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import '../functions/custom_functions.dart';
 import 'Dashboard.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import '../constants/light_constants.dart';
+import '../Custom_Widgets/Custom_Toast.dart';
+import '../Custom_Widgets/Custom_Dialog.dart';
 
 
 class Login extends StatefulWidget {
@@ -13,77 +17,9 @@ class Login extends StatefulWidget {
 }
 
 class _LoginState extends State<Login> {
-  static const Color periwinkleColor = Color.fromARGB(255, 103, 103, 186);
-  static const Color periwinkleColorLight = Color.fromARGB(255, 139, 139, 177);
-  static const Color backgroundColor = Color.fromRGBO(245, 248, 255, 1.0);
-  static const LinearGradient periwinkleGradient = LinearGradient(
-    colors: [Color.fromARGB(255, 103, 103, 186), Color.fromARGB(255, 103, 103, 186)],
-    begin: Alignment.topLeft,
-    end: Alignment.bottomRight,
-  );
-
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
 
-  Future<Map<String, dynamic>> getUserInfo(String uid) async {
-    try {
-      DocumentSnapshot<Map<String, dynamic>> userDoc =
-          await FirebaseFirestore.instance.collection('admin').doc(uid).get();
-      return userDoc.data() ?? {};
-    } catch (e) {
-      // Handle any errors that might occur while fetching the user info
-      return {};
-    }
-  }
-
- // Modify the submitDatabase method
-  Future<void> submitDatabase(String email, String password) async {
-    try {
-      UserCredential userCredential =
-          await FirebaseAuth.instance.signInWithEmailAndPassword(
-        email: email,
-        password: password,
-      );
-      final user = userCredential.user;
-      // Successfully logged in, get additional user information
-      // ignore: unnecessary_cast
-      Map<String, dynamic> userInfo = await getUserInfo(user!.uid as String);
-
-      // You can now access first_name, middle_name, last_name from userInfo map
-      String firstName = userInfo['first_name'] ?? '';
-      String middleName = userInfo['middle_name'] ?? '';
-      String lastName = userInfo['last_name'] ?? '';
-
-      // Show success notification and auto-close
-      showSuccessNotification(firstName, middleName, lastName);
-        } on FirebaseAuthException catch (e) {
-          // Handle specific FirebaseAuth exceptions
-          showErrorNotification(e.message);
-        } catch (e) {
-          showErrorNotification(e as String?);
-        }
-      }
-
-    void showSuccessNotification(String firstName, String middleName, String lastName) {
-      Fluttertoast.showToast(
-        msg: 'Login Successful\nWelcome to Tambag App!\n$firstName $middleName $lastName',
-        toastLength: Toast.LENGTH_LONG,
-        gravity: ToastGravity.TOP,
-        timeInSecForIosWeb: 3,
-        backgroundColor: periwinkleColor,
-        textColor: Colors.white,
-        fontSize: 16.0,
-        webPosition: "center",
-        webBgColor: "$periwinkleGradient"
-      );
-
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => const Dashboard(),
-        ),
-      );
-    }
 
     void showErrorNotification(String? errorMessage) {
       Fluttertoast.showToast(
@@ -98,6 +34,27 @@ class _LoginState extends State<Login> {
         webBgColor: "$periwinkleGradient",
       );
     }
+
+    // Modify the submitDatabase method
+  Future<void> submitDatabase(BuildContext context,String email, String password) async {
+    try {
+      print(email);
+      print(password);
+      await FirebaseAuth.instance.signInWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+      // Show success notification and auto-close
+      showSuccessNotification();
+      // ignore: use_build_context_synchronously
+      goToPageNoReturn(context,const Dashboard());
+        } on FirebaseAuthException catch (e) {
+          // Handle specific FirebaseAuth exceptions
+          showErrorNotification(e.message);
+        } catch (e) {
+          showErrorNotification(e as String?);
+        }
+      }
 
   @override
   Widget build(BuildContext context) {
@@ -197,27 +154,24 @@ class _LoginState extends State<Login> {
               ),
               const SizedBox(height: 20),
               SizedBox(
-                width: 150.0,
-                height: 50.0,
+                width: 150,
+                height: 50,
                 child: ElevatedButton(
                   onPressed: () {
-                    String email = emailController.text;
-                    String password = passwordController.text;
-
-                    if (email.isNotEmpty && password.isNotEmpty) {
-                      submitDatabase(email, password);
+                    if (emailController.text.isNotEmpty && passwordController.text.isNotEmpty) {
+                      submitDatabase(context, emailController.text, passwordController.text);
                     } else {
                       showErrorNotification("Email and password cannot be empty");
                     }
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.white,
+                    foregroundColor: backgroundColor, // Use primary for background color
                   ),
                   child: const Text(
                     'Login',
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
-                      color: periwinkleColor,
+                      color: periwinkleColor // Use Colors.blue as an example color
                     ),
                   ),
                 ),
