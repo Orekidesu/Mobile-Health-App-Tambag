@@ -1,5 +1,8 @@
+// ignore_for_file: camel_case_types
+
 import 'package:flutter/material.dart';
 import 'package:mobile_health_app_tambag/Screen/Dashboard.dart';
+import '../constants/light_constants.dart';
 
 class Patient_Profile extends StatefulWidget {
   const Patient_Profile({super.key});
@@ -9,19 +12,6 @@ class Patient_Profile extends StatefulWidget {
 }
 
 class _Patient_ProfileState extends State<Patient_Profile> {
-  static const Color backgroundColor = Color.fromRGBO(245, 248, 255, 1.0);
-  static const Color periwinkleColor = Color.fromARGB(255, 103, 103, 186);
-  static const Color rose = Color.fromRGBO(230, 192, 201, 1.0);
-  static const Color lightyellow = Color.fromRGBO(255, 229, 167, 1.0);
-  static const Color lightblue = Color.fromRGBO(167, 215, 246, 1.0);
-  static const LinearGradient periwinkleGradient = LinearGradient(
-    colors: [
-      Color.fromARGB(255, 103, 103, 186),
-      Color.fromARGB(255, 103, 103, 186)
-    ],
-    begin: Alignment.topLeft,
-    end: Alignment.bottomRight,
-  );
 
   @override
   Widget build(BuildContext context) {
