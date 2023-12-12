@@ -26,3 +26,23 @@ Future<List<medication_inventory>> getAllMedicalInventory() async {
     }).toList();
   }
 
+Future<Map<String, int>> getMedicationQuantities() async {
+  final QuerySnapshot<Map<String, dynamic>> querySnapshot =
+      await FirebaseFirestore.instance.collectionGroup('medications').get();
+
+  final Map<String, int> medicationQuantities = {};
+
+  for (final QueryDocumentSnapshot<Map<String, dynamic>> doc in querySnapshot.docs) {
+    final String medName = doc.data()['med_name'] as String;
+    final int medQuan = doc.data()['med_quan'] as int;
+
+    if (medicationQuantities.containsKey(medName)) {
+      medicationQuantities[medName] = medicationQuantities[medName]! + medQuan;
+    } else {
+      medicationQuantities[medName] = medQuan;
+    }
+  }
+
+  return medicationQuantities;
+}
+

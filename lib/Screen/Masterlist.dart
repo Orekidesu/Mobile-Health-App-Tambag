@@ -1,4 +1,4 @@
-// ignore_for_file: non_constant_identifier_names, camel_case_types
+// ignore_for_file: non_constant_identifier_names, camel_case_types, file_names
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -30,103 +30,126 @@ class _MasterlistState extends State<Masterlist> {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<List<medication_inventory>>(
-      future: getAllMedicalInventory(),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Scaffold(
-            body: Center(child: CupertinoActivityIndicator()),
-          );
-        } else if (snapshot.hasError) {
-          return Scaffold(
-            body: Center(child: Text('Error: ${snapshot.error}')),
-          );
-        } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-          return const Scaffold(
-            body: Center(child: Text('No medication inventory available.')),
-          );
-        } else {
-          // Sort the medication inventory data alphabetically based on med_name
-          List<medication_inventory> sortedMedicationInventory =
-              List.from(snapshot.data!);
-          sortedMedicationInventory.sort((a, b) =>
-              a.med_name.toLowerCase().compareTo(b.med_name.toLowerCase()));
-
-          // Build rows for the table using sorted data
-          List<List<String>> rows = sortedMedicationInventory.map((med) {
-            return [med.med_name, med.med_quan.toString()];
-          }).toList();
-
-          return Scaffold(
-            body: Container(
-              color: backgroundColor,
-              padding: const EdgeInsets.all(30.0),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Custom_Appbar(
-                    Apptitle: "MEDICATION",
-                    Baranggay: "MASTERLIST",
-                    hasbackIcon: true,
-                    hasRightIcon: false,
-                    iconColor: Colors.white,
-                    DistinationBack: () => goToPage(context, const Dashboard()),
-                  ),
-                  const SizedBox(height: 25),
-                  const Text(
-                    'CLIENT MEDICATION SUMMARY',
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: periwinkleColor,
-                      fontSize: 20,
-                    ),
-                  ),
-                  const Text(
-                    'Diri nga seksyon makita ang tanang\ntambal nga ginagamit sa mga geriatic\nclient ug ang kadaghanon nga\ngikinahanglan matag tambal.',
-                    style: TextStyle(
-                      fontWeight: FontWeight.w100,
-                      color: periwinkleColor,
-                      fontSize: 15,
-                    ),
-                  ),
-                  const SizedBox(height: 25),
-                  MyTable(columns: columns, rows: rows),
-                  const SizedBox(height: 25),
-                  const Text(
-                    'MEDICATION INVENTORY',
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: periwinkleColor,
-                      fontSize: 20,
-                    ),
-                  ),
-                  const Text(
-                    'Diri nga seksyon makita ang istak sa\ntambal.',
-                    style: TextStyle(
-                      fontWeight: FontWeight.w100,
-                      color: periwinkleColor,
-                      fontSize: 15,
-                    ),
-                  ),
-                  const SizedBox(height: 10),
-                  MyTable(columns: columns, rows: rows),
-                  const SizedBox(height: 10),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      CustomActionButton(
-                        onPressed: () => showTestDialog(context),
-                        buttonText: 'Print',
-                      ),
-                    ],
-                  )
-                ],
+    return SingleChildScrollView(
+      child: Container(
+        color: backgroundColor,
+        padding: const EdgeInsets.all(30.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Custom_Appbar(
+              Apptitle: "MEDICATION",
+              Baranggay: "MASTERLIST",
+              hasbackIcon: true,
+              hasRightIcon: false,
+              iconColor: Colors.white,
+              DistinationBack: () => goToPage(context, const Dashboard()),
+            ),
+            const SizedBox(height: 25),
+            const Text(
+              'CLIENT MEDICATION SUMMARY',
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                color: periwinkleColor,
+                fontSize: 20,
               ),
             ),
-          );
-        }
-      },
+            const Text(
+              'Diri nga seksyon makita ang tanang\ntambal nga ginagamit sa mga geriatic\nclient ug ang kadaghanon nga\ngikinahanglan matag tambal.',
+              style: TextStyle(
+                fontWeight: FontWeight.w100,
+                color: periwinkleColor,
+                fontSize: 15,
+              ),
+            ),
+            const SizedBox(height: 25),
+            FutureBuilder<Map<String, int>>(
+              future: getMedicationQuantities(),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Center(child: CupertinoActivityIndicator());
+                } else if (snapshot.hasError) {
+                  return Center(child: Text('Error: ${snapshot.error}'));
+                } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                  return const Center(child: Text('No medication inventory available.'));
+                } else {
+                  // Extract medication data from the snapshot
+                  Map<String, int> medicationQuantities = snapshot.data!;
+
+                  // Build rows for the table using sorted data
+                  List<MapEntry<String, int>> sortedRows =
+                      medicationQuantities.entries.toList()
+                        ..sort((a, b) => a.key.compareTo(b.key));
+
+                  List<List<String>> rows = sortedRows.map((entry) {
+                    return [entry.key, entry.value.toString()];
+                  }).toList();
+
+                  // Assuming you have a list of columns defined somewhere
+                  List<String> columns = ['Medication Name', 'Total Quantity'];
+
+                  return MyTable(columns: columns, rows: rows);
+                }
+              },
+            ),
+            const SizedBox(height: 25),
+            const Text(
+              'MEDICATION INVENTORY',
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                color: periwinkleColor,
+                fontSize: 20,
+              ),
+            ),
+            const Text(
+              'Diri nga seksyon makita ang istak sa\ntambal.',
+              style: TextStyle(
+                fontWeight: FontWeight.w100,
+                color: periwinkleColor,
+                fontSize: 15,
+              ),
+            ),
+            const SizedBox(height: 10),
+            FutureBuilder<List<medication_inventory>>(
+              future: getAllMedicalInventory(),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Center(child: CupertinoActivityIndicator());
+                } else if (snapshot.hasError) {
+                  return Center(child: Text('Error: ${snapshot.error}'));
+                } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                  return const Center(child: Text('No medication inventory available.'));
+                } else {
+                  // Sort the medication inventory data alphabetically based on med_name
+                  List<medication_inventory> sortedMedicationInventory =
+                      List.from(snapshot.data!);
+                  sortedMedicationInventory.sort((a, b) => a.med_name
+                      .toLowerCase()
+                      .compareTo(b.med_name.toLowerCase()));
+      
+                  // Build rows for the table using sorted data
+                  List<List<String>> rows = sortedMedicationInventory.map((med) {
+                    return [med.med_name, med.med_quan.toString()];
+                  }).toList();
+      
+                  return MyTable(columns: columns, rows: rows);
+                }
+              },
+            ),
+            const SizedBox(height: 25,),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                CustomActionButton(
+                  onPressed: () => showTestDialog(context),
+                  buttonText: 'Print',
+                ),
+              ],
+            )
+          ],
+        ),
+      ),
     );
   }
 

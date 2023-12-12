@@ -41,7 +41,7 @@ class TableWidget extends StatelessWidget {
                   padding: const EdgeInsets.all(8.0),
                   child: Text(
                     columnName,
-                    style: const TextStyle(fontWeight: FontWeight.bold, color: periwinkleColor),
+                    style: const TextStyle(fontWeight: FontWeight.bold, color: periwinkleColor,fontSize: 20),
                   ),
                 ),
               );
@@ -54,7 +54,7 @@ class TableWidget extends StatelessWidget {
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Text(cellData,
-                    style: const TextStyle(color: periwinkleColor),),
+                    style: const TextStyle(color: periwinkleColor, fontSize: 15,fontWeight: FontWeight.w100),),
                   ),
                 );
               }).toList(),
