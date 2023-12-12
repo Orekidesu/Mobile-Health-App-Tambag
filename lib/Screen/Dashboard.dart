@@ -30,7 +30,6 @@
     @override
     void initState() {
       super.initState();
-      patientsCollection = FirebaseFirestore.instance.collection('patients');
     }
 
     @override

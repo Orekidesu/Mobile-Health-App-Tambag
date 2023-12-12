@@ -53,8 +53,17 @@ class _Follow_upState extends State<Follow_up> {
 
   // Function to submit follow-up data to Firestore
   Future<void> submitFollowUpData() async {
-    try {
-      await patientsCollection.doc(widget.patientId).set({
+  try {
+    // Check if a document with the provided patientId exists
+    final QuerySnapshot querySnapshot = await patientsCollection
+        .where("id", isEqualTo: widget.patientId)
+        .get();
+
+    if (querySnapshot.docs.isNotEmpty) {
+      final DocumentSnapshot doc = querySnapshot.docs.first;
+
+      // Update the existing document with the new data
+      await doc.reference.update({
         'physician': physicianController.text,
         'facility': facilityController.text,
         'day': selectedDay,
@@ -69,17 +78,30 @@ class _Follow_upState extends State<Follow_up> {
 
       // Optional: Show a success message or navigate to another screen
       showSuccessSnackbar();
-    } catch (e) {
-      // Handle errors, e.g., show an error message
-      showFailedSnackbar();
+    } else {
+      // Handle the case where no document with the given patientId is found
     }
+  } catch (e) {
+    // Handle errors, e.g., show an error message
+    showFailedSnackbar();
   }
+}
+
 
   // Function to submit follow-up data to Firestore
-  Future<void> MarkAsDone() async {
-    try {
-      await patientsCollection.doc(widget.patientId).set({
-        'isDone': true, // Assuming the follow-up is not done initially
+Future<void> markAsDone() async {
+  try {
+    // Check if a document with the provided patientId exists
+    final QuerySnapshot querySnapshot = await patientsCollection
+        .where("id", isEqualTo: widget.patientId)
+        .get();
+
+    if (querySnapshot.docs.isNotEmpty) {
+      final DocumentSnapshot doc = querySnapshot.docs.first;
+
+      // Update the existing document to mark it as done
+      await doc.reference.update({
+        'isDone': true,
       });
 
       // Refresh the UI by loading the updated data
@@ -87,11 +109,15 @@ class _Follow_upState extends State<Follow_up> {
 
       // Optional: Show a success message or navigate to another screen
       showSuccessMarkDoneSnackbar();
-    } catch (e) {
-      // Handle errors, e.g., show an error message
-      showFailedSnackbar();
+    } else {
+      // Handle the case where no document with the given patientId is found
     }
+  } catch (e) {
+    // Handle errors, e.g., show an error message
+    showFailedSnackbar();
   }
+}
+
 
   List<String> Month = [
     'Enero',
@@ -124,21 +150,30 @@ class _Follow_upState extends State<Follow_up> {
 
   late CollectionReference patientsCollection;
   //Function to return all patients
-  Future<Map<String, dynamic>> getAllFollowUp() async {
-    try {
-      final docRef = patientsCollection.doc(widget.patientId);
-      final DocumentSnapshot doc = await docRef.get();
+  Future<Map<String, dynamic>?> getAllPatientsWithId() async {
+  try {
+    final QuerySnapshot querySnapshot = await patientsCollection
+        .where("id", isEqualTo: widget.patientId)
+        .get();
 
-      if (doc.exists) {
-        final data = doc.data() as Map<String, dynamic>;
+    if (querySnapshot.docs.isNotEmpty) {
+      // Assuming there's only one document with the given ID
+      final DocumentSnapshot doc = querySnapshot.docs.first;
+      final data = doc.data() as Map<String, dynamic>;
+
+      // Check if the "id" field matches the patientId
+      if (data.containsKey("id") && data["id"] == widget.patientId) {
         return data;
       } else {
-        return {}; // or throw an exception based on your error handling strategy
+        return null; // or handle the case where the ID doesn't match
       }
-    } catch (e) {
-      return {}; // or throw an exception based on your error handling strategy
+    } else {
+      return null; // or handle the case where there is no document with the given ID
     }
+  } catch (e) {
+    return null;
   }
+}
 
   void showFailedSnackbar() {
     ScaffoldMessenger.of(context).showSnackBar(
@@ -183,16 +218,17 @@ class _Follow_upState extends State<Follow_up> {
   }
 
 // Function to load follow-up data
-  Future<void> loadFollowUpData() async {
-    try {
-      final data = await getAllFollowUp();
-      setState(() {
-        followUpData = data;
-      });
-    } catch (e) {
-      print('Error loading follow-up data: $e');
-    }
+ Future<void> loadFollowUpData() async {
+  try {
+    final data = await getAllPatientsWithId();
+    setState(() {
+      followUpData = data!;
+    });
+  } catch (e) {
+    print('Error loading follow-up data: $e');
   }
+}
+
 
   @override
   void initState() {
@@ -203,6 +239,7 @@ class _Follow_upState extends State<Follow_up> {
     loadFollowUpData();
   }
 
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
@@ -244,7 +281,7 @@ class _Follow_upState extends State<Follow_up> {
                         Center(
                           child: CustomActionButton(
                             onPressed: () {
-                              MarkAsDone();
+                              markAsDone();
                             },
                             buttonText: "Mark as Done",
                           ),
