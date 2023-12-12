@@ -2,14 +2,15 @@
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import '../Custom_Widgets/Add_Medication_Dialog.dart';
 import '../Custom_Widgets/Custom_Appbar.dart';
 import '../Custom_Widgets/Custom_Dialog.dart';
 import '../Firebase_Query/Firebase_Functions.dart';
 import '../constants/light_constants.dart';
-import '../functions/custom_functions.dart';
 import 'Dashboard.dart';
 import '../Custom_Widgets/Cutom_table.dart';
 import '../Custom_Widgets/CustomActionButton.dart';
+import '../functions/custom_functions.dart';
 
 class medication_inventory {
   final String med_name;
@@ -28,6 +29,55 @@ class Masterlist extends StatefulWidget {
 class _MasterlistState extends State<Masterlist> {
   List<String> columns = ['Medication', 'Quantity'];
 
+  void _showMyDialog(BuildContext context) {
+    showDialog<void>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20.0),
+            side: const BorderSide(width: 2, color: periwinkleColor),
+          ),
+          scrollable: true,
+          backgroundColor: backgroundColor,
+          contentPadding: const EdgeInsets.all(20.0),
+          content: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text(
+                    'Add Medication',
+                    style: TextStyle(
+                      color: periwinkleColor,
+                      fontSize: 25,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  IconButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    icon: const Icon(
+                      Icons.close,
+                      color: Colors.white,
+                    ),
+                    style: ButtonStyle(
+                      backgroundColor: MaterialStateProperty.all(periwinkleColor),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 10),
+              const addMedication(),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
@@ -42,9 +92,13 @@ class _MasterlistState extends State<Masterlist> {
               Apptitle: "MEDICATION",
               Baranggay: "MASTERLIST",
               hasbackIcon: true,
-              hasRightIcon: false,
+              hasRightIcon: true,
+              icon: Icons.add,
               iconColor: Colors.white,
               DistinationBack: () => goToPage(context, const Dashboard()),
+              Distination: () {
+                _showMyDialog(context);
+              },
             ),
             const SizedBox(height: 25),
             const Text(
@@ -63,7 +117,7 @@ class _MasterlistState extends State<Masterlist> {
                 fontSize: 15,
               ),
             ),
-            const SizedBox(height: 25),
+            const SizedBox(height: 10),
             FutureBuilder<Map<String, int>>(
               future: getMedicationQuantities(),
               builder: (context, snapshot) {
@@ -72,7 +126,8 @@ class _MasterlistState extends State<Masterlist> {
                 } else if (snapshot.hasError) {
                   return Center(child: Text('Error: ${snapshot.error}'));
                 } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                  return const Center(child: Text('No medication inventory available.'));
+                  return const Center(
+                      child: Text('No medication inventory available.'));
                 } else {
                   // Extract medication data from the snapshot
                   Map<String, int> medicationQuantities = snapshot.data!;
@@ -116,7 +171,8 @@ class _MasterlistState extends State<Masterlist> {
                 } else if (snapshot.hasError) {
                   return Center(child: Text('Error: ${snapshot.error}'));
                 } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                  return const Center(child: Text('No medication inventory available.'));
+                  return const Center(
+                      child: Text('No medication inventory available.'));
                 } else {
                   // Sort the medication inventory data alphabetically based on med_name
                   List<medication_inventory> sortedMedicationInventory =
@@ -124,17 +180,20 @@ class _MasterlistState extends State<Masterlist> {
                   sortedMedicationInventory.sort((a, b) => a.med_name
                       .toLowerCase()
                       .compareTo(b.med_name.toLowerCase()));
-      
+
                   // Build rows for the table using sorted data
-                  List<List<String>> rows = sortedMedicationInventory.map((med) {
+                  List<List<String>> rows =
+                      sortedMedicationInventory.map((med) {
                     return [med.med_name, med.med_quan.toString()];
                   }).toList();
-      
+
                   return MyTable(columns: columns, rows: rows);
                 }
               },
             ),
-            const SizedBox(height: 25,),
+            const SizedBox(
+              height: 15,
+            ),
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
