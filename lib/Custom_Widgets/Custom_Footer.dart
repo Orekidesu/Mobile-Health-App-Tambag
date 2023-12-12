@@ -2,8 +2,11 @@ import 'package:flutter/material.dart';
 import '../Screen/Masterlist.dart';
 import '../Screen/addProfilePage.dart';
 import '../constants/light_constants.dart';
+import '../Custom_Widgets/CustomActionButton.dart';
 
 class ProfileAndMasterlistRow extends StatelessWidget {
+  const ProfileAndMasterlistRow({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Row(
@@ -14,7 +17,18 @@ class ProfileAndMasterlistRow extends StatelessWidget {
         const SizedBox(width: 10),
         _buildAddProfileLabels(),
         const SizedBox(width: 20),
-        _buildMedicationMasterlistButton(context),
+        CustomActionButton(
+          foreground: periwinkleColor,
+          background: Colors.white,
+          borderColor: periwinkleColor,
+          borderWidth: 2,
+          onPressed: () {
+            const Masterlist();
+          },
+          buttonText: "MEDICATION\nMASTERLIST",
+          fontWeight: FontWeight.bold,
+
+        ),
       ],
     );
   }
@@ -41,7 +55,7 @@ class ProfileAndMasterlistRow extends StatelessWidget {
   }
 
   Widget _buildAddProfileLabels() {
-    return Column(
+    return const Column(
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -67,60 +81,6 @@ class ProfileAndMasterlistRow extends StatelessWidget {
           ),
         ),
       ],
-    );
-  }
-
-  Widget _buildMedicationMasterlistButton(BuildContext context) {
-    return ElevatedButton(
-      onPressed: () {
-        showDialog(
-          context: context,
-          builder: (BuildContext context) {
-            return AlertDialog(
-              title: const Text('Masterlist'),
-              content: const Text('Redirected to Masterlist.'),
-              actions: <Widget>[
-                ElevatedButton(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const Masterlist(),
-                      ),
-                    );
-                  },
-                  child: const Text('OK'),
-                ),
-              ],
-            );
-          },
-        );
-      },
-      style: ElevatedButton.styleFrom(
-        backgroundColor: Colors.white,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10.0),
-        ),
-        side: const BorderSide(
-          color: periwinkleColor, // Change to your desired color
-          width: 1.0,
-        ),
-      ),
-      child: const Padding(
-        padding: EdgeInsets.all(3.0),
-        child: SizedBox(
-          width: 100,
-          child: Text(
-            'MEDICATION\nMASTERLIST',
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-              color: periwinkleColor, // Change to your desired color
-              height: 1.3,
-            ),
-          ),
-        ),
-      ),
     );
   }
 }
