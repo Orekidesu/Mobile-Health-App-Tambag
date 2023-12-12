@@ -23,7 +23,12 @@ class ProfileAndMasterlistRow extends StatelessWidget {
           borderColor: periwinkleColor,
           borderWidth: 2,
           onPressed: () {
-            const Masterlist();
+            Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const Masterlist(),
+            ),
+          );
           },
           buttonText: "MEDICATION\nMASTERLIST",
           fontWeight: FontWeight.bold,

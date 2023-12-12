@@ -58,7 +58,7 @@
                   child: Dashboard_List_Firebase(),
                 ),
                 const SizedBox(height: 20),
-                ProfileAndMasterlistRow(),
+                const ProfileAndMasterlistRow(),
               ],
             ),
           ),

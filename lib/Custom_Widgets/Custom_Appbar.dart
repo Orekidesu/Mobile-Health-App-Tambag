@@ -35,7 +35,6 @@ class _Custom_AppbarState extends State<Custom_Appbar> {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        const SizedBox(width: 10),
         if (widget.hasbackIcon) Custom_Button(hasIcon: true, icon: Icons.arrow_back, color: periwinkleColor,iconColor: widget.iconColor,onTap: widget.DistinationBack),
         const SizedBox(width: 10),
         Expanded(
