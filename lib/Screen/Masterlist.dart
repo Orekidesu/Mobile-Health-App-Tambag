@@ -51,7 +51,7 @@ class _MasterlistState extends State<Masterlist> {
                     'Add Medication',
                     style: TextStyle(
                       color: periwinkleColor,
-                      fontSize: 25,
+                      fontSize: 20,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
@@ -70,7 +70,7 @@ class _MasterlistState extends State<Masterlist> {
                 ],
               ),
               const SizedBox(height: 10),
-              const addMedication(),
+              const AddMedication(),
             ],
           ),
         );
