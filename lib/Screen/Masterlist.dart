@@ -86,9 +86,6 @@ class _MasterlistState extends State<Masterlist> {
                     return [entry.key, entry.value.toString()];
                   }).toList();
 
-                  // Assuming you have a list of columns defined somewhere
-                  List<String> columns = ['Medication Name', 'Total Quantity'];
-
                   return MyTable(columns: columns, rows: rows);
                 }
               },
