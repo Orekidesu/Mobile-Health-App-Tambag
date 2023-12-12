@@ -3,14 +3,13 @@
   import '../Custom_Widgets/Custom_Footer.dart';
   import 'package:cloud_firestore/cloud_firestore.dart';
   import '../Custom_Widgets/Custom_Appbar.dart';
-  import 'package:mobile_health_app_tambag/constants/light_constants.dart';
+  import '../constants/light_constants.dart';
   import '../Custom_Widgets/Dashboard_List_Firebase.dart';
   import '../functions/custom_functions.dart';
 
   class Patient {
     final String id;
     final String name;
-
     Patient({required this.id, required this.name});
   }
 

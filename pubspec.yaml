@@ -1,5 +1,5 @@
-name: mobile_health_app_tambag
-description: A new Flutter project.
+name: Tambag
+description: A health app.
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
@@ -39,6 +39,9 @@ dependencies:
   cloud_firestore: ^4.13.2
   firebase_auth: ^4.15.0
   font_awesome_flutter: ^10.6.0
+  connectivity_plus: ^5.0.2
+  flutter_slidable: ^3.0.1
+  
 
 dev_dependencies:
   flutter_test:

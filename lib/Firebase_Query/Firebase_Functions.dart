@@ -1,6 +1,6 @@
   //Function to return all patients
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:mobile_health_app_tambag/Screen/Dashboard.dart';
+import '../Screen/Dashboard.dart';
 
 late CollectionReference patientsCollection =FirebaseFirestore.instance.collection('patients');
 

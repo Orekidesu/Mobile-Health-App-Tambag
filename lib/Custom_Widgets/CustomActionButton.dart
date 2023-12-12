@@ -27,7 +27,7 @@ class CustomActionButton extends StatelessWidget {
             side: const BorderSide(color: Colors.blue, width: 0),
           ),
         ),
-        child: Text(buttonText.toUpperCase()),
+        child: Text(buttonText),
       ),
     );
   }

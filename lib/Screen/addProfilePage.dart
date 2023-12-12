@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:mobile_health_app_tambag/Screen/Dashboard.dart';
+import '../Screen/Dashboard.dart';
 import '../constants/light_constants.dart';
 
 class AddProfilePage extends StatefulWidget {

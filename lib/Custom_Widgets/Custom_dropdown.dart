@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:mobile_health_app_tambag/constants/light_constants.dart';
+import '../constants/light_constants.dart';
 
 class CustomDropdown extends StatefulWidget {
   final List<String> items;

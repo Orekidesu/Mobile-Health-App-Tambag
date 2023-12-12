@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:mobile_health_app_tambag/Screen/Dashboard.dart';
-import 'package:mobile_health_app_tambag/custom_widgets/text_widget_info.dart';
+import '../Screen/Dashboard.dart';
+import '../custom_widgets/text_widget_info.dart';
 import '../Custom_Widgets/CustomActionButton.dart';
 import '../constants/light_constants.dart';
 import '../Custom_Widgets/Custom_Appbar.dart';

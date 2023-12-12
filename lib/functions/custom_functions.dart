@@ -73,10 +73,11 @@ void showSignOutDialog(BuildContext context) {
     context: context,
     builder: (BuildContext context) {
       return CustomDialog(
+        buttonText: 'Log out',
         onSignOut: () {
           signout(context);
         },
-        message: 'Are you sure to Signout?',
+        message: 'Log out of your Account?',
       );
     },
   );

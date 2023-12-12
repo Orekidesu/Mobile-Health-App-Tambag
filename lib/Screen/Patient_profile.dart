@@ -2,11 +2,10 @@
 
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:mobile_health_app_tambag/Screen/Dashboard.dart';
-import 'package:mobile_health_app_tambag/custom_widgets/text_widget_info.dart';
+import '../Screen/Dashboard.dart';
+import '../custom_widgets/text_widget_info.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:mobile_health_app_tambag/functions/custom_functions.dart';
-import '../constants/light_constants.dart';
+import '../functions/custom_functions.dart';
 import '../Custom_Widgets/Custom_Appbar.dart';
 
 class Patient_Profile extends StatefulWidget {

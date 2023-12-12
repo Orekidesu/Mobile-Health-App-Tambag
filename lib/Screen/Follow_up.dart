@@ -1,8 +1,8 @@
 // ignore_for_file: non_constant_identifier_names
 
 import 'package:flutter/material.dart';
-import 'package:mobile_health_app_tambag/Custom_Widgets/CustomActionButton.dart';
-import 'package:mobile_health_app_tambag/functions/custom_functions.dart';
+import '../Custom_Widgets/CustomActionButton.dart';
+import '../functions/custom_functions.dart';
 import '../Custom_Widgets/Custom_dropdown.dart';
 import 'Dashboard.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -265,22 +265,21 @@ class _Follow_upState extends State<Follow_up> {
                           children: [
                             const SizedBox(height: 10.0),
                             const Text(
-                              'ADD FOLLOW-UP',
+                              'Add a Follow-up',
                               style: TextStyle(
                                   fontSize: 22.0,
                                   color: periwinkleColor,
                                   fontWeight: FontWeight
                                       .bold), // Adjust the font size as needed
                             ),
+                            const SizedBox(height: 8,),
                             const Text(
-                              'PHYSICIAN:',
+                              'Physician:',
                               style: TextStyle(
+                                  fontWeight: FontWeight.bold,
                                   fontSize: 16.0,
                                   color:
                                       periwinkleColor), // Adjust the font size as needed
-                            ),
-                            const SizedBox(
-                              height: 10,
                             ),
                             TextField(
                               controller: physicianController,
@@ -297,15 +296,14 @@ class _Follow_upState extends State<Follow_up> {
                               ),
                               // Additional properties for the TextField can be added here
                             ),
+                            const SizedBox(height: 15,),
                             const Text(
-                              'FACILITY:',
+                              'Facility:',
                               style: TextStyle(
+                                  fontWeight: FontWeight.bold,
                                   fontSize: 16.0,
                                   color:
                                       periwinkleColor), // Adjust the font size as needed
-                            ),
-                            const SizedBox(
-                              height: 10,
                             ),
                             TextField(
                               controller: facilityController,
@@ -322,14 +320,15 @@ class _Follow_upState extends State<Follow_up> {
                               ),
                               // Additional properties for the TextField can be added here
                             ),
+                            const SizedBox(height: 15),
                             const Text(
-                              'DATE:',
+                              'Date:',
                               style: TextStyle(
+                                  fontWeight: FontWeight.bold,
                                   fontSize: 16.0,
                                   color:
                                       periwinkleColor), // Adjust the font size as needed
                             ),
-                            const SizedBox(height: 10),
                             Row(
                               children: [
                                 // Month Dropdown
@@ -378,16 +377,16 @@ class _Follow_upState extends State<Follow_up> {
                               ],
                             ),
                             const SizedBox(
-                              height: 10,
+                              height: 15,
                             ),
                             const Text(
                               'Time:',
                               style: TextStyle(
+                                  fontWeight: FontWeight.bold,
                                   fontSize: 16.0,
                                   color:
                                       periwinkleColor), // Adjust the font size as needed
                             ),
-                            const SizedBox(height: 10),
                             Row(
                               children: [
                                 // Hour Dropdown
@@ -414,7 +413,7 @@ class _Follow_upState extends State<Follow_up> {
                             onPressed: () {
                               submitFollowUpData();
                             },
-                            buttonText: "SUBMIT",
+                            buttonText: "Submit",
                           ),
                             ),
                           ],

@@ -1,6 +1,6 @@
 // ignore_for_file: camel_case_types, non_constant_identifier_names
 import 'package:flutter/material.dart';
-import 'package:mobile_health_app_tambag/constants/light_constants.dart';
+import '../constants/light_constants.dart';
 import 'Custom_ButtonRound.dart';
 
 class Custom_Appbar extends StatefulWidget {

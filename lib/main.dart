@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart'; // Import Firebase Auth
-import 'package:mobile_health_app_tambag/Screen/Login.dart';
-import 'package:mobile_health_app_tambag/Screen/Dashboard.dart'; // Import Dashboard
+import '../Screen/Login.dart';
+import '../Screen/Dashboard.dart'; // Import Dashboard
 import 'firebase_options.dart';
 
 Future<void> main() async {
@@ -22,16 +22,13 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Mobile Health App Tambag',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
-      ),
       home: StreamBuilder(
         stream: FirebaseAuth.instance.authStateChanges(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const CircularProgressIndicator(); // Display loading indicator while checking authentication state.
-          } else {
+          } 
+          else {
             if (snapshot.hasData) {
               // return Patient_Profile();
               return const Dashboard();
