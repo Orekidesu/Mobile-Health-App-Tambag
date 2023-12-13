@@ -1,11 +1,11 @@
-// ignore_for_file: library_private_types_in_public_api, file_names, camel_case_types
+// ignore_for_file: library_private_types_in_public_api, file_names, camel_case_types, use_build_context_synchronously
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-
 import '../constants/light_constants.dart';
+import '../functions/custom_functions.dart';
 import 'CustomActionButton.dart';
-import 'Custom_Dialog.dart';
+import '../Screen/Masterlist.dart';
 
 class AddMedication extends StatefulWidget {
   const AddMedication({Key? key}) : super(key: key);
@@ -17,7 +17,7 @@ class AddMedication extends StatefulWidget {
 class _AddMedicationState extends State<AddMedication> {
   final TextEditingController medicationController = TextEditingController();
   final TextEditingController quantityController = TextEditingController();
-  bool newMedication = false;
+  bool newMedication = true;
 
   List<String> medicationNames = []; // List to store medication names
   String? selectedMedication; // Currently selected medication
@@ -47,44 +47,48 @@ class _AddMedicationState extends State<AddMedication> {
         medicationNames = names;
       });
     } catch (error) {
-      print('Error fetching medication names: $error');
+      showErrorNotification('Error fetching medication names: $error');
     }
   }
 
-  Future<void> updateMedicationInventory(String medName, int additionalMedQuan) async {
-  try {
-    // Reference to the medication_inventory collection
-    CollectionReference<Map<String, dynamic>> collectionReference =
-        FirebaseFirestore.instance.collection('medication_inventory');
+  Future<void> updateMedicationInventory(String medName, int newMedQuan) async {
+    try {
+      // Reference to the medication_inventory collection
+      CollectionReference<Map<String, dynamic>> collectionReference =
+          FirebaseFirestore.instance.collection('medication_inventory');
 
-    // Query for documents with a specific med_name
-    QuerySnapshot<Map<String, dynamic>> querySnapshot =
-        await collectionReference.where('med_name', isEqualTo: medName).get();
+      // Query for documents with a specific med_name
+      QuerySnapshot<Map<String, dynamic>> querySnapshot =
+          await collectionReference.where('med_name', isEqualTo: medName).get();
 
-    // Iterate through the query results and update each document
-    for (QueryDocumentSnapshot<Map<String, dynamic>> documentSnapshot in querySnapshot.docs) {
-      // Reference to the specific document
-      DocumentReference<Map<String, dynamic>> documentReference =
-          collectionReference.doc(documentSnapshot.id);
+      // Check if there are documents with the specified med_name
+      if (querySnapshot.docs.isNotEmpty) {
+        // Iterate through the query results and update each document
+        for (QueryDocumentSnapshot<Map<String, dynamic>> documentSnapshot
+            in querySnapshot.docs) {
+          // Reference to the specific document
+          DocumentReference<Map<String, dynamic>> documentReference =
+              collectionReference.doc(documentSnapshot.id);
 
-      // Get the existing med_quan value
-      int existingMedQuan = documentSnapshot.data()['med_quan'] as int;
+          // Use the update method to set the med_quan field to the new value
+          await documentReference.update({
+            'med_quan': newMedQuan,
+          });
+        }
 
-      // Calculate the new med_quan value by adding the existing value with the additional value
-      int newMedQuan = existingMedQuan + additionalMedQuan;
-
-      // Use the update method to update the med_quan field
-      await documentReference.update({
-        'med_quan': newMedQuan,
-      });
+        showSuccessNotification('Medication Inventory updated successfully.');
+        goToPage(context, const Masterlist());
+      } else {
+        // If there are no documents with the specified med_name, handle accordingly
+        showErrorNotification('No medication found with the specified name.');
+        goToPage(context, const Masterlist());
+      }
+    } catch (error) {
+      // Show error notification
+      showErrorNotification('Error updating Medication Inventory: $error');
+      goToPage(context, const Masterlist());
     }
-
-    print('Medication Inventory updated successfully.');
-  } catch (error) {
-    print('Error updating Medication Inventory: $error');
   }
-}
-
 
   Future<void> addNewMedication(String medName, int medQuan) async {
     try {
@@ -98,9 +102,11 @@ class _AddMedicationState extends State<AddMedication> {
         'med_quan': medQuan,
       });
 
-      print('New Medication added successfully.');
+      showSuccessNotification('New Medication added successfully.');
+      goToPage(context, const Masterlist());
     } catch (error) {
-      print('Error adding new Medication: $error');
+      showErrorNotification('Error adding new Medication: $error');
+      goToPage(context, const Masterlist());
     }
   }
 
@@ -110,6 +116,14 @@ class _AddMedicationState extends State<AddMedication> {
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        Text(
+          newMedication ? 'Add Medication' : 'Update Medication',
+          style: const TextStyle(
+            color: periwinkleColor,
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
         if (!newMedication)
           DropdownButton<String?>(
             value: selectedMedication,
@@ -190,7 +204,8 @@ class _AddMedicationState extends State<AddMedication> {
           controller: quantityController,
           decoration: InputDecoration(
             border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(10.0), // Adjust the radius as needed
+              borderRadius:
+                  BorderRadius.circular(10.0), // Adjust the radius as needed
               borderSide: const BorderSide(
                 color: periwinkleColor, // Set the border color
                 width: 4,
@@ -214,12 +229,12 @@ class _AddMedicationState extends State<AddMedication> {
                   );
                 } else {
                   updateMedicationInventory(
-                    medicationController.text,
+                    selectedMedication!,
                     int.tryParse(quantityController.text) ?? 0,
                   );
                 }
               },
-              buttonText: 'Submit',
+              buttonText: newMedication ? 'Add' : 'Update',
             ),
           ],
         )

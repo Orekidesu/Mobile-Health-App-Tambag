@@ -7,9 +7,9 @@ import '../Screen/Login.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import '../constants/light_constants.dart';
 
-void showSuccessNotification() {
+void showSuccessNotification(String msg) {
   Fluttertoast.showToast(
-      msg: 'Signin Success',
+      msg: msg,
       toastLength: Toast.LENGTH_LONG,
       gravity: ToastGravity.TOP,
       timeInSecForIosWeb: 3,
@@ -36,7 +36,7 @@ void showErrorNotification(String? errorMessage) {
 }
 
 void goToPage(BuildContext context, Widget? page) {
-  Navigator.pushReplacement(
+  Navigator.push(
     context,
     MaterialPageRoute(
       builder: (context) => page!,

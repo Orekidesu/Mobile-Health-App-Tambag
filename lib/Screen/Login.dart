@@ -43,7 +43,7 @@ class _LoginState extends State<Login> {
         password: password,
       );
       // Show success notification and auto-close
-      showSuccessNotification();
+      showSuccessNotification('Signin Sucsess');
       // ignore: use_build_context_synchronously
       goToPageNoReturn(context,const Dashboard());
         } on FirebaseAuthException catch (e) {

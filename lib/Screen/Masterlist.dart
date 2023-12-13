@@ -1,4 +1,4 @@
-// ignore_for_file: non_constant_identifier_names, camel_case_types, file_names
+// ignore_for_file: non_constant_identifier_names, camel_case_types, file_names, library_private_types_in_public_api
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -19,14 +19,21 @@ class medication_inventory {
 }
 
 class Masterlist extends StatefulWidget {
+  
   // ignore: use_key_in_widget_constructors
-  const Masterlist({Key? key});
+  const Masterlist({Key? key}) : super(key: key);
+
 
   @override
   State<Masterlist> createState() => _MasterlistState();
+
 }
 
 class _MasterlistState extends State<Masterlist> {
+
+final Future<Map<String, int>> _medicationQuantitiesFuture = getMedicationQuantities();
+final Future<List<medication_inventory>> _allMedicalInventoryFuture = getAllMedicalInventory();
+
   List<String> columns = ['Medication', 'Quantity'];
 
   void _showMyDialog(BuildContext context) {
@@ -45,16 +52,9 @@ class _MasterlistState extends State<Masterlist> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                mainAxisAlignment: MainAxisAlignment.end,
+
                 children: [
-                  const Text(
-                    'Add Medication',
-                    style: TextStyle(
-                      color: periwinkleColor,
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
                   IconButton(
                     onPressed: () {
                       Navigator.of(context).pop();
@@ -119,7 +119,7 @@ class _MasterlistState extends State<Masterlist> {
             ),
             const SizedBox(height: 10),
             FutureBuilder<Map<String, int>>(
-              future: getMedicationQuantities(),
+              future: _medicationQuantitiesFuture,
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return const Center(child: CupertinoActivityIndicator());
@@ -164,7 +164,7 @@ class _MasterlistState extends State<Masterlist> {
             ),
             const SizedBox(height: 10),
             FutureBuilder<List<medication_inventory>>(
-              future: getAllMedicalInventory(),
+              future: _allMedicalInventoryFuture,
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return const Center(child: CupertinoActivityIndicator());
@@ -222,3 +222,4 @@ class _MasterlistState extends State<Masterlist> {
     );
   }
 }
+
