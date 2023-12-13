@@ -93,7 +93,7 @@ final Future<List<medication_inventory>> _allMedicalInventoryFuture = getAllMedi
               Baranggay: "MASTERLIST",
               hasbackIcon: true,
               hasRightIcon: true,
-              icon: Icons.add,
+              icon: Icons.update,
               iconColor: Colors.white,
               DistinationBack: () => goToPage(context, const Dashboard()),
               Distination: () {

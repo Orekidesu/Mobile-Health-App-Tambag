@@ -17,7 +17,7 @@ class AddMedication extends StatefulWidget {
 class _AddMedicationState extends State<AddMedication> {
   final TextEditingController medicationController = TextEditingController();
   final TextEditingController quantityController = TextEditingController();
-  bool newMedication = true;
+  bool newMedication = false;
 
   List<String> medicationNames = []; // List to store medication names
   String? selectedMedication; // Currently selected medication
