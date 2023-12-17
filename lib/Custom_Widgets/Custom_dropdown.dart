@@ -21,14 +21,14 @@ class _CustomDropdownState extends State<CustomDropdown> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 60,
+      height: 53,
       width: 40,
       decoration: BoxDecoration(
         border: Border.all(
           color: periwinkleColor,
           width: 2.0, // Set the desired border thickness
         ),
-        borderRadius: BorderRadius.circular(8.0),
+        borderRadius: BorderRadius.circular(15.0),
       ),
       padding: const EdgeInsets.all(10),
       child: DropdownButton<String>(

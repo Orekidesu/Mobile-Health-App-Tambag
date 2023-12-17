@@ -12,9 +12,13 @@ class Custom_Appbar extends StatefulWidget {
   final bool hasRightIcon;
   final VoidCallback? Distination;
   final VoidCallback? DistinationBack;
+  final bool hasBrgy;
+  final double titleFontSize;
 
   const Custom_Appbar({
     Key? key,
+    this.titleFontSize = 20,
+    this.hasBrgy = true,
     required this.Apptitle,
     this.Distination,
     this.iconColor,
@@ -44,13 +48,13 @@ class _Custom_AppbarState extends State<Custom_Appbar> {
             children: [
               Text(
                 widget.Apptitle,
-                style: const TextStyle(
+                style: TextStyle(
                   color: periwinkleColor,
-                  fontSize: 20.0,
+                  fontSize: widget.titleFontSize,
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              Text(
+              if (widget.hasBrgy) Text(
                 widget.Baranggay,
                 style: const TextStyle(
                   color: periwinkleColor,

@@ -131,24 +131,24 @@ class _Patient_ProfileState extends State<Patient_Profile> {
                                       CrossAxisAlignment.start,
                                   children: [
                                     CustomTextWidget(
-                                      text1: 'NAME:',
+                                      text1: 'Name:',
                                       text2: patientInfo['name'] ?? 'N/A',
                                     ),
                                     CustomTextWidget(
-                                      text1: 'AGE:',
+                                      text1: 'Age:',
                                       text2: patientInfo['age'] ?? 'N/A',
                                     ),
                                     CustomTextWidget(
-                                      text1: 'ADDRESS:',
+                                      text1: 'Address:',
                                       text2: patientInfo['address'] ?? 'N/A',
                                     ),
                                     CustomTextWidget(
-                                      text1: 'PHYSICIAN:',
+                                      text1: 'Physician:',
                                       text2:
                                           patientInfo['physician'] ?? 'N/A',
                                     ),
                                     CustomTextWidget(
-                                      text1: 'CONTACT NO.:',
+                                      text1: 'Mobile:',
                                       text2: patientInfo['contact_number'] ??
                                           'N/A',
                                     ),
