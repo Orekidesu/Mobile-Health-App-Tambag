@@ -1,7 +1,5 @@
 // ignore_for_file: library_private_types_in_public_api, file_names, camel_case_types, use_build_context_synchronously
 
-import 'dart:math';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import '../constants/light_constants.dart';
