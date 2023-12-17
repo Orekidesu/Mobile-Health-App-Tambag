@@ -52,6 +52,7 @@ class _Custom_AppbarState extends State<Custom_Appbar> {
                   color: periwinkleColor,
                   fontSize: widget.titleFontSize,
                   fontWeight: FontWeight.bold,
+                  decoration: TextDecoration.none,
                 ),
               ),
               if (widget.hasBrgy) Text(
@@ -59,6 +60,7 @@ class _Custom_AppbarState extends State<Custom_Appbar> {
                 style: const TextStyle(
                   color: periwinkleColor,
                   fontSize: 15.0,
+                  decoration: TextDecoration.none,  
                 ),
               ),
             ],

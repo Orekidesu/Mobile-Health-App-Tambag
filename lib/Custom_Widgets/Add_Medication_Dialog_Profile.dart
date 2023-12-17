@@ -1,4 +1,6 @@
 // Import necessary libraries
+// ignore_for_file: library_private_types_in_public_api
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import '../constants/light_constants.dart';
@@ -79,8 +81,8 @@ class _AddMedicationProfileState extends State<AddMedicationProfile> {
       Map<String, dynamic> medicationDetails = {
         'med_name': medName,
         'med_ind': medInd,
-        'dosage': dosage,
-        'frequency': frequency,
+        'med_quan': int.parse(dosage),
+        'dosage':'$dosage mg usa kada tablets kada $frequency ka-oras\n$medInd',
       };
 
       // Call the callback function to update medicationList in File 2
@@ -248,8 +250,8 @@ class _AddMedicationProfileState extends State<AddMedicationProfile> {
                   );
                 } else {
                   // Handle the case where selectedMedName is null, e.g., show an error message.
-                  print('Please select a medication before adding.');
                 }
+                Navigator.pop(context);
               },
               buttonText: 'Add',
             ),

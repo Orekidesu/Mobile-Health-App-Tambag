@@ -430,7 +430,7 @@ class _Follow_upState extends State<Follow_up> {
                               ],
                             ),
                             const SizedBox(
-                              height: 15,
+                              height: 10,
                             ),
                             Center(
                               child: CustomActionButton(

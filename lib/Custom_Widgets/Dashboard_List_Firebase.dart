@@ -1,38 +1,149 @@
-// ignore_for_file: camel_case_types, library_private_types_in_public_api
+// ignore_for_file: camel_case_types, library_private_types_in_public_api, use_build_context_synchronously, file_names
 
+import 'package:Tambag/functions/custom_functions.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import '../Screen/Dashboard.dart';
 import '../Firebase_Query/Firebase_Functions.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'Custom_Dialog.dart';
 import 'PatientCard.dart';
 
-class Dashboard_List_Firebase extends StatefulWidget {
-  const Dashboard_List_Firebase({super.key});
+class DashboardListFirebase extends StatefulWidget {
+  
+  const DashboardListFirebase({Key? key}) : super(key: key);
 
   @override
-  _Dashboard_List_FirebaseState createState() =>
-      _Dashboard_List_FirebaseState();
+  _DashboardListFirebaseState createState() => _DashboardListFirebaseState();
 }
 
-class _Dashboard_List_FirebaseState extends State<Dashboard_List_Firebase> {
-  int tappedCardIndex = -1; // Initialize with an invalid index
+class _DashboardListFirebaseState extends State<DashboardListFirebase> {
+  int tappedCardIndex = -1;
+  late Future<List<Patient>> patientData;
 
- void doNothing(BuildContext context) {
+  @override
+  void initState() {
+    super.initState();
+    patientData = getAllPatients();
+  }
+
+
+  @override
+  void dispose() {
+    // Cancel or dispose of asynchronous operations here
+    super.dispose();
+  }
+
+  Future<void> deletePatient(String patientId) async {
+  try {
+    await deletePatientAndMedication(patientId);
+    await deletePatientFromFollowUpHistoryCollection(patientId);
+
+    // Refresh the patient list
     setState(() {
-      // Do nothing with the context
+      patientData = getAllPatients();
     });
+
+  } catch (error) {
+    if (mounted) {
+      // Handle error: Show a Snackbar or log the error.
+      showErrorNotification('Error deleting patient: $error');
+    }
+  }
+}
+
+
+  void deleConfirmation(String id,BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return CustomDialog(
+          buttonText: 'Delete',
+          onSignOut: () {
+            deletePatient(id);
+            Navigator.pop(context); // Assuming you have access to the 'context' variable
+          },
+          message: 'Are you sure to delete?',
+        );
+      },
+    );
+  }
+
+  Future<void> deleteSubcollectionDocuments(String documentId, String subcollectionPath) async {
+    final subcollectionRef = patientsCollection.doc(documentId).collection(subcollectionPath);
+    final subcollectionSnapshot = await subcollectionRef.get();
+
+    for (final doc in subcollectionSnapshot.docs) {
+      await subcollectionRef.doc(doc.id).delete();
+    }
+  }
+
+
+  Future<void> deleteSubcollection(String documentId, String subcollectionPath) async {
+    await deleteSubcollectionDocuments(documentId, subcollectionPath);
+    final documentRef = patientsCollection.doc(documentId);
+    await documentRef.collection(subcollectionPath).doc().delete();
+  }
+
+  Future<void> deletePatientAndMedication(String patientId) async {
+    try {
+      // Delete patient document from the "patients" collection
+      QuerySnapshot<Object?> rawPatientSnapshot = await patientsCollection.where('id', isEqualTo: patientId).get();
+
+      QuerySnapshot<Map<String, dynamic>>? patientQuerySnapshot = rawPatientSnapshot as QuerySnapshot<Map<String, dynamic>>?;
+
+      if (patientQuerySnapshot == null) {
+        // Handle case where cast fails (data doesn't match expected type)
+        showErrorNotification('Unexpected data format. Please contact support.');
+        return;
+      }
+
+      // Delete the documents found in the query
+      for (QueryDocumentSnapshot<Map<String, dynamic>> patientDoc in patientQuerySnapshot.docs) {
+        // Delete the subcollection and its documents
+        await deleteSubcollection(patientDoc.id, 'medications');
+        // Delete the patient document
+        await patientDoc.reference.delete();
+      }
+    } catch (error) {
+      showErrorNotification('Error deleting patient and medication: $error');
+      rethrow; // Re-throw the error after logging
+    }
+  }
+
+
+  Future<void> deletePatientFromFollowUpHistoryCollection(String patientId) async {
+    try {
+      // Use where to find the document with the matching patientId
+      QuerySnapshot<Map<String, dynamic>> querySnapshot =
+          await FirebaseFirestore.instance
+              .collection('follow_up_history')
+              .where('id', isEqualTo: patientId)
+              .get();
+
+      // Delete the documents found in the query
+      for (QueryDocumentSnapshot<Map<String, dynamic>> doc in querySnapshot.docs) {
+        await doc.reference.delete();
+      }
+    } catch (error) {
+      showErrorNotification('Error deleting patient from follow_up_history collection: $error');
+      rethrow; // Re-throw the error after logging
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<List<Patient>>(
-      future: getAllPatients(),
+      future: patientData,
       builder: (context, snapshot) {
         if (snapshot.hasError) {
           return Text('Error: ${snapshot.error}');
         } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-          return const CupertinoActivityIndicator();
+          return const Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [Text('No patient')],
+                );
         } else {
           return ListView.builder(
             itemCount: snapshot.data!.length,
@@ -42,20 +153,13 @@ class _Dashboard_List_FirebaseState extends State<Dashboard_List_Firebase> {
               return Container(
                 margin: const EdgeInsets.all(4.0),
                 child: Slidable(
-                    // Specify a key if the Slidable is dismissible.
-                  key: const ValueKey(0),
+                  key: ValueKey(index),
                   endActionPane: ActionPane(
                     motion: const StretchMotion(),
-                
-                    // A pane can dismiss the Slidable.
-                    dismissible: DismissiblePane(onDismissed: () {}),
-                
-                    // All actions are defined in the children parameter.
                     children: [
-                      // A SlidableAction can have an icon and/or a label.
                       SlidableAction(
                         borderRadius: const BorderRadius.all(Radius.circular(10)),
-                        onPressed: doNothing,
+                        onPressed: (context) => deleConfirmation(patient.id,context),
                         backgroundColor: Colors.red,
                         foregroundColor: Colors.white,
                         icon: Icons.delete,
@@ -69,10 +173,11 @@ class _Dashboard_List_FirebaseState extends State<Dashboard_List_Firebase> {
                     index: index,
                     tappedCardIndex: tappedCardIndex,
                     onTap: () {
-                      // Update the tapped card
-                      setState(() {
-                        tappedCardIndex = index;
-                      });
+                      if (mounted) {
+                        setState(() {
+                          tappedCardIndex = index;
+                        });
+                      }
                     },
                   ),
                 ),
@@ -84,5 +189,3 @@ class _Dashboard_List_FirebaseState extends State<Dashboard_List_Firebase> {
     );
   }
 }
-
-

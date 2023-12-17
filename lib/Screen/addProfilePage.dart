@@ -1,7 +1,9 @@
-// ignore_for_file: library_private_types_in_public_api
+// ignore_for_file: library_private_types_in_public_api, use_build_context_synchronously
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import '../Custom_Widgets/Add_Medication_Dialog_Profile.dart';
+import '../Custom_Widgets/CustomActionButton.dart';
 import '../Custom_Widgets/Custom_Appbar.dart';
 import '../Custom_Widgets/Custom_TextField.dart';
 import '../Screen/Dashboard.dart';
@@ -22,6 +24,79 @@ class _AddProfilePageState extends State<AddProfilePage> {
   TextEditingController contactNumberController = TextEditingController();
   TextEditingController physicianController = TextEditingController();
   List<Map<String, dynamic>> medicationList = [];
+  String highestIdValue = '';
+
+  @override
+  void initState()  {
+    super.initState();
+  }
+
+  final CollectionReference patientsCollection = FirebaseFirestore.instance.collection('patients');
+  final CollectionReference followUpCollection = FirebaseFirestore.instance.collection('follow_up_history');
+
+  Future<void> addProfileToFirebase() async {
+    try {
+      // Add profile data to the patients collection
+      String id = await getHighestIdDocument();
+      DocumentReference profileReference =
+          await patientsCollection.add(getProfileData(id));
+
+      await followUpCollection.add(newFolowup(id));
+
+      // Add medication data to the subcollection
+      CollectionReference medicationCollection =
+          profileReference.collection('medications');
+      for (Map<String, dynamic> medicationDetails in medicationList) {
+        await medicationCollection.add(medicationDetails);
+      }
+      showSuccessNotification('Successfully added');
+    } catch (e) {
+      showErrorNotification('Error adding profile to Firebase: $e');
+    }
+  }
+
+  Future<String> getHighestIdDocument() async {
+    try {
+      // Replace 'patients' with your collection name
+      QuerySnapshot querySnapshot = await patientsCollection
+          .orderBy('id', descending: true)
+          .limit(1)
+          .get();
+
+      // Check if there are any documents
+      if (querySnapshot.docs.isNotEmpty) {
+        // Access the document with the highest 'id' value
+        DocumentSnapshot highestIdDocument = querySnapshot.docs.first;
+
+        // Access the 'id' field value from the document
+        String highestIdValue = (int.parse(highestIdDocument['id']) + 1).toString();
+        return highestIdValue;
+      } else {
+        return '1'; // Return a default value if no documents are found
+      }
+    } catch (e) {
+      return ''; // Return a default value in case of an error
+    }
+  }
+
+
+  Map<String, dynamic> getProfileData(String id) {
+    return {
+      'name': nameController.text,
+      'age': ageController.text,
+      'address': addressController.text,
+      'contact_number': contactNumberController.text,
+      'physician': physicianController.text,
+      'id' : id,
+    };
+  }
+
+  Map<String, dynamic> newFolowup(String id) {
+    return {
+      'isDone': true,
+      'id' : id,
+    };
+  }
 
   void _showMyDialog(BuildContext context) {
     showDialog<void>(
@@ -166,11 +241,11 @@ class _AddProfilePageState extends State<AddProfilePage> {
                                     ),
                                   ),
                                   subtitle: Text(
-                                    'Dosage: ${medicationDetails['dosage'] ?? ''} mg usa kada tablets kada ${medicationDetails['frequency'] ?? ''} ka-oras\n${medicationDetails['med_ind'] ?? ''}',
+                                    '${medicationDetails['dosage'] ?? ''}',
                                     style: const TextStyle(
                                       fontSize:
                                           13, // Adjust the font size as needed
-                                          color: periwinkleColor,
+                                      color: periwinkleColor,
                                     ),
                                   ),
                                   // You can customize the ListTile further if needed
@@ -217,6 +292,18 @@ class _AddProfilePageState extends State<AddProfilePage> {
                     controller: physicianController,
                     labelText: 'Physician:',
                   ),
+                  const SizedBox(height: 10,),
+                  Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                  CustomActionButton(  
+                      onPressed: () {
+                        addProfileToFirebase();
+                        goToPageNoReturn(context,const Dashboard());  
+                      },
+                      buttonText: "Add",
+                    ),
+                  ],)                  
                 ],
               ),
             ),

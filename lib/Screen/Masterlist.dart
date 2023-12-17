@@ -107,6 +107,8 @@ final Future<List<medication_inventory>> _allMedicalInventoryFuture = getAllMedi
                 fontWeight: FontWeight.bold,
                 color: periwinkleColor,
                 fontSize: 20,
+                decoration: TextDecoration.none,
+
               ),
             ),
             const Text(
@@ -115,6 +117,7 @@ final Future<List<medication_inventory>> _allMedicalInventoryFuture = getAllMedi
                 fontWeight: FontWeight.w100,
                 color: periwinkleColor,
                 fontSize: 15,
+                decoration: TextDecoration.none,
               ),
             ),
             const SizedBox(height: 10),
@@ -122,12 +125,17 @@ final Future<List<medication_inventory>> _allMedicalInventoryFuture = getAllMedi
               future: _medicationQuantitiesFuture,
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const Center(child: CupertinoActivityIndicator());
+                  return const Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      CupertinoActivityIndicator(),
+                      SizedBox(height: 16),
+                    ],
+                  );
                 } else if (snapshot.hasError) {
                   return Center(child: Text('Error: ${snapshot.error}'));
                 } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                  return const Center(
-                      child: Text('No medication inventory available.'));
+                  return const Text('Not available.',style: TextStyle(color: Colors.red, fontSize: 14,decoration: TextDecoration.none,),);
                 } else {
                   // Extract medication data from the snapshot
                   Map<String, int> medicationQuantities = snapshot.data!;
@@ -152,6 +160,7 @@ final Future<List<medication_inventory>> _allMedicalInventoryFuture = getAllMedi
                 fontWeight: FontWeight.bold,
                 color: periwinkleColor,
                 fontSize: 20,
+                decoration: TextDecoration.none,
               ),
             ),
             const Text(
@@ -160,6 +169,7 @@ final Future<List<medication_inventory>> _allMedicalInventoryFuture = getAllMedi
                 fontWeight: FontWeight.w100,
                 color: periwinkleColor,
                 fontSize: 15,
+                decoration: TextDecoration.none,
               ),
             ),
             const SizedBox(height: 10),
@@ -167,12 +177,17 @@ final Future<List<medication_inventory>> _allMedicalInventoryFuture = getAllMedi
               future: _allMedicalInventoryFuture,
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const Center(child: CupertinoActivityIndicator());
+                  return const Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      CupertinoActivityIndicator(),
+                      SizedBox(height: 16),
+                    ],
+                  );
                 } else if (snapshot.hasError) {
                   return Center(child: Text('Error: ${snapshot.error}'));
                 } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                  return const Center(
-                      child: Text('No medication inventory available.'));
+                  return const Text('Not available.',style: TextStyle(color: Colors.red, fontSize: 14,decoration: TextDecoration.none,),);
                 } else {
                   // Sort the medication inventory data alphabetically based on med_name
                   List<medication_inventory> sortedMedicationInventory =

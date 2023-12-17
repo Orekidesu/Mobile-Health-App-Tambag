@@ -125,31 +125,37 @@ class _AddMedicationState extends State<AddMedication> {
           ),
         ),
         if (!newMedication)
-          Container(
-            padding: const EdgeInsets.all(4.0),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(8.0),
-              border: Border.all(
-                color: periwinkleColor, // Set your desired border color
-                width: 2.0, // Set your desired border width
+          Row(
+            children: [
+              Expanded(
+                child: Container(
+                  padding: const EdgeInsets.all(4.0),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(8.0),
+                    border: Border.all(
+                      color: periwinkleColor, // Set your desired border color
+                      width: 2.0, // Set your desired border width
+                    ),
+                  ),
+                  child: DropdownButton<String?>(
+                    value: selectedMedication,
+                    onChanged: (String? value) {
+                      setState(() {
+                        selectedMedication = value;
+                      });
+                    },
+                    items: medicationNames.map((String medName) {
+                      return DropdownMenuItem<String>(
+                        value: medName,
+                        child: Text(medName),
+                      );
+                    }).toList(),
+                    hint: const Text('Select Medication'),
+                  ),
+                ),
               ),
-            ),
-            child: DropdownButton<String?>(
-              value: selectedMedication,
-              onChanged: (String? value) {
-                setState(() {
-                  selectedMedication = value;
-                });
-              },
-              items: medicationNames.map((String medName) {
-                return DropdownMenuItem<String>(
-                  value: medName,
-                  child: Text(medName),
-                );
-              }).toList(),
-              hint: const Text('Select Medication'),
-            ),
+            ],
           ),
         if (newMedication)
           Column(
