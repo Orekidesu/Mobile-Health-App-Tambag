@@ -240,217 +240,240 @@ class _Follow_upState extends State<Follow_up> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-        color: backgroundColor,
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Custom_Appbar(
-              Baranggay: "Baranggay Guadalupe",
-              Apptitle: "TAMBAG",
-              hasbackIcon: true,
-              hasRightIcon: false,
-              iconColor: Colors.white,
-              DistinationBack: () => goToPage(context, const Dashboard()),
-            ),
-            const SizedBox(
-              height: 10,
-            ),
-            Container(
-              margin: const EdgeInsets.all(8.0),
-              padding: const EdgeInsets.all(10.0),
-              decoration: BoxDecoration(
-                border: Border.all(
-                  color: periwinkleColor, // Set the border color to black
-                  width: 2.0,
-                ),
-                borderRadius:
-                    BorderRadius.circular(10.0), // Adjust the radius as needed
-                color: Colors.white,
+      body: SafeArea(
+        child: Container(
+          height: MediaQuery.of(context).size.height, // Adjust as needed
+          color: backgroundColor,
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Custom_Appbar(
+                Baranggay: "Baranggay Guadalupe",
+                Apptitle: "TAMBAG",
+                hasbackIcon: true,
+                hasRightIcon: false,
+                iconColor: Colors.white,
+                DistinationBack: () => goToPage(context, const Dashboard()),
               ),
-              // Check if isDone is true before displaying the content
-              child: followUpData['isDone'] == false
-                  ? Column(
-                      children: [
-                        FollowUpWidget(followUpData: followUpData),
-                        const SizedBox(height: 20.0),
-                        Center(
-                          child: CustomActionButton(
-                            onPressed: () {
-                              markAsDone();
-                            },
-                            buttonText: "Mark as Done",
+              const SizedBox(
+                height: 10,
+              ),
+              Expanded(
+                child: Column(
+                  children: [
+                    SingleChildScrollView(
+                      child: Container(
+                        margin: const EdgeInsets.all(8.0),
+                        padding: const EdgeInsets.all(10.0),
+                        decoration: BoxDecoration(
+                          border: Border.all(
+                            color:
+                                periwinkleColor, // Set the border color to black
+                            width: 2.0,
                           ),
+                          borderRadius: BorderRadius.circular(
+                              10.0), // Adjust the radius as needed
+                          color: Colors.white,
                         ),
-                      ],
-                    )
-                  : const Center(
-                      child: Text("No Appointment Available"),
-                    ), // If isDone is false, display an empty container
-            ),
-            Container(
-                child: followUpData['isDone'] == true
-                    ? Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            const SizedBox(height: 10.0),
-                            const Text(
-                              'Add a Follow-up',
-                              style: TextStyle(
-                                  fontSize: 22.0,
-                                  color: periwinkleColor,
-                                  fontWeight: FontWeight
-                                      .bold), // Adjust the font size as needed
-                            ),
-                            const SizedBox(
-                              height: 8,
-                            ),
-                            CustomTextField(
-                              controller: physicianController,
-                              labelText: 'Physician:',
-                            ),
-                            const SizedBox(
-                              height: 15,
-                            ),
-                            CustomTextField(
-                              controller: facilityController,
-                              labelText: 'Facility:',
-                            ),
-                            const SizedBox(height: 15),
-                            const Text(
-                              'Date:',
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 16.0,
-                                  color:
-                                      periwinkleColor), // Adjust the font size as needed
-                            ),
-                            Row(
-                              children: [
-                                // Month Dropdown
-                                Expanded(
-                                    flex: 2,
-                                    child: Container(
-                                      decoration: BoxDecoration(
-                                        color: Colors.white,
-                                        borderRadius:
-                                            BorderRadius.circular(8.0),
-                                      ),
-                                      child: CustomDropdown(
-                                        items: Month,
-                                        value: selectedMonth,
-                                        onChanged: (String newValue) {
-                                          setState(() {
-                                            selectedMonth = newValue;
-                                          });
-                                        },
-                                      ),
-                                    )),
-                                const SizedBox(width: 10),
-
-                                // Day Dropdown
-                                Expanded(
-                                    flex: 1,
-                                    child: Container(
-                                      decoration: BoxDecoration(
-                                        color: Colors.white,
-                                        borderRadius:
-                                            BorderRadius.circular(8.0),
-                                      ),
-                                      child: CustomDropdown(
-                                        items: List<String>.generate(31,
-                                            (index) => (index + 1).toString()),
-                                        value: selectedDay,
-                                        onChanged: (String newValue) {
-                                          setState(() {
-                                            selectedDay = newValue;
-                                          });
-                                        },
-                                      ),
-                                    )),
-                                const SizedBox(width: 10),
-                                // Year Dropdown
-                                Expanded(
-                                  flex: 1,
-                                  child: Container(
-                                    decoration: BoxDecoration(
-                                      color: Colors.white,
-                                      borderRadius: BorderRadius.circular(8.0),
-                                    ),
-                                    child: CustomDropdown(
-                                      items: List<String>.generate(10,
-                                          (index) => (2023 - index).toString()),
-                                      value: selectedYear,
-                                      onChanged: (String newValue) {
-                                        setState(() {
-                                          selectedYear = newValue;
-                                        });
+                        // Check if isDone is true before displaying the content
+                        child: followUpData['isDone'] == false
+                            ? Column(
+                                children: [
+                                  FollowUpWidget(followUpData: followUpData),
+                                  const SizedBox(height: 20.0),
+                                  Center(
+                                    child: CustomActionButton(
+                                      onPressed: () {
+                                        markAsDone();
                                       },
+                                      buttonText: "Mark as Done",
                                     ),
                                   ),
+                                ],
+                              )
+                            : const Center(
+                                child: Text("No Appointment Available"),
+                              ), // If isDone is false, display an empty container
+                      ),
+                    ),
+                    Container(
+                        child: followUpData['isDone'] == true
+                            ? Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    const SizedBox(height: 10.0),
+                                    const Text(
+                                      'Add a Follow-up',
+                                      style: TextStyle(
+                                          fontSize: 22.0,
+                                          color: periwinkleColor,
+                                          fontWeight: FontWeight
+                                              .bold), // Adjust the font size as needed
+                                    ),
+                                    const SizedBox(
+                                      height: 8,
+                                    ),
+                                    CustomTextField(
+                                      controller: physicianController,
+                                      labelText: 'Physician:',
+                                    ),
+                                    const SizedBox(
+                                      height: 15,
+                                    ),
+                                    CustomTextField(
+                                      controller: facilityController,
+                                      labelText: 'Facility:',
+                                    ),
+                                    const SizedBox(height: 15),
+                                    const Text(
+                                      'Date:',
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 16.0,
+                                          color:
+                                              periwinkleColor), // Adjust the font size as needed
+                                    ),
+                                    Row(
+                                      children: [
+                                        // Month Dropdown
+                                        Expanded(
+                                            flex: 2,
+                                            child: Container(
+                                              decoration: BoxDecoration(
+                                                color: Colors.white,
+                                                borderRadius:
+                                                    BorderRadius.circular(8.0),
+                                              ),
+                                              child: CustomDropdown(
+                                                items: Month,
+                                                value: selectedMonth,
+                                                onChanged: (String newValue) {
+                                                  setState(() {
+                                                    selectedMonth = newValue;
+                                                  });
+                                                },
+                                              ),
+                                            )),
+                                        const SizedBox(width: 10),
+
+                                        // Day Dropdown
+                                        Expanded(
+                                            flex: 1,
+                                            child: Container(
+                                              decoration: BoxDecoration(
+                                                color: Colors.white,
+                                                borderRadius:
+                                                    BorderRadius.circular(8.0),
+                                              ),
+                                              child: CustomDropdown(
+                                                items: List<String>.generate(
+                                                    31,
+                                                    (index) =>
+                                                        (index + 1).toString()),
+                                                value: selectedDay,
+                                                onChanged: (String newValue) {
+                                                  setState(() {
+                                                    selectedDay = newValue;
+                                                  });
+                                                },
+                                              ),
+                                            )),
+                                        const SizedBox(width: 10),
+                                        // Year Dropdown
+                                        Expanded(
+                                          flex: 1,
+                                          child: Container(
+                                            decoration: BoxDecoration(
+                                              color: Colors.white,
+                                              borderRadius:
+                                                  BorderRadius.circular(8.0),
+                                            ),
+                                            child: CustomDropdown(
+                                              items: List<String>.generate(
+                                                  10,
+                                                  (index) => (2023 - index)
+                                                      .toString()),
+                                              value: selectedYear,
+                                              onChanged: (String newValue) {
+                                                setState(() {
+                                                  selectedYear = newValue;
+                                                });
+                                              },
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    const SizedBox(
+                                      height: 15,
+                                    ),
+                                    const Text(
+                                      'Time:',
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 16.0,
+                                          color:
+                                              periwinkleColor), // Adjust the font size as needed
+                                    ),
+                                    Row(
+                                      children: [
+                                        // Hour Dropdown
+                                        Expanded(
+                                            child: Container(
+                                          decoration: BoxDecoration(
+                                            color: Colors.white,
+                                            borderRadius:
+                                                BorderRadius.circular(8.0),
+                                          ),
+                                          child: CustomDropdown(
+                                            items: Time,
+                                            value: selectedTime,
+                                            onChanged: (String newValue) {
+                                              setState(() {
+                                                selectedTime = newValue;
+                                              });
+                                            },
+                                          ),
+                                        )),
+                                      ],
+                                    ),
+                                    const SizedBox(
+                                      height: 10,
+                                    ),
+                                    Row(
+                                      mainAxisAlignment: MainAxisAlignment.end,
+                                  crossAxisAlignment: CrossAxisAlignment.end,
+                                      children: [
+                                        CustomActionButton(
+                                            onPressed: () {
+                                              submitFollowUpData();
+                                            },
+                                            buttonText: "Submit",
+                                          ),
+                                      ],
+                                    ),
+                                  ],
                                 ),
-                              ],
-                            ),
-                            const SizedBox(
-                              height: 15,
-                            ),
-                            const Text(
-                              'Time:',
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 16.0,
-                                  color:
-                                      periwinkleColor), // Adjust the font size as needed
-                            ),
-                            Row(
-                              children: [
-                                // Hour Dropdown
-                                Expanded(
-                                    child: Container(
-                                  decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    borderRadius: BorderRadius.circular(8.0),
-                                  ),
-                                  child: CustomDropdown(
-                                    items: Time,
-                                    value: selectedTime,
-                                    onChanged: (String newValue) {
-                                      setState(() {
-                                        selectedTime = newValue;
-                                      });
-                                    },
-                                  ),
-                                )),
-                                const SizedBox(width: 10),
-                              ],
-                            ),
-                            const SizedBox(
-                              height: 10,
-                            ),
-                            Center(
-                              child: CustomActionButton(
-                                onPressed: () {
-                                  submitFollowUpData();
-                                },
-                                buttonText: "Submit",
-                              ),
-                            ),
-                          ],
-                        ),
-                      )
-                    : const Expanded(
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [Text("There's a Ongoing Appointment")],
-                        ),
-                      ))
-          ],
+                              )
+                            : const Expanded(
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Text("There's a Ongoing Appointment")
+                                  ],
+                                ),
+                              ))
+                  ],
+                ),
+              )
+            ],
+          ),
         ),
       ),
     );

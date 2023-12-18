@@ -1,6 +1,6 @@
 // ignore_for_file: camel_case_types, library_private_types_in_public_api, use_build_context_synchronously, file_names
 
-import 'package:Tambag/functions/custom_functions.dart';
+import '../functions/custom_functions.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';

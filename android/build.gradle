@@ -22,10 +22,20 @@ rootProject.buildDir = '../build'
 subprojects {
     project.buildDir = "${rootProject.buildDir}/${project.name}"
 }
-subprojects {
-    project.evaluationDependsOn(':app')
-}
 
 tasks.register("clean", Delete) {
     delete rootProject.buildDir
+}
+
+// Make sure the 'android' block is correctly placed
+subprojects {
+    afterEvaluate {
+        android {
+            defaultConfig {
+                minSdkVersion 21
+                // ... other configurations
+            }
+            // ... other configurations
+        }
+    }
 }

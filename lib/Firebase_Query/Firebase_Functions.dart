@@ -1,5 +1,5 @@
   //Function to return all patients
-import 'package:Tambag/Screen/Masterlist.dart';
+import '../Screen/Masterlist.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../Screen/Dashboard.dart';
 

@@ -1,6 +1,6 @@
 // ignore_for_file: file_names
 
-import 'package:Tambag/constants/light_constants.dart';
+import '../constants/light_constants.dart';
 import 'package:flutter/material.dart';
 
 class MyTable extends StatelessWidget {

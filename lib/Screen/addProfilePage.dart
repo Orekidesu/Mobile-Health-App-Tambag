@@ -152,7 +152,9 @@ class _AddProfilePageState extends State<AddProfilePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
+      body: 
+      SafeArea(child: Container(
+        height: MediaQuery.of(context).size.height, // Adjust as needed
         color: backgroundColor,
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -169,147 +171,159 @@ class _AddProfilePageState extends State<AddProfilePage> {
               iconColor: Colors.white,
               DistinationBack: () => goToPage(context, const Dashboard()),
             ),
-            Padding(
-              padding: const EdgeInsets.only(
-                left: 10,
-                right: 10,
-              ),
-              child: Column(
-                children: [
-                  const SizedBox(
-                    height: 10,
+            Expanded(
+              child: SingleChildScrollView(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Padding(
+                  padding: const EdgeInsets.only(
+                    left: 10,
+                    right: 10,
                   ),
-                  CustomTextField(
-                    controller: nameController,
-                    labelText: 'Name:',
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  CustomTextField(
-                    controller: ageController,
-                    labelText: 'Age:',
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  CustomTextField(
-                    controller: addressController,
-                    labelText: 'Address:',
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                  child: Column(
                     children: [
-                      const Text(
-                        'Medication:',
-                        style: TextStyle(
-                          color: periwinkleColor,
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                        ),
+                      const SizedBox(
+                        height: 10,
                       ),
-                      Container(
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          border: Border.all(
-                            color: periwinkleColor, // Set the border color
-                            width: 2.0, // Set the border width
-                          ),
-                          borderRadius: BorderRadius.circular(
-                              12.0), // Set the border radius
-                        ),
-                        child: SizedBox(
-                          height:
-                              150.0, // Set a specific height for the container
-                          child: Padding(
-                            padding: const EdgeInsets.all(4.0),
-                            child: ListView.builder(
-                              itemCount: medicationList.length,
-                              itemBuilder: (context, index) {
-                                Map<String, dynamic> medicationDetails =
-                                    medicationList[index];
-                                return ListTile(
-                                  title: Text(
-                                    medicationDetails['med_name'] ?? '',
-                                    style: const TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      color: periwinkleColor,
-                                    ),
-                                  ),
-                                  subtitle: Text(
-                                    '${medicationDetails['dosage'] ?? ''}',
-                                    style: const TextStyle(
-                                      fontSize:
-                                          13, // Adjust the font size as needed
-                                      color: periwinkleColor,
-                                    ),
-                                  ),
-                                  // You can customize the ListTile further if needed
-                                );
-                              },
+                      CustomTextField(
+                        controller: nameController,
+                        labelText: 'Name:',
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      CustomTextField(
+                        controller: ageController,
+                        labelText: 'Age:',
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      CustomTextField(
+                        controller: addressController,
+                        labelText: 'Address:',
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text(
+                            'Medication:',
+                            style: TextStyle(
+                              color: periwinkleColor,
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
                             ),
                           ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(
-                    height: 5,
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      GestureDetector(
-                        onTap: () {
-                          _showMyDialog(context);
-                        },
-                        child: const Text(
-                          'Add Medication',
-                          style: TextStyle(
-                            color: periwinkleColor, // Set the text color
-                            fontWeight: FontWeight.bold,
-                            fontSize: 18,
+                          Container(
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              border: Border.all(
+                                color: periwinkleColor, // Set the border color
+                                width: 2.0, // Set the border width
+                              ),
+                              borderRadius: BorderRadius.circular(
+                                  12.0), // Set the border radius
+                            ),
+                            child: SizedBox(
+                              height:
+                                  150.0, // Set a specific height for the container
+                              child: Padding(
+                                padding: const EdgeInsets.all(4.0),
+                                child: ListView.builder(
+                                  itemCount: medicationList.length,
+                                  itemBuilder: (context, index) {
+                                    Map<String, dynamic> medicationDetails =
+                                        medicationList[index];
+                                    return ListTile(
+                                      title: Text(
+                                        medicationDetails['med_name'] ?? '',
+                                        style: const TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          color: periwinkleColor,
+                                        ),
+                                      ),
+                                      subtitle: Text(
+                                        '${medicationDetails['dosage'] ?? ''}',
+                                        style: const TextStyle(
+                                          fontSize:
+                                              13, // Adjust the font size as needed
+                                          color: periwinkleColor,
+                                        ),
+                                      ),
+                                      // You can customize the ListTile further if needed
+                                    );
+                                  },
+                                ),
+                              ),
+                            ),
                           ),
-                        ),
+                        ],
                       ),
+                      const SizedBox(
+                        height: 5,
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          GestureDetector(
+                            onTap: () {
+                              _showMyDialog(context);
+                            },
+                            child: const Text(
+                              'Add Medication',
+                              style: TextStyle(
+                                color: periwinkleColor, // Set the text color
+                                fontWeight: FontWeight.bold,
+                                fontSize: 18,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      CustomTextField(
+                        controller: contactNumberController,
+                        labelText: 'Contact Number:',
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      CustomTextField(
+                        controller: physicianController,
+                        labelText: 'Physician:',
+                      ),
+                      const SizedBox(height: 10,),
+                      Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                      CustomActionButton(  
+                          onPressed: () {
+                            addProfileToFirebase();
+                            goToPageNoReturn(context,const Dashboard());  
+                          },
+                          buttonText: "Add",
+                        ),
+                      ],)                  
                     ],
                   ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  CustomTextField(
-                    controller: contactNumberController,
-                    labelText: 'Contact Number:',
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  CustomTextField(
-                    controller: physicianController,
-                    labelText: 'Physician:',
-                  ),
-                  const SizedBox(height: 10,),
-                  Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                  CustomActionButton(  
-                      onPressed: () {
-                        addProfileToFirebase();
-                        goToPageNoReturn(context,const Dashboard());  
-                      },
-                      buttonText: "Add",
-                    ),
-                  ],)                  
-                ],
+                ),
+                  ], ),
               ),
-            ),
+            )
+            
           ],
         ),
-      ),
+      ),),
+      
+      
     );
   }
 }

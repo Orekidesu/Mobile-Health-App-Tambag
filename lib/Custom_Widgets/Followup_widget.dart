@@ -34,7 +34,7 @@ class FollowUpWidget extends StatelessWidget {
                     style: TextStyle(
                       fontSize: 15.0,
                       color: periwinkleColor,
-                      fontWeight: FontWeight.w100,
+                      fontWeight: FontWeight.normal,
                     ),
                   ),
                   TextSpan(
@@ -50,7 +50,7 @@ class FollowUpWidget extends StatelessWidget {
                     style: TextStyle(
                       fontSize: 15.0,
                       color: periwinkleColor,
-                      fontWeight: FontWeight.w100,
+                      fontWeight: FontWeight.normal,
                     ),
                   ),
                   TextSpan(
@@ -66,7 +66,7 @@ class FollowUpWidget extends StatelessWidget {
                     style: TextStyle(
                       fontSize: 15.0,
                       color: periwinkleColor,
-                      fontWeight: FontWeight.w100,
+                      fontWeight: FontWeight.normal,
                     ),
                   ),
                   const TextSpan(
@@ -74,7 +74,7 @@ class FollowUpWidget extends StatelessWidget {
                     style: TextStyle(
                       fontSize: 15.0,
                       color: periwinkleColor,
-                      fontWeight: FontWeight.w100,
+                      fontWeight: FontWeight.normal,
                     ),
                   ),
                   TextSpan(

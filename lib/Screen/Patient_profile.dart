@@ -84,150 +84,153 @@ class _Patient_ProfileState extends State<Patient_Profile> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: backgroundColor,
-      body: LayoutBuilder(
-        builder: (BuildContext context, BoxConstraints constraints) {
-          return SingleChildScrollView(
-            child: ConstrainedBox(
-              constraints: BoxConstraints(
-                minHeight: constraints.maxHeight,
-              ),
-              child: Padding(
-                padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Custom_Appbar(
-                      Baranggay: "PROFILE",
-                      Apptitle: "PATIENT",
-                      hasbackIcon: true,
-                      hasRightIcon: false,
-                      iconColor: Colors.white,
-                      DistinationBack: () =>
-                          goToPage(context, const Dashboard()),
-                    ),
-                    Container(
-                      padding: const EdgeInsets.fromLTRB(16.0, 10.0, 16.0, 0.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          FutureBuilder<Map<String, dynamic>>(
-                            future: patientData,
+    return 
+    SafeArea(
+      child: Scaffold(
+        backgroundColor: backgroundColor,
+        body: LayoutBuilder(
+          builder: (BuildContext context, BoxConstraints constraints) {
+            return SingleChildScrollView(
+              child: ConstrainedBox(
+                constraints: BoxConstraints(
+                  minHeight: constraints.maxHeight,
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Custom_Appbar(
+                        Baranggay: "PROFILE",
+                        Apptitle: "PATIENT",
+                        hasbackIcon: true,
+                        hasRightIcon: false,
+                        iconColor: Colors.white,
+                        DistinationBack: () =>
+                            goToPage(context, const Dashboard()),
+                      ),
+                      Container(
+                        padding: const EdgeInsets.fromLTRB(16.0, 10.0, 16.0, 0.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            FutureBuilder<Map<String, dynamic>>(
+                              future: patientData,
+                              builder: (context, snapshot) {
+                                if (snapshot.connectionState ==
+                                    ConnectionState.waiting) {
+                                  return Container();
+                                } else if (snapshot.hasError) {
+                                  return Text('Error: ${snapshot.error}');
+                                } else if (!snapshot.hasData ||
+                                    snapshot.data!.isEmpty) {
+                                  return const Text('No patient data available.');
+                                } else {
+                                  final patientInfo = snapshot.data!;
+                                  return Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      CustomTextWidget(
+                                        text1: 'Name:',
+                                        text2: patientInfo['name'] ?? 'N/A',
+                                      ),
+                                      CustomTextWidget(
+                                        text1: 'Age:',
+                                        text2: patientInfo['age'] ?? 'N/A',
+                                      ),
+                                      CustomTextWidget(
+                                        text1: 'Address:',
+                                        text2: patientInfo['address'] ?? 'N/A',
+                                      ),
+                                      CustomTextWidget(
+                                        text1: 'Physician:',
+                                        text2:
+                                            patientInfo['physician'] ?? 'N/A',
+                                      ),
+                                      CustomTextWidget(
+                                        text1: 'Mobile:',
+                                        text2: patientInfo['contact_number'] ??
+                                            'N/A',
+                                      ),
+                                    ],
+                                  );
+                                }
+                              },
+                            ),
+                          ],
+                        ),
+                      ),
+                      // Medications section
+                      Container(
+                        height:
+                            MediaQuery.of(context).size.width < 600 ? 300 : 500,
+                        margin: const EdgeInsets.fromLTRB(0, 20, 0, 0),
+                        child: Expanded(
+                          child: FutureBuilder<List<Map<String, dynamic>>>(
+                            future: medications,
                             builder: (context, snapshot) {
                               if (snapshot.connectionState ==
                                   ConnectionState.waiting) {
-                                return Container();
+                                return const Center(child: CupertinoActivityIndicator());
                               } else if (snapshot.hasError) {
                                 return Text('Error: ${snapshot.error}');
                               } else if (!snapshot.hasData ||
                                   snapshot.data!.isEmpty) {
-                                return const Text('No patient data available.');
+                                return const Text('No medication data available.');
                               } else {
-                                final patientInfo = snapshot.data!;
-                                return Column(
-                                  crossAxisAlignment:
-                                      CrossAxisAlignment.start,
-                                  children: [
-                                    CustomTextWidget(
-                                      text1: 'Name:',
-                                      text2: patientInfo['name'] ?? 'N/A',
-                                    ),
-                                    CustomTextWidget(
-                                      text1: 'Age:',
-                                      text2: patientInfo['age'] ?? 'N/A',
-                                    ),
-                                    CustomTextWidget(
-                                      text1: 'Address:',
-                                      text2: patientInfo['address'] ?? 'N/A',
-                                    ),
-                                    CustomTextWidget(
-                                      text1: 'Physician:',
-                                      text2:
-                                          patientInfo['physician'] ?? 'N/A',
-                                    ),
-                                    CustomTextWidget(
-                                      text1: 'Mobile:',
-                                      text2: patientInfo['contact_number'] ??
-                                          'N/A',
-                                    ),
-                                  ],
+                                final medicationsList = snapshot.data!;
+                                return ListView(
+                                  padding: const EdgeInsets.fromLTRB(10, 10, 16, 0),
+                                  children: medicationsList.map((medication) {
+                                    return CardWithIcon(
+                                      icon: FontAwesomeIcons.pills,
+                                      title:
+                                          "MEDICATION ${medication['count']}\n${medication['name']}",
+                                      subtitle: medication['dosage'] ?? 'N/A',
+                                    );
+                                  }).toList(),
                                 );
                               }
                             },
                           ),
-                        ],
-                      ),
-                    ),
-                    // Medications section
-                    Container(
-                      height:
-                          MediaQuery.of(context).size.width < 600 ? 300 : 500,
-                      margin: const EdgeInsets.fromLTRB(0, 20, 0, 0),
-                      child: Expanded(
-                        child: FutureBuilder<List<Map<String, dynamic>>>(
-                          future: medications,
-                          builder: (context, snapshot) {
-                            if (snapshot.connectionState ==
-                                ConnectionState.waiting) {
-                              return const Center(child: CupertinoActivityIndicator());
-                            } else if (snapshot.hasError) {
-                              return Text('Error: ${snapshot.error}');
-                            } else if (!snapshot.hasData ||
-                                snapshot.data!.isEmpty) {
-                              return const Text('No medication data available.');
-                            } else {
-                              final medicationsList = snapshot.data!;
-                              return ListView(
-                                padding: const EdgeInsets.fromLTRB(10, 10, 16, 0),
-                                children: medicationsList.map((medication) {
-                                  return CardWithIcon(
-                                    icon: FontAwesomeIcons.pills,
-                                    title:
-                                        "MEDICATION ${medication['count']}\n${medication['name']}",
-                                    subtitle: medication['dosage'] ?? 'N/A',
-                                  );
-                                }).toList(),
-                              );
-                            }
-                          },
                         ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
+            );
+          },
+        ),
+        bottomNavigationBar: Container(
+          padding: const EdgeInsets.fromLTRB(16, 16, 16, 0.0),
+          height: 200,
+          margin: const EdgeInsets.only(bottom: 25.0),
+          child: Card(
+            shape: RoundedRectangleBorder(
+              side: const BorderSide(
+                color: Colors.blue,
+                width: 2.0,
+              ),
+              borderRadius: BorderRadius.circular(20.0),
             ),
-          );
-        },
-      ),
-      bottomNavigationBar: Container(
-        padding: const EdgeInsets.fromLTRB(16, 16, 16, 0.0),
-        height: 200,
-        margin: const EdgeInsets.only(bottom: 25.0),
-        child: Card(
-          shape: RoundedRectangleBorder(
-            side: const BorderSide(
-              color: Colors.blue,
-              width: 2.0,
-            ),
-            borderRadius: BorderRadius.circular(20.0),
-          ),
-          color: periwinkleColor,
-          child: Container(
-            constraints: const BoxConstraints.expand(),
-            child: Align(
-              alignment: Alignment.topCenter,
-              child: Container(
-                margin: const EdgeInsets.only(bottom: 16),
-                child: const Text(
-                  'DRUG MEDICATION INTERACTIONS',
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                    letterSpacing: 2.0,
+            color: periwinkleColor,
+            child: Container(
+              constraints: const BoxConstraints.expand(),
+              child: Align(
+                alignment: Alignment.topCenter,
+                child: Container(
+                  margin: const EdgeInsets.only(bottom: 16),
+                  child: const Text(
+                    'DRUG MEDICATION INTERACTIONS',
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                      letterSpacing: 2.0,
+                    ),
                   ),
                 ),
               ),

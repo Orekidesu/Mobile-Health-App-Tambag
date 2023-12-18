@@ -9,7 +9,7 @@ import '../functions/custom_functions.dart';
 
 class Tracker extends StatefulWidget {
   final String patientId;
-  const Tracker({Key? key, required this.patientId}) : super(key: key);
+  const Tracker({super.key, required this.patientId});
 
   @override
   State<Tracker> createState() => _TrackerState();
@@ -22,9 +22,10 @@ class _TrackerState extends State<Tracker> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return 
+    SafeArea(child: Scaffold(
       backgroundColor: backgroundColor,
-      body: Container(
+      body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(25.0),
           child: Column(
@@ -40,7 +41,7 @@ class _TrackerState extends State<Tracker> {
                 DistinationBack: () => goToPage(context, const Dashboard()),
               ),
               Container(
-                padding: EdgeInsets.fromLTRB(16, 10.0, 16.0, 0.0),
+                padding: const EdgeInsets.fromLTRB(16, 10.0, 16.0, 0.0),
                 child: Container(
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.start,
@@ -65,7 +66,7 @@ class _TrackerState extends State<Tracker> {
                 flex: 2,
                 child: Container(
                   height: 300,
-                  margin: EdgeInsets.fromLTRB(0, 16, 0, 0),
+                  margin: const EdgeInsets.fromLTRB(0, 16, 0, 0),
                   child: Card(
                     shape: RoundedRectangleBorder(
                       side: const BorderSide(
@@ -75,9 +76,9 @@ class _TrackerState extends State<Tracker> {
                       borderRadius: BorderRadius.circular(20.0),
                     ),
                     child: Container(
-                      constraints: BoxConstraints.expand(),
+                      constraints: const BoxConstraints.expand(),
                       child: Container(
-                        padding: EdgeInsets.all(16),
+                        padding: const EdgeInsets.all(16),
                         child: Column(
                           children: [
                             const Expanded(
@@ -130,8 +131,8 @@ class _TrackerState extends State<Tracker> {
               Expanded(
                 flex: 4,
                 child: Container(
-                  padding: EdgeInsets.only(top: 16.0),
-                  margin: EdgeInsets.only(bottom: 25.0),
+                  padding: const EdgeInsets.only(top: 16.0),
+                  margin: const EdgeInsets.only(bottom: 25.0),
                   height: 200,
                   child: Card(
                     shape: RoundedRectangleBorder(
@@ -252,7 +253,7 @@ class _TrackerState extends State<Tracker> {
             ],
           ),
         ),
-      ),
+      ),), 
     );
   }
 }
@@ -271,14 +272,14 @@ class MedicationTile extends StatelessWidget {
     return ListTile(
       title: Text(
         medicationName,
-        style: TextStyle(
+        style: const TextStyle(
           color: Color.fromARGB(255, 103, 103, 186),
           fontWeight: FontWeight.bold,
         ),
       ),
       subtitle: Text(
         text,
-        style: TextStyle(
+        style: const TextStyle(
           color: Color.fromARGB(255, 103, 103, 186),
         ),
       ),
