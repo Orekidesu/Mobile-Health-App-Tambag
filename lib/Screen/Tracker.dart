@@ -1,4 +1,4 @@
-import 'package:Tambag/Firebase_Query/Firebase_Functions.dart';
+import '../Firebase_Query/Firebase_Functions.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../Screen/Dashboard.dart';
@@ -7,11 +7,11 @@ import '../Custom_Widgets/CustomActionButton.dart';
 import '../constants/light_constants.dart';
 import '../Custom_Widgets/Custom_Appbar.dart';
 import '../functions/custom_functions.dart';
-import '../Firebase_Query/Firebase_Functions.dart';
 
 class Tracker extends StatefulWidget {
   final String patientId;
-  const Tracker({super.key, required this.patientId});
+
+  const Tracker({Key? key, required this.patientId}) : super(key: key);
 
   @override
   State<Tracker> createState() => _TrackerState();
@@ -24,6 +24,7 @@ class _TrackerState extends State<Tracker> {
   TextEditingController contraindicationController = TextEditingController();
   TextEditingController dietController = TextEditingController();
 
+  @override
   void initState() {
     super.initState();
     patientData = DataService.getPatientData(widget.patientId);
@@ -32,11 +33,10 @@ class _TrackerState extends State<Tracker> {
 
   @override
   Widget build(BuildContext context) {
-    return 
-    SafeArea(child: Scaffold(
-      backgroundColor: backgroundColor,
-      body: SingleChildScrollView(
-        child: Padding(
+    return SafeArea(
+      child: Scaffold(
+        backgroundColor: backgroundColor,
+        body: Container(
           padding: const EdgeInsets.all(25.0),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
@@ -50,19 +50,20 @@ class _TrackerState extends State<Tracker> {
                 iconColor: Colors.white,
                 DistinationBack: () => goToPage(context, const Dashboard()),
               ),
-              Container(
-                padding: EdgeInsets.fromLTRB(0.0, 10.0, 16.0, 0.0),
-                child: Container(
+              Expanded(
+                child: SingleChildScrollView(
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
+                      const SizedBox(height: 10,),
                       FutureBuilder<Map<String, dynamic>>(
                         future: patientData,
                         builder: (context, snapshot) {
                           if (snapshot.connectionState ==
                               ConnectionState.waiting) {
-                            return Container();
+                            return const Center(
+                                            child: CircularProgressIndicator());
                           } else if (snapshot.hasError) {
                             return Text('Error: ${snapshot.error}');
                           } else if (!snapshot.hasData ||
@@ -72,6 +73,7 @@ class _TrackerState extends State<Tracker> {
                             final patientInfo = snapshot.data!;
                             return Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.start,
                               children: [
                                 CustomTextWidget(
                                   text1: 'NAME:',
@@ -79,7 +81,7 @@ class _TrackerState extends State<Tracker> {
                                 ),
                                 CustomTextWidget(
                                   text1: 'AGE:',
-                                  text2: patientInfo['age'] ?? 'N/A',
+                                  text2: patientInfo['age']?.toString() ?? 'N/A',
                                 ),
                                 CustomTextWidget(
                                   text1: 'ADDRESS:',
@@ -98,182 +100,183 @@ class _TrackerState extends State<Tracker> {
                           }
                         },
                       ),
-                    ],
-                  ),
-                ),
-              ),
-
-              // LIST MEDICATION //
-              Expanded(
-                flex: 1,
-                child: Container(
-                  margin: EdgeInsets.fromLTRB(0, 16, 0, 0),
-                  height: 300,
-                  margin: const EdgeInsets.fromLTRB(0, 16, 0, 0),
-                  child: Card(
-                    shape: RoundedRectangleBorder(
-                      side: const BorderSide(
-                        color: periwinkleColor,
-                        width: 2.0,
-                      ),
-                      child: Container(
-                        padding: const EdgeInsets.all(16),
-                        child: Column(
-                          children: [
-                            const Expanded(
-                                flex: 1,
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Icon(FontAwesomeIcons.pills),
-                                    SizedBox(
-                                      width: 10.0,
-                                    ),
-                                    Text(
-                                      'LUNES',
-                                      style: TextStyle(
+                      // LIST MEDICATION //
+                      Container(
+                        margin: const EdgeInsets.fromLTRB(0, 16, 0, 0),
+                        height: 250,
+                        child: Card(
+                          shape: RoundedRectangleBorder(
+                            side: const BorderSide(
+                              color: periwinkleColor,
+                              width: 2.0,
+                            ),
+                            borderRadius: BorderRadius.circular(10.0),
+                          ),
+                          child: Container(
+                            padding: const EdgeInsets.all(16),
+                            child: Column(
+                              children: [
+                                const Expanded(
+                                  flex: 1,
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Icon(FontAwesomeIcons.pills),
+                                      SizedBox(width: 10.0),
+                                      Text(
+                                        'LUNES',
+                                        style: TextStyle(
                                           fontSize: 16.0,
                                           fontWeight: FontWeight.bold,
-                                          color: Color.fromARGB(
-                                              255, 103, 103, 186)),
-                                    ),
-                                  ],
-                                )),
-                            Expanded(
-                              flex: 3,
-                              child: FutureBuilder<List<Map<String, dynamic>>>(
-                                future: medications,
-                                builder: (context, snapshot) {
-                                  if (snapshot.connectionState ==
-                                      ConnectionState.waiting) {
-                                    return Container(); // or any loading indicator
-                                  } else if (snapshot.hasError) {
-                                    return Text('Error: ${snapshot.error}');
-                                  } else if (!snapshot.hasData ||
-                                      snapshot.data!.isEmpty) {
-                                    return const Text(
-                                        'No medication data available.');
-                                  } else {
-                                    final List<Map<String, dynamic>>
-                                        medicationList = snapshot.data!;
-                                    return ListView.builder(
-                                      itemCount: medicationList.length,
-                                      itemBuilder: (context, index) {
-                                        final medication =
-                                            medicationList[index];
-                                        return MedicationTile(
-                                          medicationName:
-                                              medication['name'] ?? 'N/A',
-                                          text: medication['dosage'] ?? 'N/A',
+                                          color:
+                                              Color.fromARGB(255, 103, 103, 186),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                Expanded(
+                                  flex: 3,
+                                  child:
+                                      FutureBuilder<List<Map<String, dynamic>>>(
+                                    future: medications,
+                                    builder: (context, snapshot) {
+                                      if (snapshot.connectionState ==
+                                          ConnectionState.waiting) {
+                                        return const Center(
+                                            child: CircularProgressIndicator());
+                                      } else if (snapshot.hasError) {
+                                        return Text('Error: ${snapshot.error}');
+                                      } else if (!snapshot.hasData ||
+                                          snapshot.data!.isEmpty) {
+                                        return const Text(
+                                            'No medication data available.');
+                                      } else {
+                                        final List<Map<String, dynamic>>
+                                            medicationList = snapshot.data!;
+                                        return ListView.builder(
+                                          itemCount: medicationList.length,
+                                          itemBuilder: (context, index) {
+                                            final medication =
+                                                medicationList[index];
+                                            return MedicationTile(
+                                              medicationName:
+                                                  medication['name'] ?? 'N/A',
+                                              text: medication['dosage'] ?? 'N/A',
+                                            );
+                                          },
                                         );
-                                      },
-                                    );
-                                  }
-                                },
+                                      }
+                                    },
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 5,
+                      ),
+                      Card(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20.0),
+                        ),
+                        color: periwinkleColor,
+                        child: Padding(
+                          padding: const EdgeInsets.all(16.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            children: [
+                              const Text(
+                                'Reminder:',
+                                style: TextStyle(
+                                  fontSize: 16.0,
+                                  color: backgroundColor,
+                                ),
+                              ),
+                              TextField(
+                                controller: reminderController,
+                                decoration: InputDecoration(
+                                  filled: true,
+                                  fillColor: Colors.white,
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(10.0),
+                                    borderSide: const BorderSide(
+                                      color: backgroundColor,
+                                      width: 4,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              const Text(
+                                'Contraindication:',
+                                style: TextStyle(
+                                  fontSize: 16.0,
+                                  color: backgroundColor,
+                                ),
+                              ),
+                              TextField(
+                                controller: contraindicationController,
+                                decoration: InputDecoration(
+                                  filled: true,
+                                  fillColor: Colors.white,
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(10.0),
+                                    borderSide: const BorderSide(
+                                      color: backgroundColor,
+                                      width: 4,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              const Text(
+                                'Diet:',
+                                style: TextStyle(
+                                  fontSize: 16.0,
+                                  color: backgroundColor,
+                                ),
+                              ),
+                              TextField(
+                                controller: dietController,
+                                decoration: InputDecoration(
+                                  filled: true,
+                                  fillColor: Colors.white,
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(10.0),
+                                    borderSide: const BorderSide(
+                                      color: backgroundColor,
+                                      width: 4,
+                                    ),
+                                  ),
+                                ),
                               ),
                             ],
                           ),
                         ),
                       ),
-                    ),
-                  ),
-                ),
-              Expanded(
-                flex: 2,
-                child: Card(
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(20.0),
-                  ),
-                  color: periwinkleColor,
-                  child: Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        const Text(
-                          'Reminder:',
-                          style: TextStyle(
-                            fontSize: 16.0,
-                            color: backgroundColor,
+                      const SizedBox(
+                        height: 5,
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          CustomActionButton(
+                            onPressed: () {},
+                            buttonText: "Print",
                           ),
-                        ),
-                        TextField(
-                          controller: reminderController,
-                          decoration: InputDecoration(
-                            filled: true,
-                            fillColor: Colors.white,
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10.0),
-                              borderSide: const BorderSide(
-                                color: backgroundColor,
-                                width: 4,
-                              ),
-                            ),
-                          ),
-                        ),
-                        const Text(
-                          'Contraindication:',
-                          style: TextStyle(
-                            fontSize: 16.0,
-                            color: backgroundColor,
-                          ),
-                        ),
-                        TextField(
-                          controller: contraindicationController,
-                          decoration: InputDecoration(
-                            filled: true,
-                            fillColor: Colors.white,
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10.0),
-                              borderSide: const BorderSide(
-                                color: backgroundColor,
-                                width: 4,
-                              ),
-                            ),
-                          ),
-                        ),
-                        const Text(
-                          'Diet:',
-                          style: TextStyle(
-                            fontSize: 16.0,
-                            color: backgroundColor,
-                          ),
-                        ),
-                        TextField(
-                          controller: dietController,
-                          decoration: InputDecoration(
-                            filled: true,
-                            fillColor: Colors.white,
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10.0),
-                              borderSide: const BorderSide(
-                                color: backgroundColor,
-                                width: 4,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
+                        ],
+                      )
+                    ],
                   ),
                 ),
               ),
-
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  CustomActionButton(
-                    onPressed: () {},
-                    buttonText: "PRINT",
-                  ),
-                ],
-              )
             ],
           ),
         ),
-      ),), 
+      ),
     );
   }
 }
