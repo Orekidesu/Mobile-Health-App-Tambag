@@ -16,10 +16,10 @@ class AddMedicationProfile extends StatefulWidget {
   final AddMedicationCallback addMedicationCallback;
 
   const AddMedicationProfile({
-    Key? key,
+    super.key,
     required this.medicationList,
     required this.addMedicationCallback,
-  }) : super(key: key);
+  });
 
   @override
   _AddMedicationProfileState createState() => _AddMedicationProfileState();
@@ -97,6 +97,12 @@ class _AddMedicationProfileState extends State<AddMedicationProfile> {
     }
   }
 
+  bool _validateInput() {
+    return selectedMedName != null &&
+        dosageController.text.isNotEmpty &&
+        frequencyController.text.isNotEmpty;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -121,6 +127,7 @@ class _AddMedicationProfileState extends State<AddMedicationProfile> {
             Expanded(
               child: 
               Container(
+                height: 45,
                 padding: const EdgeInsets.all(4.0),
                 decoration: BoxDecoration(
                   color: Colors.white,
@@ -169,16 +176,19 @@ class _AddMedicationProfileState extends State<AddMedicationProfile> {
         Row(
           children: [
             Expanded(
-              child: TextField(
-                controller: dosageController,
-                decoration: InputDecoration(
-                  filled: true,
-                  fillColor: Colors.white,
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10.0),
-                    borderSide: const BorderSide(
-                      color: periwinkleColor,
-                      width: 4,
+              child: SizedBox(
+                height: 45,
+                child: TextField(
+                  controller: dosageController,
+                  decoration: InputDecoration(
+                    filled: true,
+                    fillColor: Colors.white,
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10.0),
+                      borderSide: const BorderSide(
+                        color: periwinkleColor,
+                        width: 4,
+                      ),
                     ),
                   ),
                 ),
@@ -186,16 +196,19 @@ class _AddMedicationProfileState extends State<AddMedicationProfile> {
             ),
             const SizedBox(width: 8.0),
             Expanded(
-              child: TextField(
-                controller: frequencyController,
-                decoration: InputDecoration(
-                  filled: true,
-                  fillColor: Colors.white,
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10.0),
-                    borderSide: const BorderSide(
-                      color: periwinkleColor,
-                      width: 4,
+              child: SizedBox(
+                height: 45,
+                child: TextField(
+                  controller: frequencyController,
+                  decoration: InputDecoration(
+                    filled: true,
+                    fillColor: Colors.white,
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10.0),
+                      borderSide: const BorderSide(
+                        color: periwinkleColor,
+                        width: 4,
+                      ),
                     ),
                   ),
                 ),
@@ -241,17 +254,18 @@ class _AddMedicationProfileState extends State<AddMedicationProfile> {
           children: [
             CustomActionButton(
               onPressed: () {
-                if (selectedMedName != null) {
+                if (_validateInput()) {
                   addNewMedication(
                     selectedMedName!,
                     selectedMedInd,
                     dosageController.text,
                     frequencyController.text,
                   );
+                  Navigator.pop(context);
                 } else {
-                  // Handle the case where selectedMedName is null, e.g., show an error message.
+                  // Show an error message if any field is empty
+                  showErrorNotification('Please fill in all fields.');
                 }
-                Navigator.pop(context);
               },
               buttonText: 'Add',
             ),

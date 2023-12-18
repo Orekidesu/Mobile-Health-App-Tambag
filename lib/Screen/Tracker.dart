@@ -116,10 +116,6 @@ class _TrackerState extends State<Tracker> {
                         color: periwinkleColor,
                         width: 2.0,
                       ),
-                      borderRadius: BorderRadius.circular(20.0),
-                    ),
-                    child: Container(
-                      constraints: const BoxConstraints.expand(),
                       child: Container(
                         padding: const EdgeInsets.all(16),
                         child: Column(
@@ -176,15 +172,13 @@ class _TrackerState extends State<Tracker> {
                                   }
                                 },
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                       ),
                     ),
                   ),
                 ),
-              ),
-
               Expanded(
                 flex: 2,
                 child: Card(
@@ -288,7 +282,8 @@ class MedicationTile extends StatelessWidget {
   final String text;
   final String medicationName;
 
-  MedicationTile({
+  const MedicationTile({
+    super.key,
     required this.medicationName,
     required this.text,
   });

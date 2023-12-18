@@ -4,7 +4,7 @@ import '../constants/light_constants.dart';
 class FollowUpWidget extends StatelessWidget {
   final Map<String, dynamic> followUpData;
 
-  const FollowUpWidget({Key? key, required this.followUpData}) : super(key: key);
+  const FollowUpWidget({super.key, required this.followUpData});
 
   @override
   Widget build(BuildContext context) {

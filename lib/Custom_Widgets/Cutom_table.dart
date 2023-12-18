@@ -8,10 +8,10 @@ class MyTable extends StatelessWidget {
   final List<List<String>> rows;
 
   const MyTable({
-    Key? key,
+    super.key,
     required this.columns,
     required this.rows,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -24,10 +24,10 @@ class TableWidget extends StatelessWidget {
   final List<List<String>> rows;
 
   const TableWidget({
-    Key? key,
+    super.key,
     required this.columns,
     required this.rows,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -54,7 +54,7 @@ class TableWidget extends StatelessWidget {
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Text(cellData,
-                    style: const TextStyle(color: periwinkleColor, fontSize: 15,fontWeight: FontWeight.w100,decoration: TextDecoration.none,),),
+                    style: const TextStyle(color: periwinkleColor, fontSize: 15,fontWeight: FontWeight.normal,decoration: TextDecoration.none,),),
                   ),
                 );
               }).toList(),

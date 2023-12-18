@@ -11,7 +11,7 @@ class CustomActionButton extends StatelessWidget {
   final FontWeight? fontWeight;
 
   const CustomActionButton({
-    Key? key,
+    super.key,
     this.fontWeight,
     this.borderWidth,
     this.borderColor,
@@ -19,7 +19,7 @@ class CustomActionButton extends StatelessWidget {
     this.background,
     required this.onPressed,
     required this.buttonText,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

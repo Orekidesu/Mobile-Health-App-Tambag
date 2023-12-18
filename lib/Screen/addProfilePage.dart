@@ -11,7 +11,7 @@ import '../constants/light_constants.dart';
 import '../functions/custom_functions.dart';
 
 class AddProfilePage extends StatefulWidget {
-  const AddProfilePage({Key? key}) : super(key: key);
+  const AddProfilePage({super.key});
 
   @override
   _AddProfilePageState createState() => _AddProfilePageState();
@@ -35,8 +35,9 @@ class _AddProfilePageState extends State<AddProfilePage> {
   final CollectionReference followUpCollection = FirebaseFirestore.instance.collection('follow_up_history');
 
   Future<void> addProfileToFirebase() async {
-    try {
-      // Add profile data to the patients collection
+  try {
+    if (_validateInput()) {
+      // All fields are non-empty, proceed with adding to Firebase
       String id = await getHighestIdDocument();
       DocumentReference profileReference =
           await patientsCollection.add(getProfileData(id));
@@ -50,10 +51,17 @@ class _AddProfilePageState extends State<AddProfilePage> {
         await medicationCollection.add(medicationDetails);
       }
       showSuccessNotification('Successfully added');
-    } catch (e) {
-      showErrorNotification('Error adding profile to Firebase: $e');
+
+      // Navigate to the Dashboard after successful addition
+      goToPage(context, const Dashboard());
+    } else {
+      // Show an error notification if there are empty fields
+      showErrorNotification('Please fill in all fields.');
     }
+  } catch (e) {
+    showErrorNotification('Error adding profile to Firebase: $e');
   }
+} 
 
   Future<String> getHighestIdDocument() async {
     try {
@@ -97,6 +105,16 @@ class _AddProfilePageState extends State<AddProfilePage> {
       'id' : id,
     };
   }
+
+  bool _validateInput() {
+  // Check if any of the text fields are empty
+  return nameController.text.isNotEmpty &&
+      ageController.text.isNotEmpty &&
+      addressController.text.isNotEmpty &&
+      contactNumberController.text.isNotEmpty &&
+      physicianController.text.isNotEmpty &&
+      medicationList.isNotEmpty;
+}
 
   void _showMyDialog(BuildContext context) {
     showDialog<void>(
@@ -307,7 +325,6 @@ class _AddProfilePageState extends State<AddProfilePage> {
                       CustomActionButton(  
                           onPressed: () {
                             addProfileToFirebase();
-                            goToPageNoReturn(context,const Dashboard());  
                           },
                           buttonText: "Add",
                         ),

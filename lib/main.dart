@@ -22,7 +22,14 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Mobile Health App Tambag',
+       theme: ThemeData(
+        // Set the default font family for the entire app
+        textTheme: const TextTheme(
+          bodyMedium: TextStyle(fontFamily: 'Arial'),
+        ),
+      ),
       home: StreamBuilder(
+        
         stream: FirebaseAuth.instance.authStateChanges(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {

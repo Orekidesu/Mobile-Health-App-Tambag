@@ -8,7 +8,7 @@ import 'CustomActionButton.dart';
 import '../Screen/Masterlist.dart';
 
 class AddMedication extends StatefulWidget {
-  const AddMedication({Key? key}) : super(key: key);
+  const AddMedication({super.key});
 
   @override
   _AddMedicationState createState() => _AddMedicationState();
@@ -110,6 +110,15 @@ class _AddMedicationState extends State<AddMedication> {
     }
   }
 
+  bool _validateInput() {
+    if (newMedication) {
+      return medicationController.text.isNotEmpty &&
+          quantityController.text.isNotEmpty;
+    } else {
+      return selectedMedication != null && quantityController.text.isNotEmpty;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -124,11 +133,15 @@ class _AddMedicationState extends State<AddMedication> {
             fontWeight: FontWeight.bold,
           ),
         ),
+        const SizedBox(
+          height: 5,
+        ),
         if (!newMedication)
           Row(
             children: [
               Expanded(
                 child: Container(
+                  height: 45,
                   padding: const EdgeInsets.all(4.0),
                   decoration: BoxDecoration(
                     color: Colors.white,
@@ -170,21 +183,24 @@ class _AddMedicationState extends State<AddMedication> {
                   color: periwinkleColor,
                 ), // Adjust the font size as needed
               ),
-              TextField(
-                controller: medicationController,
-                decoration: InputDecoration(
-                  filled: true,
-                  fillColor: Colors.white,
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(
-                        10.0), // Adjust the radius as needed
-                    borderSide: const BorderSide(
-                      color: periwinkleColor, // Set the border color
-                      width: 4,
+              SizedBox(
+                height: 45,
+                child: TextField(
+                  controller: medicationController,
+                  decoration: InputDecoration(
+                    filled: true,
+                    fillColor: Colors.white,
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(
+                          10.0), // Adjust the radius as needed
+                      borderSide: const BorderSide(
+                        color: periwinkleColor, // Set the border color
+                        width: 4,
+                      ),
                     ),
                   ),
+                  // Additional properties for the TextField can be added here
                 ),
-                // Additional properties for the TextField can be added here
               ),
             ],
           ),
@@ -219,21 +235,24 @@ class _AddMedicationState extends State<AddMedication> {
             color: periwinkleColor,
           ), // Adjust the font size as needed
         ),
-        TextField(
-          controller: quantityController,
-          decoration: InputDecoration(
-            filled: true,
-            fillColor: Colors.white,
-            border: OutlineInputBorder(
-              borderRadius:
-                  BorderRadius.circular(10.0), // Adjust the radius as needed
-              borderSide: const BorderSide(
-                color: periwinkleColor, // Set the border color
-                width: 4,
+        SizedBox(
+          height: 45,
+          child: TextField(
+            controller: quantityController,
+            decoration: InputDecoration(
+              filled: true,
+              fillColor: Colors.white,
+              border: OutlineInputBorder(
+                borderRadius:
+                    BorderRadius.circular(10.0), // Adjust the radius as needed
+                borderSide: const BorderSide(
+                  color: periwinkleColor, // Set the border color
+                  width: 4,
+                ),
               ),
             ),
+            // Additional properties for the TextField can be added here
           ),
-          // Additional properties for the TextField can be added here
         ),
         const SizedBox(
           height: 15,
@@ -243,16 +262,21 @@ class _AddMedicationState extends State<AddMedication> {
           children: [
             CustomActionButton(
               onPressed: () {
-                if (newMedication) {
-                  addNewMedication(
-                    medicationController.text,
-                    int.tryParse(quantityController.text) ?? 0,
-                  );
+                if (_validateInput()) {
+                  if (newMedication) {
+                    addNewMedication(
+                      medicationController.text,
+                      int.tryParse(quantityController.text) ?? 0,
+                    );
+                  } else {
+                    updateMedicationInventory(
+                      selectedMedication!,
+                      int.tryParse(quantityController.text) ?? 0,
+                    );
+                  }
                 } else {
-                  updateMedicationInventory(
-                    selectedMedication!,
-                    int.tryParse(quantityController.text) ?? 0,
-                  );
+                  // Show an error message if any field is empty
+                  showErrorNotification('Please fill in all fields.');
                 }
               },
               buttonText: newMedication ? 'Add' : 'Update',
