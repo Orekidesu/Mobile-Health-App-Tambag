@@ -124,11 +124,13 @@ class _AddMedicationState extends State<AddMedication> {
             fontWeight: FontWeight.bold,
           ),
         ),
+        const SizedBox(height: 5,),
         if (!newMedication)
           Row(
             children: [
               Expanded(
                 child: Container(
+                  height: 45,
                   padding: const EdgeInsets.all(4.0),
                   decoration: BoxDecoration(
                     color: Colors.white,
@@ -170,21 +172,24 @@ class _AddMedicationState extends State<AddMedication> {
                   color: periwinkleColor,
                 ), // Adjust the font size as needed
               ),
-              TextField(
-                controller: medicationController,
-                decoration: InputDecoration(
-                  filled: true,
-                  fillColor: Colors.white,
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(
-                        10.0), // Adjust the radius as needed
-                    borderSide: const BorderSide(
-                      color: periwinkleColor, // Set the border color
-                      width: 4,
+              SizedBox(
+                height: 45,
+                child: TextField(
+                  controller: medicationController,
+                  decoration: InputDecoration(
+                    filled: true,
+                    fillColor: Colors.white,
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(
+                          10.0), // Adjust the radius as needed
+                      borderSide: const BorderSide(
+                        color: periwinkleColor, // Set the border color
+                        width: 4,
+                      ),
                     ),
                   ),
+                  // Additional properties for the TextField can be added here
                 ),
-                // Additional properties for the TextField can be added here
               ),
             ],
           ),
@@ -219,21 +224,24 @@ class _AddMedicationState extends State<AddMedication> {
             color: periwinkleColor,
           ), // Adjust the font size as needed
         ),
-        TextField(
-          controller: quantityController,
-          decoration: InputDecoration(
-            filled: true,
-            fillColor: Colors.white,
-            border: OutlineInputBorder(
-              borderRadius:
-                  BorderRadius.circular(10.0), // Adjust the radius as needed
-              borderSide: const BorderSide(
-                color: periwinkleColor, // Set the border color
-                width: 4,
+        SizedBox(
+          height: 45,
+          child: TextField(
+            controller: quantityController,
+            decoration: InputDecoration(
+              filled: true,
+              fillColor: Colors.white,
+              border: OutlineInputBorder(
+                borderRadius:
+                    BorderRadius.circular(10.0), // Adjust the radius as needed
+                borderSide: const BorderSide(
+                  color: periwinkleColor, // Set the border color
+                  width: 4,
+                ),
               ),
             ),
+            // Additional properties for the TextField can be added here
           ),
-          // Additional properties for the TextField can be added here
         ),
         const SizedBox(
           height: 15,

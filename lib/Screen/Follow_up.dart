@@ -334,7 +334,7 @@ class _Follow_upState extends State<Follow_up> {
                                       'Date:',
                                       style: TextStyle(
                                           fontWeight: FontWeight.bold,
-                                          fontSize: 16.0,
+                                          fontSize: 17.0,
                                           color:
                                               periwinkleColor), // Adjust the font size as needed
                                     ),
@@ -416,7 +416,7 @@ class _Follow_upState extends State<Follow_up> {
                                       'Time:',
                                       style: TextStyle(
                                           fontWeight: FontWeight.bold,
-                                          fontSize: 16.0,
+                                          fontSize: 17.0,
                                           color:
                                               periwinkleColor), // Adjust the font size as needed
                                     ),

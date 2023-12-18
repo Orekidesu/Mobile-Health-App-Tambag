@@ -121,6 +121,7 @@ class _AddMedicationProfileState extends State<AddMedicationProfile> {
             Expanded(
               child: 
               Container(
+                height: 45,
                 padding: const EdgeInsets.all(4.0),
                 decoration: BoxDecoration(
                   color: Colors.white,
@@ -169,16 +170,19 @@ class _AddMedicationProfileState extends State<AddMedicationProfile> {
         Row(
           children: [
             Expanded(
-              child: TextField(
-                controller: dosageController,
-                decoration: InputDecoration(
-                  filled: true,
-                  fillColor: Colors.white,
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10.0),
-                    borderSide: const BorderSide(
-                      color: periwinkleColor,
-                      width: 4,
+              child: SizedBox(
+                height: 45,
+                child: TextField(
+                  controller: dosageController,
+                  decoration: InputDecoration(
+                    filled: true,
+                    fillColor: Colors.white,
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10.0),
+                      borderSide: const BorderSide(
+                        color: periwinkleColor,
+                        width: 4,
+                      ),
                     ),
                   ),
                 ),
@@ -186,16 +190,19 @@ class _AddMedicationProfileState extends State<AddMedicationProfile> {
             ),
             const SizedBox(width: 8.0),
             Expanded(
-              child: TextField(
-                controller: frequencyController,
-                decoration: InputDecoration(
-                  filled: true,
-                  fillColor: Colors.white,
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10.0),
-                    borderSide: const BorderSide(
-                      color: periwinkleColor,
-                      width: 4,
+              child: SizedBox(
+                height: 45,
+                child: TextField(
+                  controller: frequencyController,
+                  decoration: InputDecoration(
+                    filled: true,
+                    fillColor: Colors.white,
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10.0),
+                      borderSide: const BorderSide(
+                        color: periwinkleColor,
+                        width: 4,
+                      ),
                     ),
                   ),
                 ),

@@ -77,7 +77,7 @@ class _Patient_ProfileState extends State<Patient_Profile> {
         return [];
       }
     } catch (e) {
-      print('Error fetching medications: $e');
+      showErrorNotification('Error fetching medications: $e');
       return [];
     }
   }

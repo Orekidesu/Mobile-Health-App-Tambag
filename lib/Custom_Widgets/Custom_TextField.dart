@@ -13,7 +13,7 @@ class CustomTextField extends StatelessWidget {
     super.key,
     required this.controller,
     required this.labelText,
-    this.labelFontSize = 20.0,
+    this.labelFontSize = 17.0,
     this.textFieldHeight = 5.0,
     this.borderRadius = 15.0,
     this.obscureText = false,
