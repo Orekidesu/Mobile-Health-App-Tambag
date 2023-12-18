@@ -9,6 +9,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../functions/custom_functions.dart';
 import '../Custom_Widgets/Custom_Appbar.dart';
 import '../constants/light_constants.dart';
+import '../Firebase_Query/Firebase_Functions.dart';
 
 class Patient_Profile extends StatefulWidget {
   final String patientId;
@@ -27,59 +28,8 @@ class _Patient_ProfileState extends State<Patient_Profile> {
   @override
   void initState() {
     super.initState();
-    patientData = getPatientData();
-    medications = getMedications();
-  }
-
-  Future<Map<String, dynamic>> getPatientData() async {
-    try {
-      final querySnapshot = await FirebaseFirestore.instance
-          .collection('patients')
-          .where('id', isEqualTo: widget.patientId)
-          .get();
-
-      if (querySnapshot.docs.isNotEmpty) {
-        // Assuming there is only one document matching the ID
-        return querySnapshot.docs.first.data();
-      } else {
-        return {};
-      }
-    } catch (e) {
-      return {};
-    }
-  }
-
-  Future<List<Map<String, dynamic>>> getMedications() async {
-    try {
-      final medicationsSnapshot = await FirebaseFirestore.instance
-          .collection('patients')
-          .where('id', isEqualTo: widget.patientId)
-          .limit(1)
-          .get();
-
-      if (medicationsSnapshot.docs.isNotEmpty) {
-        final patientDoc = medicationsSnapshot.docs.first;
-
-        final medicationsSubcollection =
-            await patientDoc.reference.collection('medications').get();
-
-        count = 0;
-        return medicationsSubcollection.docs.map((medicationDoc) {
-          count++;
-          return {
-            'name': medicationDoc['med_name'],
-            'dosage': medicationDoc['dosage']
-                .toString(), // Convert int to String if needed
-            'count': count,
-          };
-        }).toList();
-      } else {
-        return [];
-      }
-    } catch (e) {
-      print('Error fetching medications: $e');
-      return [];
-    }
+    patientData = DataService.getPatientData(widget.patientId);
+    medications = DataService.getMedications(widget.patientId);
   }
 
   @override
@@ -180,21 +130,74 @@ class _Patient_ProfileState extends State<Patient_Profile> {
                                   snapshot.data!.isEmpty) {
                                 return const Text('No medication data available.');
                               } else {
-                                final medicationsList = snapshot.data!;
-                                return ListView(
-                                  padding: const EdgeInsets.fromLTRB(10, 10, 16, 0),
-                                  children: medicationsList.map((medication) {
-                                    return CardWithIcon(
-                                      icon: FontAwesomeIcons.pills,
-                                      title:
-                                          "MEDICATION ${medication['count']}\n${medication['name']}",
-                                      subtitle: medication['dosage'] ?? 'N/A',
-                                    );
-                                  }).toList(),
+                                final patientInfo = snapshot.data!;
+                                return Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    CustomTextWidget(
+                                      text1: 'NAME:',
+                                      text2: patientInfo['name'] ?? 'N/A',
+                                    ),
+                                    CustomTextWidget(
+                                      text1: 'AGE:',
+                                      text2: patientInfo['age'] ?? 'N/A',
+                                    ),
+                                    CustomTextWidget(
+                                      text1: 'ADDRESS:',
+                                      text2: patientInfo['address'] ?? 'N/A',
+                                    ),
+                                    CustomTextWidget(
+                                      text1: 'PHYSICIAN:',
+                                      text2: patientInfo['physician'] ?? 'N/A',
+                                    ),
+                                    CustomTextWidget(
+                                      text1: 'CONTACT NO.:',
+                                      text2: patientInfo['contact_number'] ??
+                                          'N/A',
+                                    ),
+                                  ],
                                 );
                               }
                             },
                           ),
+                        ],
+                      ),
+                    ),
+                    // Medications section
+                    Container(
+                      height:
+                          MediaQuery.of(context).size.width < 600 ? 300 : 500,
+                      margin: const EdgeInsets.fromLTRB(0, 20, 0, 0),
+                      child: Expanded(
+                        child: FutureBuilder<List<Map<String, dynamic>>>(
+                          future: medications,
+                          builder: (context, snapshot) {
+                            if (snapshot.connectionState ==
+                                ConnectionState.waiting) {
+                              return const Center(
+                                  child: CupertinoActivityIndicator());
+                            } else if (snapshot.hasError) {
+                              return Text('Error: ${snapshot.error}');
+                            } else if (!snapshot.hasData ||
+                                snapshot.data!.isEmpty) {
+                              return const Text(
+                                  'No medication data available.');
+                            } else {
+                              final medicationsList = snapshot.data!;
+                              return ListView(
+                                padding:
+                                    const EdgeInsets.fromLTRB(10, 10, 16, 0),
+                                children: medicationsList.map((medication) {
+                                  return CardWithIcon(
+                                    icon: FontAwesomeIcons.pills,
+                                    title:
+                                        "MEDICATION ${medication['count']}\n${medication['name']}",
+                                    subtitle: medication['dosage'] ?? 'N/A',
+                                  );
+                                }).toList(),
+                              );
+                            }
+                          },
                         ),
                       ),
                     ],
@@ -270,7 +273,8 @@ class CardWithIcon extends StatelessWidget {
             borderRadius: BorderRadius.circular(20.0),
           ),
           child: ListTile(
-            leading: Icon(icon, color: const Color.fromARGB(255, 103, 103, 186)),
+            leading:
+                Icon(icon, color: const Color.fromARGB(255, 103, 103, 186)),
             title: Text(
               title.toUpperCase(),
               style: const TextStyle(
