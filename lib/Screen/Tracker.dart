@@ -116,28 +116,24 @@ class _TrackerState extends State<Tracker> {
                             padding: const EdgeInsets.all(16),
                             child: Column(
                               children: [
-                                const Expanded(
-                                  flex: 1,
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      Icon(FontAwesomeIcons.pills),
-                                      SizedBox(width: 10.0),
-                                      Text(
-                                        'LUNES',
-                                        style: TextStyle(
-                                          fontSize: 16.0,
-                                          fontWeight: FontWeight.bold,
-                                          color:
-                                              Color.fromARGB(255, 103, 103, 186),
-                                        ),
+                                const Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Icon(FontAwesomeIcons.pills),
+                                    SizedBox(width: 10.0),
+                                    Text(
+                                      'LUNES',
+                                      style: TextStyle(
+                                        fontSize: 16.0,
+                                        fontWeight: FontWeight.bold,
+                                        color:
+                                            Color.fromARGB(255, 103, 103, 186),
                                       ),
-                                    ],
-                                  ),
+                                    ),
+                                  ],
                                 ),
                                 Expanded(
-                                  flex: 3,
                                   child:
                                       FutureBuilder<List<Map<String, dynamic>>>(
                                     future: medications,
