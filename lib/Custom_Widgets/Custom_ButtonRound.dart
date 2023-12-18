@@ -12,7 +12,7 @@ class Custom_Button extends StatelessWidget {
   final VoidCallback? onTap;
 
   const Custom_Button({
-    Key? key,
+    super.key,
     required this.onTap,
     this.color,
     this.iconColor,
@@ -20,7 +20,7 @@ class Custom_Button extends StatelessWidget {
     required this.hasIcon,
     this.text,
     this.textColor,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
