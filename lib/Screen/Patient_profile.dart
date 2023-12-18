@@ -9,7 +9,6 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../functions/custom_functions.dart';
 import '../Custom_Widgets/Custom_Appbar.dart';
 import '../constants/light_constants.dart';
-import '../Firebase_Query/Firebase_Functions.dart';
 
 class Patient_Profile extends StatefulWidget {
   final String patientId;
