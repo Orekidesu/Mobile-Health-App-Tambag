@@ -8,10 +8,10 @@ class MyTable extends StatelessWidget {
   final List<List<String>> rows;
 
   const MyTable({
-    Key? key,
+    super.key,
     required this.columns,
     required this.rows,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -24,10 +24,10 @@ class TableWidget extends StatelessWidget {
   final List<List<String>> rows;
 
   const TableWidget({
-    Key? key,
+    super.key,
     required this.columns,
     required this.rows,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

@@ -20,7 +20,7 @@ class medication_inventory {
 
 class Masterlist extends StatefulWidget {
   // ignore: use_key_in_widget_constructors
-  const Masterlist({Key? key}) : super(key: key);
+  const Masterlist({super.key});
 
   @override
   State<Masterlist> createState() => _MasterlistState();

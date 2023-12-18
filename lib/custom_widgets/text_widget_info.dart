@@ -10,7 +10,7 @@ class CustomTextWidget extends StatelessWidget {
   static const Ucase_font_size = 16.0;
   static const Color periwinkleColor = Color.fromARGB(255, 103, 103, 186);
 
-  CustomTextWidget({
+  const CustomTextWidget({super.key, 
     required this.text1,
     required this.text2,
     this.fontSize,

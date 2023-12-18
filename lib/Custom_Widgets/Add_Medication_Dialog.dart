@@ -8,7 +8,7 @@ import 'CustomActionButton.dart';
 import '../Screen/Masterlist.dart';
 
 class AddMedication extends StatefulWidget {
-  const AddMedication({Key? key}) : super(key: key);
+  const AddMedication({super.key});
 
   @override
   _AddMedicationState createState() => _AddMedicationState();

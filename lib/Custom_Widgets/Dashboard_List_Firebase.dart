@@ -2,7 +2,6 @@
 
 import '../functions/custom_functions.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import '../Screen/Dashboard.dart';
 import '../Firebase_Query/Firebase_Functions.dart';
@@ -12,7 +11,7 @@ import 'PatientCard.dart';
 
 class DashboardListFirebase extends StatefulWidget {
   
-  const DashboardListFirebase({Key? key}) : super(key: key);
+  const DashboardListFirebase({super.key});
 
   @override
   _DashboardListFirebaseState createState() => _DashboardListFirebaseState();

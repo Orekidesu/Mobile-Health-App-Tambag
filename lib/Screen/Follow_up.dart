@@ -33,9 +33,9 @@ class Follow_up extends StatefulWidget {
   final String patientId;
 
   const Follow_up({
-    Key? key,
+    super.key,
     required this.patientId, // Corrected the parameter name
-  }) : super(key: key);
+  });
 
   @override
   State<Follow_up> createState() => _Follow_upState();

@@ -14,7 +14,7 @@
   }
 
   class Dashboard extends StatefulWidget {
-    const Dashboard({Key? key}) : super(key: key);
+    const Dashboard({super.key});
 
     @override
     // ignore: library_private_types_in_public_api

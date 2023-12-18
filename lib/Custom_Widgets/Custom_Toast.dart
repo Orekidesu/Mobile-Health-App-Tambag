@@ -10,7 +10,7 @@ import '../constants/light_constants.dart';
 class CustomToast extends StatelessWidget {
   final String message;
 
-  const CustomToast({Key? key, required this.message}) : super(key: key);
+  const CustomToast({super.key, required this.message});
 
   @override
   Widget build(BuildContext context) {
@@ -26,6 +26,6 @@ class CustomToast extends StatelessWidget {
       webBgColor: "$periwinkleGradient",
     );
 
-    return SizedBox.shrink(); // Empty widget, as showToast handles the display
+    return const SizedBox.shrink(); // Empty widget, as showToast handles the display
   }
 }

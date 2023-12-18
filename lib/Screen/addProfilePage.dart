@@ -11,7 +11,7 @@ import '../constants/light_constants.dart';
 import '../functions/custom_functions.dart';
 
 class AddProfilePage extends StatefulWidget {
-  const AddProfilePage({Key? key}) : super(key: key);
+  const AddProfilePage({super.key});
 
   @override
   _AddProfilePageState createState() => _AddProfilePageState();

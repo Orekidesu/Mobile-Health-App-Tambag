@@ -16,10 +16,10 @@ class AddMedicationProfile extends StatefulWidget {
   final AddMedicationCallback addMedicationCallback;
 
   const AddMedicationProfile({
-    Key? key,
+    super.key,
     required this.medicationList,
     required this.addMedicationCallback,
-  }) : super(key: key);
+  });
 
   @override
   _AddMedicationProfileState createState() => _AddMedicationProfileState();

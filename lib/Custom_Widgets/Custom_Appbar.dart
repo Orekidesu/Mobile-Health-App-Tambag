@@ -16,7 +16,7 @@ class Custom_Appbar extends StatefulWidget {
   final double titleFontSize;
 
   const Custom_Appbar({
-    Key? key,
+    super.key,
     this.titleFontSize = 20,
     this.hasBrgy = true,
     required this.Apptitle,
@@ -27,7 +27,7 @@ class Custom_Appbar extends StatefulWidget {
     this.icon,
     required this.hasbackIcon,
     required this.hasRightIcon,
-  }) : super(key: key);
+  });
 
   @override
   State<Custom_Appbar> createState() => _Custom_AppbarState();
