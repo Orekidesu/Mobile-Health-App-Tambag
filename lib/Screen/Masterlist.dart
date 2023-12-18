@@ -119,7 +119,7 @@ class _MasterlistState extends State<Masterlist> {
                     const Text(
                       'Diri nga seksyon makita ang tanang\ntambal nga ginagamit sa mga geriatic\nclient ug ang kadaghanon nga\ngikinahanglan matag tambal.',
                       style: TextStyle(
-                        fontWeight: FontWeight.w100,
+                        fontWeight: FontWeight.normal,
                         color: periwinkleColor,
                         fontSize: 15,
                         decoration: TextDecoration.none,
@@ -178,7 +178,7 @@ class _MasterlistState extends State<Masterlist> {
                     const Text(
                       'Diri nga seksyon makita ang istak sa\ntambal.',
                       style: TextStyle(
-                        fontWeight: FontWeight.w100,
+                        fontWeight: FontWeight.normal,
                         color: periwinkleColor,
                         fontSize: 15,
                         decoration: TextDecoration.none,

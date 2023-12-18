@@ -307,7 +307,7 @@ class _AddProfilePageState extends State<AddProfilePage> {
                       CustomActionButton(  
                           onPressed: () {
                             addProfileToFirebase();
-                            goToPageNoReturn(context,const Dashboard());  
+                            goToPage(context,const Dashboard());  
                           },
                           buttonText: "Add",
                         ),
