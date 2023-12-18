@@ -125,20 +125,37 @@ class _AddMedicationState extends State<AddMedication> {
           ),
         ),
         if (!newMedication)
-          DropdownButton<String?>(
-            value: selectedMedication,
-            onChanged: (String? value) {
-              setState(() {
-                selectedMedication = value;
-              });
-            },
-            items: medicationNames.map((String medName) {
-              return DropdownMenuItem<String>(
-                value: medName,
-                child: Text(medName),
-              );
-            }).toList(),
-            hint: const Text('Select Medication'),
+          Row(
+            children: [
+              Expanded(
+                child: Container(
+                  padding: const EdgeInsets.all(4.0),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(8.0),
+                    border: Border.all(
+                      color: periwinkleColor, // Set your desired border color
+                      width: 2.0, // Set your desired border width
+                    ),
+                  ),
+                  child: DropdownButton<String?>(
+                    value: selectedMedication,
+                    onChanged: (String? value) {
+                      setState(() {
+                        selectedMedication = value;
+                      });
+                    },
+                    items: medicationNames.map((String medName) {
+                      return DropdownMenuItem<String>(
+                        value: medName,
+                        child: Text(medName),
+                      );
+                    }).toList(),
+                    hint: const Text('Select Medication'),
+                  ),
+                ),
+              ),
+            ],
           ),
         if (newMedication)
           Column(
@@ -156,6 +173,8 @@ class _AddMedicationState extends State<AddMedication> {
               TextField(
                 controller: medicationController,
                 decoration: InputDecoration(
+                  filled: true,
+                  fillColor: Colors.white,
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(
                         10.0), // Adjust the radius as needed
@@ -203,6 +222,8 @@ class _AddMedicationState extends State<AddMedication> {
         TextField(
           controller: quantityController,
           decoration: InputDecoration(
+            filled: true,
+            fillColor: Colors.white,
             border: OutlineInputBorder(
               borderRadius:
                   BorderRadius.circular(10.0), // Adjust the radius as needed

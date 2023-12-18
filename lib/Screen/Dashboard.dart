@@ -35,7 +35,8 @@
     @override
     Widget build(BuildContext context) {
       return Scaffold(
-        body: Container(
+        body: 
+        SafeArea(child: Container(
           color: backgroundColor,
           padding: const EdgeInsets.all(16.0),
           child: Center(
@@ -54,14 +55,15 @@
                 ),
                 const SizedBox(height: 10),
                 const Expanded(
-                  child: Dashboard_List_Firebase(),
+                  child: DashboardListFirebase(),
                 ),
                 const SizedBox(height: 20),
                 const ProfileAndMasterlistRow(),
               ],
             ),
           ),
-        ),
+        ),),
+        
       );
     }
   }

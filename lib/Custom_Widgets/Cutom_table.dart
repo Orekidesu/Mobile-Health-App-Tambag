@@ -1,6 +1,6 @@
 // ignore_for_file: file_names
 
-import 'package:Tambag/constants/light_constants.dart';
+import '../constants/light_constants.dart';
 import 'package:flutter/material.dart';
 
 class MyTable extends StatelessWidget {
@@ -41,7 +41,7 @@ class TableWidget extends StatelessWidget {
                   padding: const EdgeInsets.all(8.0),
                   child: Text(
                     columnName,
-                    style: const TextStyle(fontWeight: FontWeight.bold, color: periwinkleColor,fontSize: 20),
+                    style: const TextStyle(fontWeight: FontWeight.bold, color: periwinkleColor,fontSize: 20,decoration: TextDecoration.none,),
                   ),
                 ),
               );
@@ -54,7 +54,7 @@ class TableWidget extends StatelessWidget {
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Text(cellData,
-                    style: const TextStyle(color: periwinkleColor, fontSize: 15,fontWeight: FontWeight.w100),),
+                    style: const TextStyle(color: periwinkleColor, fontSize: 15,fontWeight: FontWeight.w100,decoration: TextDecoration.none,),),
                   ),
                 );
               }).toList(),
