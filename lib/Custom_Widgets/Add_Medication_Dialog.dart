@@ -110,6 +110,15 @@ class _AddMedicationState extends State<AddMedication> {
     }
   }
 
+  bool _validateInput() {
+    if (newMedication) {
+      return medicationController.text.isNotEmpty &&
+          quantityController.text.isNotEmpty;
+    } else {
+      return selectedMedication != null && quantityController.text.isNotEmpty;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -124,7 +133,9 @@ class _AddMedicationState extends State<AddMedication> {
             fontWeight: FontWeight.bold,
           ),
         ),
-        const SizedBox(height: 5,),
+        const SizedBox(
+          height: 5,
+        ),
         if (!newMedication)
           Row(
             children: [
@@ -251,16 +262,21 @@ class _AddMedicationState extends State<AddMedication> {
           children: [
             CustomActionButton(
               onPressed: () {
-                if (newMedication) {
-                  addNewMedication(
-                    medicationController.text,
-                    int.tryParse(quantityController.text) ?? 0,
-                  );
+                if (_validateInput()) {
+                  if (newMedication) {
+                    addNewMedication(
+                      medicationController.text,
+                      int.tryParse(quantityController.text) ?? 0,
+                    );
+                  } else {
+                    updateMedicationInventory(
+                      selectedMedication!,
+                      int.tryParse(quantityController.text) ?? 0,
+                    );
+                  }
                 } else {
-                  updateMedicationInventory(
-                    selectedMedication!,
-                    int.tryParse(quantityController.text) ?? 0,
-                  );
+                  // Show an error message if any field is empty
+                  showErrorNotification('Please fill in all fields.');
                 }
               },
               buttonText: newMedication ? 'Add' : 'Update',

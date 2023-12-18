@@ -55,32 +55,37 @@ class _Follow_upState extends State<Follow_up> {
   // Function to submit follow-up data to Firestore
   Future<void> submitFollowUpData() async {
     try {
-      // Check if a document with the provided patientId exists
-      final QuerySnapshot querySnapshot = await patientsCollection
-          .where("id", isEqualTo: widget.patientId)
-          .get();
+      if (_validateInput()) {
+        // All fields are non-empty, proceed with submitting to Firestore
+        final QuerySnapshot querySnapshot = await patientsCollection
+            .where("id", isEqualTo: widget.patientId)
+            .get();
 
-      if (querySnapshot.docs.isNotEmpty) {
-        final DocumentSnapshot doc = querySnapshot.docs.first;
+        if (querySnapshot.docs.isNotEmpty) {
+          final DocumentSnapshot doc = querySnapshot.docs.first;
 
-        // Update the existing document with the new data
-        await doc.reference.update({
-          'physician': physicianController.text,
-          'facility': facilityController.text,
-          'day': selectedDay,
-          'month': selectedMonth,
-          'year': selectedYear,
-          'time': selectedTime,
-          'isDone': false, // Assuming the follow-up is not done initially
-        });
+          // Update the existing document with the new data
+          await doc.reference.update({
+            'physician': physicianController.text,
+            'facility': facilityController.text,
+            'day': selectedDay,
+            'month': selectedMonth,
+            'year': selectedYear,
+            'time': selectedTime,
+            'isDone': false,
+          });
 
-        // Refresh the UI by loading the updated data
-        loadFollowUpData();
+          // Refresh the UI by loading the updated data
+          loadFollowUpData();
 
-        // Optional: Show a success message or navigate to another screen
-        showSuccessSnackbar();
+          // Optional: Show a success message or navigate to another screen
+          showSuccessSnackbar();
+        } else {
+          // Handle the case where no document with the given patientId is found
+        }
       } else {
-        // Handle the case where no document with the given patientId is found
+        // Show an error message if any field is empty
+        showErrorNotification('Please fill in all fields.');
       }
     } catch (e) {
       // Handle errors, e.g., show an error message
@@ -224,8 +229,18 @@ class _Follow_upState extends State<Follow_up> {
         followUpData = data!;
       });
     } catch (e) {
-      print('Error loading follow-up data: $e');
+      showErrorNotification('Error loading follow-up data: $e');
     }
+  }
+
+  bool _validateInput() {
+    // Check if any of the text fields are empty
+    return physicianController.text.isNotEmpty &&
+        facilityController.text.isNotEmpty &&
+        selectedMonth.isNotEmpty &&
+        selectedDay.isNotEmpty &&
+        selectedYear.isNotEmpty &&
+        selectedTime.isNotEmpty;
   }
 
   @override
@@ -447,14 +462,15 @@ class _Follow_upState extends State<Follow_up> {
                                     ),
                                     Row(
                                       mainAxisAlignment: MainAxisAlignment.end,
-                                  crossAxisAlignment: CrossAxisAlignment.end,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.end,
                                       children: [
                                         CustomActionButton(
-                                            onPressed: () {
-                                              submitFollowUpData();
-                                            },
-                                            buttonText: "Submit",
-                                          ),
+                                          onPressed: () {
+                                            submitFollowUpData();
+                                          },
+                                          buttonText: "Submit",
+                                        ),
                                       ],
                                     ),
                                   ],

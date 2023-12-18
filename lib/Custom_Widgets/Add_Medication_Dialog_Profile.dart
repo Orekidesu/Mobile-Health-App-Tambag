@@ -97,6 +97,12 @@ class _AddMedicationProfileState extends State<AddMedicationProfile> {
     }
   }
 
+  bool _validateInput() {
+    return selectedMedName != null &&
+        dosageController.text.isNotEmpty &&
+        frequencyController.text.isNotEmpty;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -248,17 +254,18 @@ class _AddMedicationProfileState extends State<AddMedicationProfile> {
           children: [
             CustomActionButton(
               onPressed: () {
-                if (selectedMedName != null) {
+                if (_validateInput()) {
                   addNewMedication(
                     selectedMedName!,
                     selectedMedInd,
                     dosageController.text,
                     frequencyController.text,
                   );
+                  Navigator.pop(context);
                 } else {
-                  // Handle the case where selectedMedName is null, e.g., show an error message.
+                  // Show an error message if any field is empty
+                  showErrorNotification('Please fill in all fields.');
                 }
-                Navigator.pop(context);
               },
               buttonText: 'Add',
             ),
