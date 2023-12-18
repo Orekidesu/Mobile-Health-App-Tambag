@@ -9,6 +9,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../functions/custom_functions.dart';
 import '../Custom_Widgets/Custom_Appbar.dart';
 import '../constants/light_constants.dart';
+import '../Firebase_Query/Firebase_Functions.dart';
 
 class Patient_Profile extends StatefulWidget {
   final String patientId;
@@ -262,7 +263,8 @@ class CardWithIcon extends StatelessWidget {
             borderRadius: BorderRadius.circular(20.0),
           ),
           child: ListTile(
-            leading: Icon(icon, color: const Color.fromARGB(255, 103, 103, 186)),
+            leading:
+                Icon(icon, color: const Color.fromARGB(255, 103, 103, 186)),
             title: Text(
               title.toUpperCase(),
               style: const TextStyle(
