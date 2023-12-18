@@ -24,7 +24,9 @@ class _DashboardListFirebaseState extends State<DashboardListFirebase> {
   @override
   void initState() {
     super.initState();
-    patientData = getAllPatients();
+    setState(() {
+      patientData = getAllPatients();
+    });
   }
 
 
