@@ -1,4 +1,4 @@
-// ignore_for_file: non_constant_identifier_names
+// ignore_for_file: non_constant_identifier_names, file_names
 
 import 'package:flutter/material.dart';
 import '../Custom_Widgets/CustomActionButton.dart';
@@ -51,29 +51,62 @@ class _Follow_upState extends State<Follow_up> {
   String selectedDay = '1';
   String selectedYear = '2023';
   String selectedTime = 'alas-otso sa buntag';
+  bool isSendingInProgress = false;
 
   String convertToInternationalFormat(String localPhoneNumber) {
-  // Assuming local phone numbers in the Philippines start with "09" and are 11 digits long
-  if (localPhoneNumber.length == 11 && localPhoneNumber.startsWith("09")) {
-    // Remove the leading "0" and add the country code "+63"
-    return "+63${localPhoneNumber.substring(1)}";
-  } else {
-    // Handle invalid phone number format
-    return "Invalid phone number format";
+    // Assuming local phone numbers in the Philippines start with "09" and are 11 digits long
+    if (localPhoneNumber.length == 11 && localPhoneNumber.startsWith("09")) {
+      // Remove the leading "0" and add the country code "+63"
+      return "+63${localPhoneNumber.substring(1)}";
+    } else {
+      // Handle invalid phone number format
+      return "Invalid phone number format";
+    }
   }
-}
-  // Function to submit follow-up data to Firestore
-  Future<void> submitFollowUpData(String num) async {
-    try {
-      if (_validateInput()) {
-        // All fields are non-empty, proceed with submitting to Firestore
-        final QuerySnapshot querySnapshot = await followUpCollection
-            .where("id", isEqualTo: widget.patientId)
-            .get();
-    
-        if (querySnapshot.docs.isNotEmpty) {
-          final DocumentSnapshot subdoc = querySnapshot.docs.first;
 
+  Future<bool> sendSMSAndUpdateStatus(String num, String msg, DocumentReference subdocReference) async {
+      num = convertToInternationalFormat(num);
+      
+      bool status = await sendSMS(num, msg);
+      if (status) {
+        await subdocReference.update({
+          'smsError': false,
+        });
+      } else {
+        await subdocReference.update({
+          'smsError': true,
+        });
+      }
+
+      return status;
+  }
+
+  // Function to submit follow-up data to Firestore
+  Future<void> submitFollowUpData(String msg, String num) async {
+  try {
+    if (isSendingInProgress) {
+      showErrorNotification('Sending ongoing...');
+      return;
+    }
+
+    if (_validateInput()) {
+      
+      // All fields are non-empty, proceed with submitting to Firestore
+      final QuerySnapshot querySnapshot = await followUpCollection
+          .where("id", isEqualTo: widget.patientId)
+          .get();
+
+      if (querySnapshot.docs.isNotEmpty) {
+        final DocumentSnapshot subdoc = querySnapshot.docs.first;
+        isSendingInProgress = true;
+        bool smsStatus = await sendSMSAndUpdateStatus(num, msg, subdoc.reference);
+
+        // Refresh the UI by loading the updated data
+        loadFollowUpData();
+
+        // Optional: Show a success message or navigate to another screen
+        if (smsStatus) {
+          showSuccessNotification('Successful to send SMS');
           // Update the existing document with the new data
           await subdoc.reference.update({
             'physician': physicianController.text,
@@ -84,29 +117,20 @@ class _Follow_upState extends State<Follow_up> {
             'time': selectedTime,
             'isDone': false,
           });
-
-          String message = 'Mo followup kang ${physicianController.text} sa ${facilityController.text}t sa umaabot nga ika-$selectedDay sa $selectedMonth $selectedYear, $selectedTime';
-          num = convertToInternationalFormat(num);
-          //print(message);
-          sendSMS(num,message); 
-
-          // Refresh the UI by loading the updated data
-          loadFollowUpData();
-
-          // Optional: Show a success message or navigate to another screen
-          showSuccessSnackbar();
-        } else {
-          // Handle the case where no document with the given patientId is found
         }
+        isSendingInProgress = false;
       } else {
-        // Show an error message if any field is empty
-        showErrorNotification('Please fill in all fields.');
+        // Handle the case where no document with the given patientId is found
       }
-    } catch (e) {
-      // Handle errors, e.g., show an error message
-      showFailedSnackbar();
+    } else {
+      // Show an error message if any field is empty
+      showErrorNotification('Please fill in all fields.');
     }
+  } catch (e) {
+    // Handle errors, e.g., show an error message
+    showFailedSnackbar();
   }
+}
 
   // Function to submit follow-up data to Firestore
   Future<void> markAsDone() async {
@@ -166,8 +190,7 @@ class _Follow_upState extends State<Follow_up> {
   ];
 
   Map<String, dynamic> followUpData = {};
-  String contact_number= '';
-
+  String contact_number = '';
 
   late CollectionReference patientsCollection;
   late CollectionReference followUpCollection;
@@ -198,32 +221,31 @@ class _Follow_upState extends State<Follow_up> {
   }
 
   Future<String?> getContactNumberWithId() async {
-  try {
-    final QuerySnapshot querySnapshot = await patientsCollection
-        .where("id", isEqualTo: widget.patientId)
-        .get();
+    try {
+      final QuerySnapshot querySnapshot = await patientsCollection
+          .where("id", isEqualTo: widget.patientId)
+          .get();
 
-    if (querySnapshot.docs.isNotEmpty) {
-      // Assuming there's only one document with the given ID
-      final DocumentSnapshot doc = querySnapshot.docs.first;
-      final data = doc.data() as Map<String, dynamic>;
+      if (querySnapshot.docs.isNotEmpty) {
+        // Assuming there's only one document with the given ID
+        final DocumentSnapshot doc = querySnapshot.docs.first;
+        final data = doc.data() as Map<String, dynamic>;
 
-      // Check if the "id" field matches the patientId
-      if (data.containsKey("id") && data["id"] == widget.patientId) {
-        // Retrieve the contact_number field
-        String? contactNumber = data['contact_number'];
-        return contactNumber;
+        // Check if the "id" field matches the patientId
+        if (data.containsKey("id") && data["id"] == widget.patientId) {
+          // Retrieve the contact_number field
+          String? contactNumber = data['contact_number'];
+          return contactNumber;
+        } else {
+          return null; // or handle the case where the ID doesn't match
+        }
       } else {
-        return null; // or handle the case where the ID doesn't match
+        return null; // or handle the case where there is no document with the given ID
       }
-    } else {
-      return null; // or handle the case where there is no document with the given ID
+    } catch (e) {
+      return null;
     }
-  } catch (e) {
-    return null;
   }
-}
-
 
   void showFailedSnackbar() {
     ScaffoldMessenger.of(context).showSnackBar(
@@ -304,7 +326,8 @@ class _Follow_upState extends State<Follow_up> {
   void initState() {
     super.initState();
     // Call the function when the widget is initialized
-    followUpCollection = FirebaseFirestore.instance.collection('follow_up_history');
+    followUpCollection =
+        FirebaseFirestore.instance.collection('follow_up_history');
     patientsCollection = FirebaseFirestore.instance.collection('patients');
     loadFollowUpData();
     loadContactNumber();
@@ -312,6 +335,7 @@ class _Follow_upState extends State<Follow_up> {
 
   @override
   Widget build(BuildContext context) {
+    String message = '';
     return Scaffold(
       body: SafeArea(
         child: Container(
@@ -363,6 +387,9 @@ class _Follow_upState extends State<Follow_up> {
                                       },
                                       buttonText: "Mark as Done",
                                     ),
+                                  ),
+                                  const SizedBox(
+                                    height: 10,
                                   ),
                                 ],
                               )
@@ -525,7 +552,9 @@ class _Follow_upState extends State<Follow_up> {
                                       children: [
                                         CustomActionButton(
                                           onPressed: () {
-                                            submitFollowUpData(contact_number);
+                                            message = 'Mo followup kang ${physicianController.text} sa ${facilityController.text} sa umaabot nga ika-$selectedDay sa $selectedMonth $selectedYear, $selectedTime';               
+                                            submitFollowUpData(
+                                                message, contact_number);
                                           },
                                           buttonText: "Submit",
                                         ),

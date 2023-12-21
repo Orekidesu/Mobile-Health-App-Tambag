@@ -90,7 +90,7 @@ void showSignOutDialog(BuildContext context) {
 }
 
 
-Future<void> sendSMS(String recipient, String message) async {
+Future<bool> sendSMS(String recipient, String message) async {
   final credentials = base64Encode(utf8.encode('$username:$apiKey'));
   final headers = {
     'Authorization': 'Basic $credentials',
@@ -111,13 +111,30 @@ Future<void> sendSMS(String recipient, String message) async {
   try {
     final response = await http.post(url, headers: headers, body: body);
     if (response.statusCode == 200) {
-      showSuccessNotification('SMS sent successfully!');
+      final responseData = jsonDecode(response.body);
+      if (responseData["data"]["messages"][0]["status"] == 'INSUFFICIENT_CREDIT')
+      {
+        showErrorNotification('Insufficient Credits!\nContact Admin to reload.');
+        return false;
+      }
+      else if (responseData["data"]["messages"][0]["status"] == 'INVALID_RECIPIENT')
+      {
+        showErrorNotification('Invalid Recipient!');
+        return false;
+      }
+      else{
+        return true; // SMS sent successfully
+      }
+      
     } else {
-      showErrorNotification('Failed to send SMS: ${response.statusCode}');
+      return false; // Failed to send SMS
     }
+
   } catch (e) {
     showErrorNotification('Error sending SMS: $e');
+    return false; // Error sending SMS
   }
 }
+
 
   
