@@ -1,10 +1,16 @@
 // ignore_for_file: depend_on_referenced_packages, unused_element
 
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import '../Custom_Widgets/Custom_Dialog.dart';
 import '../Screen/Login.dart';  
 import 'package:fluttertoast/fluttertoast.dart';
 import '../constants/light_constants.dart';
+import 'package:http/http.dart' as http;
+
+const apiKey = '0EAC57AC-ECAF-6206-24DB-2688BF5EF58F';
+const username = 'Kael_fiel';
 
 void showSuccessNotification(String msg) {
   Fluttertoast.showToast(
@@ -81,6 +87,37 @@ void showSignOutDialog(BuildContext context) {
       );
     },
   );
+}
+
+
+Future<void> sendSMS(String recipient, String message) async {
+  final credentials = base64Encode(utf8.encode('$username:$apiKey'));
+  final headers = {
+    'Authorization': 'Basic $credentials',
+    'Content-Type': 'application/json'
+  };
+
+  final url = Uri.parse('https://rest.clicksend.com/v3/sms/send');
+  final body = jsonEncode({
+    'messages': [
+      {
+        'body': message,
+        'from': '+639380363909',
+        'to': recipient
+      }
+    ]
+  });
+
+  try {
+    final response = await http.post(url, headers: headers, body: body);
+    if (response.statusCode == 200) {
+      showSuccessNotification('SMS sent successfully!');
+    } else {
+      showErrorNotification('Failed to send SMS: ${response.statusCode}');
+    }
+  } catch (e) {
+    showErrorNotification('Error sending SMS: $e');
+  }
 }
 
   

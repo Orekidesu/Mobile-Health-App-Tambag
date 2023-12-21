@@ -41,6 +41,8 @@ dependencies:
   font_awesome_flutter: ^10.6.0
   connectivity_plus: ^5.0.2
   flutter_slidable: ^3.0.1
+  twilio_flutter: ^0.0.9
+
   
 
 dev_dependencies:

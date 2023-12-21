@@ -52,20 +52,30 @@ class _Follow_upState extends State<Follow_up> {
   String selectedYear = '2023';
   String selectedTime = 'alas-otso sa buntag';
 
+  String convertToInternationalFormat(String localPhoneNumber) {
+  // Assuming local phone numbers in the Philippines start with "09" and are 11 digits long
+  if (localPhoneNumber.length == 11 && localPhoneNumber.startsWith("09")) {
+    // Remove the leading "0" and add the country code "+63"
+    return "+63${localPhoneNumber.substring(1)}";
+  } else {
+    // Handle invalid phone number format
+    return "Invalid phone number format";
+  }
+}
   // Function to submit follow-up data to Firestore
-  Future<void> submitFollowUpData() async {
+  Future<void> submitFollowUpData(String num) async {
     try {
       if (_validateInput()) {
         // All fields are non-empty, proceed with submitting to Firestore
-        final QuerySnapshot querySnapshot = await patientsCollection
+        final QuerySnapshot querySnapshot = await followUpCollection
             .where("id", isEqualTo: widget.patientId)
             .get();
-
+    
         if (querySnapshot.docs.isNotEmpty) {
-          final DocumentSnapshot doc = querySnapshot.docs.first;
+          final DocumentSnapshot subdoc = querySnapshot.docs.first;
 
           // Update the existing document with the new data
-          await doc.reference.update({
+          await subdoc.reference.update({
             'physician': physicianController.text,
             'facility': facilityController.text,
             'day': selectedDay,
@@ -74,6 +84,11 @@ class _Follow_upState extends State<Follow_up> {
             'time': selectedTime,
             'isDone': false,
           });
+
+          String message = 'Mo followup kang ${physicianController.text} sa ${facilityController.text}t sa umaabot nga ika-$selectedDay sa $selectedMonth $selectedYear, $selectedTime';
+          num = convertToInternationalFormat(num);
+          //print(message);
+          sendSMS(num,message); 
 
           // Refresh the UI by loading the updated data
           loadFollowUpData();
@@ -97,7 +112,7 @@ class _Follow_upState extends State<Follow_up> {
   Future<void> markAsDone() async {
     try {
       // Check if a document with the provided patientId exists
-      final QuerySnapshot querySnapshot = await patientsCollection
+      final QuerySnapshot querySnapshot = await followUpCollection
           .where("id", isEqualTo: widget.patientId)
           .get();
 
@@ -151,12 +166,15 @@ class _Follow_upState extends State<Follow_up> {
   ];
 
   Map<String, dynamic> followUpData = {};
+  String contact_number= '';
+
 
   late CollectionReference patientsCollection;
+  late CollectionReference followUpCollection;
   //Function to return all patients
   Future<Map<String, dynamic>?> getAllPatientsWithId() async {
     try {
-      final QuerySnapshot querySnapshot = await patientsCollection
+      final QuerySnapshot querySnapshot = await followUpCollection
           .where("id", isEqualTo: widget.patientId)
           .get();
 
@@ -178,6 +196,34 @@ class _Follow_upState extends State<Follow_up> {
       return null;
     }
   }
+
+  Future<String?> getContactNumberWithId() async {
+  try {
+    final QuerySnapshot querySnapshot = await patientsCollection
+        .where("id", isEqualTo: widget.patientId)
+        .get();
+
+    if (querySnapshot.docs.isNotEmpty) {
+      // Assuming there's only one document with the given ID
+      final DocumentSnapshot doc = querySnapshot.docs.first;
+      final data = doc.data() as Map<String, dynamic>;
+
+      // Check if the "id" field matches the patientId
+      if (data.containsKey("id") && data["id"] == widget.patientId) {
+        // Retrieve the contact_number field
+        String? contactNumber = data['contact_number'];
+        return contactNumber;
+      } else {
+        return null; // or handle the case where the ID doesn't match
+      }
+    } else {
+      return null; // or handle the case where there is no document with the given ID
+    }
+  } catch (e) {
+    return null;
+  }
+}
+
 
   void showFailedSnackbar() {
     ScaffoldMessenger.of(context).showSnackBar(
@@ -233,6 +279,17 @@ class _Follow_upState extends State<Follow_up> {
     }
   }
 
+  Future<void> loadContactNumber() async {
+    try {
+      final data = await getContactNumberWithId();
+      setState(() {
+        contact_number = data!;
+      });
+    } catch (e) {
+      showErrorNotification('Error loading follow-up data: $e');
+    }
+  }
+
   bool _validateInput() {
     // Check if any of the text fields are empty
     return physicianController.text.isNotEmpty &&
@@ -247,9 +304,10 @@ class _Follow_upState extends State<Follow_up> {
   void initState() {
     super.initState();
     // Call the function when the widget is initialized
-    patientsCollection =
-        FirebaseFirestore.instance.collection('follow_up_history');
+    followUpCollection = FirebaseFirestore.instance.collection('follow_up_history');
+    patientsCollection = FirebaseFirestore.instance.collection('patients');
     loadFollowUpData();
+    loadContactNumber();
   }
 
   @override
@@ -467,7 +525,7 @@ class _Follow_upState extends State<Follow_up> {
                                       children: [
                                         CustomActionButton(
                                           onPressed: () {
-                                            submitFollowUpData();
+                                            submitFollowUpData(contact_number);
                                           },
                                           buttonText: "Submit",
                                         ),

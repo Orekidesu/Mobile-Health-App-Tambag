@@ -78,7 +78,7 @@ class FollowUpWidget extends StatelessWidget {
                     ),
                   ),
                   TextSpan(
-                    text: 'ika-${followUpData['day'] ?? 'N/A'} sa ${followUpData['month'] ?? 'N/A'} ${followUpData['year'] ?? 'N/A'}, alas-otso sa buntag',
+                    text: 'ika-${followUpData['day'] ?? 'N/A'} sa ${followUpData['month'] ?? 'N/A'} ${followUpData['year'] ?? 'N/A'}, ${followUpData['time'] ?? 'N/A'}',
                     style: const TextStyle(
                       fontSize: 15.0,
                       color: periwinkleColor,
