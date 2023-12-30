@@ -1,3 +1,6 @@
+import 'package:Tambag_Health_App/custom_widgets/Custom_Tile.dart';
+import 'package:intl/intl.dart';
+
 import '../Firebase_Query/Firebase_Functions.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -7,6 +10,7 @@ import '../Custom_Widgets/CustomActionButton.dart';
 import '../constants/light_constants.dart';
 import '../Custom_Widgets/Custom_Appbar.dart';
 import '../functions/custom_functions.dart';
+import 'package:intl/date_symbol_data_local.dart';
 
 class Tracker extends StatefulWidget {
   final String patientId;
@@ -27,17 +31,20 @@ class _TrackerState extends State<Tracker> {
   @override
   void initState() {
     super.initState();
+
+    // Intl.defaultLocale = 'fil';
     patientData = DataService.getPatientData(widget.patientId);
     medications = DataService.getMedications(widget.patientId);
   }
 
   @override
   Widget build(BuildContext context) {
+    initializeDateFormatting('fil');
     return SafeArea(
       child: Scaffold(
         backgroundColor: backgroundColor,
         body: Container(
-          padding: const EdgeInsets.all(25.0),
+          padding: const EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 0.0),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -56,14 +63,13 @@ class _TrackerState extends State<Tracker> {
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const SizedBox(height: 10,),
                       FutureBuilder<Map<String, dynamic>>(
                         future: patientData,
                         builder: (context, snapshot) {
                           if (snapshot.connectionState ==
                               ConnectionState.waiting) {
                             return const Center(
-                                            child: CircularProgressIndicator());
+                                child: CircularProgressIndicator());
                           } else if (snapshot.hasError) {
                             return Text('Error: ${snapshot.error}');
                           } else if (!snapshot.hasData ||
@@ -71,31 +77,37 @@ class _TrackerState extends State<Tracker> {
                             return const Text('No patient data available.');
                           } else {
                             final patientInfo = snapshot.data!;
-                            return Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                CustomTextWidget(
-                                  text1: 'NAME:',
-                                  text2: patientInfo['name'] ?? 'N/A',
-                                ),
-                                CustomTextWidget(
-                                  text1: 'AGE:',
-                                  text2: patientInfo['age']?.toString() ?? 'N/A',
-                                ),
-                                CustomTextWidget(
-                                  text1: 'ADDRESS:',
-                                  text2: patientInfo['address'] ?? 'N/A',
-                                ),
-                                CustomTextWidget(
-                                  text1: 'PHYSICIAN:',
-                                  text2: patientInfo['physician'] ?? 'N/A',
-                                ),
-                                CustomTextWidget(
-                                  text1: 'CONTACT NO.:',
-                                  text2: patientInfo['contact_number'] ?? 'N/A',
-                                ),
-                              ],
+                            return Padding(
+                              padding: const EdgeInsets.fromLTRB(
+                                  16.0, 10.0, 16.0, 0.0),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  CustomTextWidget(
+                                    text1: 'NAME:',
+                                    text2: patientInfo['name'] ?? 'N/A',
+                                  ),
+                                  CustomTextWidget(
+                                    text1: 'AGE:',
+                                    text2:
+                                        patientInfo['age']?.toString() ?? 'N/A',
+                                  ),
+                                  CustomTextWidget(
+                                    text1: 'ADDRESS:',
+                                    text2: patientInfo['address'] ?? 'N/A',
+                                  ),
+                                  CustomTextWidget(
+                                    text1: 'PHYSICIAN:',
+                                    text2: patientInfo['physician'] ?? 'N/A',
+                                  ),
+                                  CustomTextWidget(
+                                    text1: 'CONTACT NO.:',
+                                    text2:
+                                        patientInfo['contact_number'] ?? 'N/A',
+                                  ),
+                                ],
+                              ),
                             );
                           }
                         },
@@ -116,15 +128,17 @@ class _TrackerState extends State<Tracker> {
                             padding: const EdgeInsets.all(16),
                             child: Column(
                               children: [
-                                const Row(
+                                Row(
                                   mainAxisAlignment: MainAxisAlignment.start,
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Icon(FontAwesomeIcons.pills),
                                     SizedBox(width: 10.0),
                                     Text(
-                                      'LUNES',
-                                      style: TextStyle(
+                                      // Get the current day and format it to your needs (e.g., 'EEEE' for full day name).
+                                      DateFormat('EEEE', 'fil')
+                                          .format(DateTime.now()),
+                                      style: const TextStyle(
                                         fontSize: 16.0,
                                         fontWeight: FontWeight.bold,
                                         color:
@@ -142,6 +156,7 @@ class _TrackerState extends State<Tracker> {
                                           ConnectionState.waiting) {
                                         return const Center(
                                             child: CircularProgressIndicator());
+                                        //  child: Text('Please wait...'),);
                                       } else if (snapshot.hasError) {
                                         return Text('Error: ${snapshot.error}');
                                       } else if (!snapshot.hasData ||
@@ -159,7 +174,8 @@ class _TrackerState extends State<Tracker> {
                                             return MedicationTile(
                                               medicationName:
                                                   medication['name'] ?? 'N/A',
-                                              text: medication['dosage'] ?? 'N/A',
+                                              text:
+                                                  medication['dosage'] ?? 'N/A',
                                             );
                                           },
                                         );
@@ -271,36 +287,6 @@ class _TrackerState extends State<Tracker> {
               ),
             ],
           ),
-        ),
-      ),
-    );
-  }
-}
-
-class MedicationTile extends StatelessWidget {
-  final String text;
-  final String medicationName;
-
-  const MedicationTile({
-    super.key,
-    required this.medicationName,
-    required this.text,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return ListTile(
-      title: Text(
-        medicationName,
-        style: const TextStyle(
-          color: Color.fromARGB(255, 103, 103, 186),
-          fontWeight: FontWeight.bold,
-        ),
-      ),
-      subtitle: Text(
-        text,
-        style: const TextStyle(
-          color: Color.fromARGB(255, 103, 103, 186),
         ),
       ),
     );
