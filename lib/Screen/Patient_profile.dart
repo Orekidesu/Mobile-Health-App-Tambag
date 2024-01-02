@@ -1,5 +1,6 @@
 // ignore_for_file: camel_case_types
 
+import 'package:Tambag_Health_App/custom_widgets/Drug_interaction.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -9,6 +10,8 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../functions/custom_functions.dart';
 import '../Custom_Widgets/Custom_Appbar.dart';
 import '../constants/light_constants.dart';
+import '../Firebase_Query/Firebase_Functions.dart';
+import 'package:Tambag_Health_App/custom_widgets/Custom_Tile.dart';
 
 class Patient_Profile extends StatefulWidget {
   final String patientId;
@@ -24,68 +27,62 @@ class _Patient_ProfileState extends State<Patient_Profile> {
   late Future<List<Map<String, dynamic>>> medications;
   int count = 0;
 
+  late Future<List<Map<String, dynamic>>> interactingMedications;
+  late Future<List<String>> interactionDetails;
+
   @override
   void initState() {
     super.initState();
-    patientData = getPatientData();
-    medications = getMedications();
+    patientData = DataService.getPatientData(widget.patientId);
+    medications = DataService.getMedications(widget.patientId);
+    interactingMedications = _initializeInteractingMedications();
+    interactionDetails = _initializeInteractionDetails();
   }
 
-  Future<Map<String, dynamic>> getPatientData() async {
-    try {
-      final querySnapshot = await FirebaseFirestore.instance
-          .collection('patients')
-          .where('id', isEqualTo: widget.patientId)
-          .get();
+  Future<List<Map<String, dynamic>>> _initializeInteractingMedications() async {
+    final patientMedications = await medications;
+    final interactionChecker = MedicationInteractionChecker(allInteractions);
 
-      if (querySnapshot.docs.isNotEmpty) {
-        // Assuming there is only one document matching the ID
-        return querySnapshot.docs.first.data();
-      } else {
-        return {};
-      }
-    } catch (e) {
-      return {};
-    }
+    final List<String> medicationNames =
+        patientMedications.map((med) => med['name'] as String).toList();
+    final List<String>? interactingMedicines =
+        interactionChecker.checkInteractions(medicationNames);
+
+    final List<Map<String, dynamic>> interactingMedications = patientMedications
+        .where((medication) =>
+            interactingMedicines != null &&
+            interactingMedicines.contains(medication['name']))
+        .map((medication) {
+      final name = medication['name'] as String;
+      final dosage = medication['dosage'] as String? ?? 'N/A';
+
+      return {
+        'name': name,
+        'dosage': dosage,
+      };
+    }).toList();
+
+    return interactingMedications;
   }
 
-  Future<List<Map<String, dynamic>>> getMedications() async {
-    try {
-      final medicationsSnapshot = await FirebaseFirestore.instance
-          .collection('patients')
-          .where('id', isEqualTo: widget.patientId)
-          .limit(1)
-          .get();
+  Future<List<String>> _initializeInteractionDetails() async {
+    final patientMedications = await medications;
+    final interactionChecker = MedicationInteractionChecker(allInteractions);
 
-      if (medicationsSnapshot.docs.isNotEmpty) {
-        final patientDoc = medicationsSnapshot.docs.first;
+    final List<String> medicationNames =
+        patientMedications.map((med) => med['name'] as String).toList();
+    final List<String>? interactingMedicines =
+        interactionChecker.checkInteractions(medicationNames);
 
-        final medicationsSubcollection =
-            await patientDoc.reference.collection('medications').get();
+    final List<String> interactionDetails =
+        interactionChecker.getInteractionsDetails(interactingMedicines ?? []);
 
-        count = 0;
-        return medicationsSubcollection.docs.map((medicationDoc) {
-          count++;
-          return {
-            'name': medicationDoc['med_name'],
-            'dosage': medicationDoc['dosage']
-                .toString(), // Convert int to String if needed
-            'count': count,
-          };
-        }).toList();
-      } else {
-        return [];
-      }
-    } catch (e) {
-      showErrorNotification('Error fetching medications: $e');
-      return [];
-    }
+    return interactionDetails;
   }
 
   @override
   Widget build(BuildContext context) {
-    return 
-    SafeArea(
+    return SafeArea(
       child: Scaffold(
         backgroundColor: backgroundColor,
         body: LayoutBuilder(
@@ -128,8 +125,7 @@ class _Patient_ProfileState extends State<Patient_Profile> {
                               } else {
                                 final patientInfo = snapshot.data!;
                                 return Column(
-                                  crossAxisAlignment:
-                                      CrossAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     CustomTextWidget(
                                       text1: 'Name:',
@@ -145,8 +141,7 @@ class _Patient_ProfileState extends State<Patient_Profile> {
                                     ),
                                     CustomTextWidget(
                                       text1: 'Physician:',
-                                      text2:
-                                          patientInfo['physician'] ?? 'N/A',
+                                      text2: patientInfo['physician'] ?? 'N/A',
                                     ),
                                     CustomTextWidget(
                                       text1: 'Mobile:',
@@ -168,7 +163,8 @@ class _Patient_ProfileState extends State<Patient_Profile> {
                         builder: (context, snapshot) {
                           if (snapshot.connectionState ==
                               ConnectionState.waiting) {
-                            return const Center(child: CupertinoActivityIndicator());
+                            return const Center(
+                                child: CupertinoActivityIndicator());
                           } else if (snapshot.hasError) {
                             return Text('Error: ${snapshot.error}');
                           } else if (!snapshot.hasData ||
@@ -180,8 +176,7 @@ class _Patient_ProfileState extends State<Patient_Profile> {
                               children: medicationsList.map((medication) {
                                 return CardWithIcon(
                                   icon: FontAwesomeIcons.pills,
-                                  title:
-                                      "MEDICATION ${medication['count']}\n${medication['name']}",
+                                  title: "${medication['name']}",
                                   subtitle: medication['dosage'] ?? 'N/A',
                                 );
                               }).toList(),
@@ -198,7 +193,7 @@ class _Patient_ProfileState extends State<Patient_Profile> {
         ),
         bottomNavigationBar: Container(
           padding: const EdgeInsets.fromLTRB(16, 16, 16, 0.0),
-          height: 200,
+          height: 200.0,
           margin: const EdgeInsets.only(bottom: 25.0),
           child: Card(
             shape: RoundedRectangleBorder(
@@ -209,23 +204,132 @@ class _Patient_ProfileState extends State<Patient_Profile> {
               borderRadius: BorderRadius.circular(20.0),
             ),
             color: periwinkleColor,
-            child: Container(
-              constraints: const BoxConstraints.expand(),
-              child: Align(
-                alignment: Alignment.topCenter,
-                child: Container(
-                  margin: const EdgeInsets.only(bottom: 16),
-                  child: const Text(
-                    'DRUG MEDICATION INTERACTIONS',
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
-                      letterSpacing: 2.0,
+            child: Column(
+              children: [
+                Container(
+                  padding: EdgeInsets.fromLTRB(10.0, 10.0, 10.0, 0.0),
+                  child: Center(
+                    child: Text(
+                      'DRUG MEDICATION INTERACTIONS',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16.0,
+                        color: Colors.white,
+                      ),
                     ),
                   ),
                 ),
-              ),
+                Expanded(
+                  child: Container(
+                    height: 120.0,
+                    width: 400.0,
+                    padding: EdgeInsets.fromLTRB(8.0, 0.0, 8.0, 0.0),
+                    child: Card(
+                      shape: RoundedRectangleBorder(
+                        side: BorderSide(
+                          color: Colors.white,
+                          width: 2.0,
+                        ),
+                        borderRadius: BorderRadius.circular(20.0),
+                      ),
+                      child: SingleChildScrollView(
+                        child: Column(children: [
+                          FutureBuilder<List<Map<String, dynamic>>>(
+                            future: interactingMedications,
+                            builder: (context, snapshot) {
+                              if (snapshot.connectionState ==
+                                  ConnectionState.waiting) {
+                                return const Center(
+                                    child: CircularProgressIndicator());
+                              } else if (snapshot.hasError) {
+                                return Text('Error: ${snapshot.error}');
+                              } else if (!snapshot.hasData ||
+                                  snapshot.data!.isEmpty) {
+                                return const Text(
+                                    'No interacting medications available.');
+                              } else {
+                                final interactingMedicationsList =
+                                    snapshot.data!;
+                                return Column(
+                                  children: interactingMedicationsList
+                                      .map((interaction) {
+                                    return ListTile(
+                                      title: Text(
+                                        interaction['name']
+                                                .toString()
+                                                .toUpperCase() ??
+                                            'N/A',
+                                        style: TextStyle(
+                                          fontSize: 16.0,
+                                          fontWeight: FontWeight.bold,
+                                          color: periwinkleColor,
+                                        ),
+                                      ),
+                                      subtitle: Text(
+                                        '${interaction['dosage'] ?? 'N/A'}',
+                                        style: TextStyle(
+                                          color: periwinkleColor,
+                                        ),
+                                      ),
+                                    );
+                                  }).toList(),
+                                );
+                              }
+                            },
+                          ),
+
+                          //INTERACTION DETAILS SECTION: IT SHOULD CONTAIN A CENTERED HEADING CALLED "INTERACTIONS" AND BELOW IT ARE THE INTERACTION DETAILS //
+
+                          FutureBuilder<List<String>>(
+                            future: interactionDetails,
+                            builder: (context, snapshot) {
+                              if (snapshot.connectionState ==
+                                  ConnectionState.waiting) {
+                                return const Text('');
+                              } else if (snapshot.hasError) {
+                                return Text('Error: ${snapshot.error}');
+                              } else if (!snapshot.hasData ||
+                                  snapshot.data!.isEmpty) {
+                                return const Text('');
+                              } else {
+                                final interactionDetailsList = snapshot.data!;
+                                return Column(
+                                  children: [
+                                    const SizedBox(height: 10.0),
+                                    Center(
+                                      child: Text(
+                                        'INTERACTIONS',
+                                        style: TextStyle(
+                                          fontSize: 18.0,
+                                          fontWeight: FontWeight.bold,
+                                          color: periwinkleColor,
+                                        ),
+                                      ),
+                                    ),
+                                    ListView.builder(
+                                      shrinkWrap: true,
+                                      itemCount: interactionDetailsList.length,
+                                      itemBuilder: (context, index) {
+                                        return ListTile(
+                                          title: Text(
+                                            interactionDetailsList[index],
+                                            style: TextStyle(
+                                                color: periwinkleColor),
+                                          ),
+                                        );
+                                      },
+                                    ),
+                                  ],
+                                );
+                              }
+                            },
+                          ),
+                        ]),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
         ),
@@ -235,17 +339,18 @@ class _Patient_ProfileState extends State<Patient_Profile> {
 }
 
 class CardWithIcon extends StatelessWidget {
-  final IconData icon;
+  final IconData? icon;
   final String title;
   final String subtitle;
   final Color borderColor;
 
-  const CardWithIcon({super.key, 
-    required this.icon,
+  const CardWithIcon({
+    Key? key,
+    this.icon,
     required this.title,
     required this.subtitle,
     this.borderColor = const Color.fromARGB(255, 103, 103, 186),
-  });
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -262,8 +367,9 @@ class CardWithIcon extends StatelessWidget {
             borderRadius: BorderRadius.circular(20.0),
           ),
           child: ListTile(
-            leading:
-                Icon(icon, color: const Color.fromARGB(255, 103, 103, 186)),
+            leading: icon != null
+                ? Icon(icon, color: const Color.fromARGB(255, 103, 103, 186))
+                : null,
             title: Text(
               title.toUpperCase(),
               style: const TextStyle(
