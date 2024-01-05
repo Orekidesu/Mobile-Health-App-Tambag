@@ -49,6 +49,8 @@ class _AddMedicationProfileState extends State<AddMedicationProfile> {
               .get();
 
       List<MapEntry<String, String>> medicationData = querySnapshot.docs
+          .where((doc) => !widget.medicationList.any(
+              (addedMed) => addedMed['med_name'] == doc.data()['med_name']))
           .map((QueryDocumentSnapshot<Map<String, dynamic>> doc) {
         return MapEntry(
           doc.data()['med_name'] as String,
@@ -178,8 +180,7 @@ class _AddMedicationProfileState extends State<AddMedicationProfile> {
                       selectedMedInd = getMedInd(value ?? '');
                     });
                   },
-                  items:
-                      medicationDataList.map((MapEntry<String, String> entry) {
+                  items: medicationDataList.map((entry) {
                     return DropdownMenuItem<String>(
                       value: entry.key,
                       child: Text(entry.key),
