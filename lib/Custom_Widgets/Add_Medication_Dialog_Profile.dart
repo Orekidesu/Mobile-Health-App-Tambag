@@ -28,6 +28,8 @@ class AddMedicationProfile extends StatefulWidget {
 class _AddMedicationProfileState extends State<AddMedicationProfile> {
   final TextEditingController dosageController = TextEditingController();
   final TextEditingController frequencyController = TextEditingController();
+  final TextEditingController quantityController = TextEditingController();
+
   String? selectedMedName;
   late String selectedMedInd = '';
 
@@ -75,23 +77,54 @@ class _AddMedicationProfileState extends State<AddMedicationProfile> {
     String medName,
     String medInd,
     String dosage,
+    String quantity,
     String frequency,
   ) async {
     try {
-      Map<String, dynamic> medicationDetails = {
-        'med_name': medName,
-        'med_ind': medInd,
-        'med_quan': int.parse(dosage),
-        'dosage':'$dosage mg usa kada tablets kada $frequency ka-oras\n$medInd',
-      };
+      int requestedQuantity = int.parse(quantity);
+      if (requestedQuantity > 0) {
+        // Get the available quantity from the medication inventory
+        QuerySnapshot<Map<String, dynamic>> inventorySnapshot =
+            await FirebaseFirestore.instance
+                .collection('medication_inventory')
+                .where('med_name', isEqualTo: medName)
+                .limit(1)
+                .get();
 
-      // Call the callback function to update medicationList in File 2
-      widget.addMedicationCallback(medicationDetails);
+        int availableQuantity =
+            inventorySnapshot.docs.first.data()['med_quan'] as int;
+        DocumentReference docRef = inventorySnapshot.docs.first.reference;
 
-      showSuccessNotification('Medication added successfully.');
+        // Check if the requested quantity is greater than the available quantity
+        if (requestedQuantity > availableQuantity) {
+          showErrorNotification(
+              'Requested quantity exceeds available quantity.');
+          return;
+        } else {
+          Map<String, dynamic> medicationDetails = {
+            'med_name': medName,
+            'med_ind': medInd,
+            'med_quan': int.parse(quantity),
+            'dosage':
+                '$dosage mg usa kada tablets kada $frequency ka-oras\n$medInd',
+          };
 
-      frequencyController.clear();
-      dosageController.clear();
+          widget.addMedicationCallback(medicationDetails);
+
+          // Update the quantity in the medication inventory
+          await docRef
+              .update({'med_quan': availableQuantity - requestedQuantity});
+
+          showSuccessNotification('Medication added successfully.');
+
+          frequencyController.clear();
+          dosageController.clear();
+          quantityController.clear();
+        }
+      } else {
+        showErrorNotification(
+            'Invalid quantity. Please enter a valid quantity.');
+      }
     } catch (error) {
       showErrorNotification('Error adding new Medication: $error');
     }
@@ -100,7 +133,8 @@ class _AddMedicationProfileState extends State<AddMedicationProfile> {
   bool _validateInput() {
     return selectedMedName != null &&
         dosageController.text.isNotEmpty &&
-        frequencyController.text.isNotEmpty;
+        frequencyController.text.isNotEmpty &&
+        quantityController.text.isNotEmpty;
   }
 
   @override
@@ -125,8 +159,7 @@ class _AddMedicationProfileState extends State<AddMedicationProfile> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Expanded(
-              child: 
-              Container(
+              child: Container(
                 height: 45,
                 padding: const EdgeInsets.all(4.0),
                 decoration: BoxDecoration(
@@ -137,8 +170,7 @@ class _AddMedicationProfileState extends State<AddMedicationProfile> {
                     width: 2.0, // Set your desired border width
                   ),
                 ),
-                child: 
-                DropdownButton<String>(
+                child: DropdownButton<String>(
                   value: selectedMedName,
                   onChanged: (String? value) {
                     setState(() {
@@ -183,6 +215,7 @@ class _AddMedicationProfileState extends State<AddMedicationProfile> {
                   decoration: InputDecoration(
                     filled: true,
                     fillColor: Colors.white,
+                    hintText: 'Dosage (mg)',
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10.0),
                       borderSide: const BorderSide(
@@ -203,6 +236,45 @@ class _AddMedicationProfileState extends State<AddMedicationProfile> {
                   decoration: InputDecoration(
                     filled: true,
                     fillColor: Colors.white,
+                    hintText: 'Freq (Oras)',
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10.0),
+                      borderSide: const BorderSide(
+                        color: periwinkleColor,
+                        width: 4,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(
+          height: 15,
+        ),
+        const Text(
+          'Quantity:',
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: 16.0,
+            color: periwinkleColor,
+          ),
+        ),
+        const SizedBox(
+          height: 5,
+        ),
+        Row(
+          children: [
+            Expanded(
+              child: SizedBox(
+                height: 45,
+                child: TextField(
+                  controller: quantityController,
+                  decoration: InputDecoration(
+                    filled: true,
+                    fillColor: Colors.white,
+                    hintText: '', //
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10.0),
                       borderSide: const BorderSide(
@@ -259,6 +331,7 @@ class _AddMedicationProfileState extends State<AddMedicationProfile> {
                     selectedMedName!,
                     selectedMedInd,
                     dosageController.text,
+                    quantityController.text,
                     frequencyController.text,
                   );
                   Navigator.pop(context);

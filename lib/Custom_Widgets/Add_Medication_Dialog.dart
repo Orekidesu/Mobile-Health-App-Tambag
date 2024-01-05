@@ -90,7 +90,7 @@ class _AddMedicationState extends State<AddMedication> {
     }
   }
 
-  Future<void> addNewMedication(String medName, int medQuan) async {
+  /* Future<void> addNewMedication(String medName, int medQuan) async {
     try {
       // Reference to the medication_inventory collection
       CollectionReference<Map<String, dynamic>> collectionReference =
@@ -108,7 +108,7 @@ class _AddMedicationState extends State<AddMedication> {
       showErrorNotification('Error adding new Medication: $error');
       goToPage(context, const Masterlist());
     }
-  }
+  }*/
 
   bool _validateInput() {
     if (newMedication) {
@@ -204,7 +204,7 @@ class _AddMedicationState extends State<AddMedication> {
               ),
             ],
           ),
-        Row(
+        /*Row(
           children: [
             Checkbox(
               value: newMedication,
@@ -223,7 +223,7 @@ class _AddMedicationState extends State<AddMedication> {
               ),
             )
           ],
-        ),
+        ),*/
         const SizedBox(
           height: 10,
         ),
@@ -263,17 +263,18 @@ class _AddMedicationState extends State<AddMedication> {
             CustomActionButton(
               onPressed: () {
                 if (_validateInput()) {
-                  if (newMedication) {
-                    addNewMedication(
-                      medicationController.text,
-                      int.tryParse(quantityController.text) ?? 0,
-                    );
-                  } else {
-                    updateMedicationInventory(
-                      selectedMedication!,
-                      int.tryParse(quantityController.text) ?? 0,
-                    );
-                  }
+                  // if (newMedication) {
+                  //   addNewMedication(
+                  //     medicationController.text,
+                  //     int.tryParse(quantityController.text) ?? 0,
+                  //   );
+                  // }
+                  //  else {
+                  updateMedicationInventory(
+                    selectedMedication!,
+                    int.tryParse(quantityController.text) ?? 0,
+                  );
+                  // }
                 } else {
                   // Show an error message if any field is empty
                   showErrorNotification('Please fill in all fields.');

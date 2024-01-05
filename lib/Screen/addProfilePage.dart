@@ -27,41 +27,43 @@ class _AddProfilePageState extends State<AddProfilePage> {
   String highestIdValue = '';
 
   @override
-  void initState()  {
+  void initState() {
     super.initState();
   }
 
-  final CollectionReference patientsCollection = FirebaseFirestore.instance.collection('patients');
-  final CollectionReference followUpCollection = FirebaseFirestore.instance.collection('follow_up_history');
+  final CollectionReference patientsCollection =
+      FirebaseFirestore.instance.collection('patients');
+  final CollectionReference followUpCollection =
+      FirebaseFirestore.instance.collection('follow_up_history');
 
   Future<void> addProfileToFirebase() async {
-  try {
-    if (_validateInput()) {
-      // All fields are non-empty, proceed with adding to Firebase
-      String id = await getHighestIdDocument();
-      DocumentReference profileReference =
-          await patientsCollection.add(getProfileData(id));
+    try {
+      if (_validateInput()) {
+        // All fields are non-empty, proceed with adding to Firebase
+        String id = await getHighestIdDocument();
+        DocumentReference profileReference =
+            await patientsCollection.add(getProfileData(id));
 
-      await followUpCollection.add(newFolowup(id));
+        await followUpCollection.add(newFolowup(id));
 
-      // Add medication data to the subcollection
-      CollectionReference medicationCollection =
-          profileReference.collection('medications');
-      for (Map<String, dynamic> medicationDetails in medicationList) {
-        await medicationCollection.add(medicationDetails);
+        // Add medication data to the subcollection
+        CollectionReference medicationCollection =
+            profileReference.collection('medications');
+        for (Map<String, dynamic> medicationDetails in medicationList) {
+          await medicationCollection.add(medicationDetails);
+        }
+        showSuccessNotification('Successfully added');
+
+        // Navigate to the Dashboard after successful addition
+        goToPage(context, const Dashboard());
+      } else {
+        // Show an error notification if there are empty fields
+        showErrorNotification('Please fill in all fields.');
       }
-      showSuccessNotification('Successfully added');
-
-      // Navigate to the Dashboard after successful addition
-      goToPage(context, const Dashboard());
-    } else {
-      // Show an error notification if there are empty fields
-      showErrorNotification('Please fill in all fields.');
+    } catch (e) {
+      showErrorNotification('Error adding profile to Firebase: $e');
     }
-  } catch (e) {
-    showErrorNotification('Error adding profile to Firebase: $e');
   }
-} 
 
   Future<String> getHighestIdDocument() async {
     try {
@@ -77,7 +79,8 @@ class _AddProfilePageState extends State<AddProfilePage> {
         DocumentSnapshot highestIdDocument = querySnapshot.docs.first;
 
         // Access the 'id' field value from the document
-        String highestIdValue = (int.parse(highestIdDocument['id']) + 1).toString();
+        String highestIdValue =
+            (int.parse(highestIdDocument['id']) + 1).toString();
         return highestIdValue;
       } else {
         return '1'; // Return a default value if no documents are found
@@ -87,7 +90,6 @@ class _AddProfilePageState extends State<AddProfilePage> {
     }
   }
 
-
   Map<String, dynamic> getProfileData(String id) {
     return {
       'name': nameController.text,
@@ -95,26 +97,26 @@ class _AddProfilePageState extends State<AddProfilePage> {
       'address': addressController.text,
       'contact_number': contactNumberController.text,
       'physician': physicianController.text,
-      'id' : id,
+      'id': id,
     };
   }
 
   Map<String, dynamic> newFolowup(String id) {
     return {
       'isDone': true,
-      'id' : id,
+      'id': id,
     };
   }
 
   bool _validateInput() {
-  // Check if any of the text fields are empty
-  return nameController.text.isNotEmpty &&
-      ageController.text.isNotEmpty &&
-      addressController.text.isNotEmpty &&
-      contactNumberController.text.isNotEmpty &&
-      physicianController.text.isNotEmpty &&
-      medicationList.isNotEmpty;
-}
+    // Check if any of the text fields are empty
+    return nameController.text.isNotEmpty &&
+        ageController.text.isNotEmpty &&
+        addressController.text.isNotEmpty &&
+        contactNumberController.text.isNotEmpty &&
+        physicianController.text.isNotEmpty &&
+        medicationList.isNotEmpty;
+  }
 
   void _showMyDialog(BuildContext context) {
     showDialog<void>(
@@ -170,177 +172,183 @@ class _AddProfilePageState extends State<AddProfilePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: 
-      SafeArea(child: Container(
-        height: MediaQuery.of(context).size.height, // Adjust as needed
-        color: backgroundColor,
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Custom_Appbar(
-              titleFontSize: 25,
-              hasBrgy: false,
-              Baranggay: "Profile",
-              Apptitle: "Add Profile",
-              hasbackIcon: true,
-              hasRightIcon: false,
-              iconColor: Colors.white,
-              DistinationBack: () => goToPage(context, const Dashboard()),
-            ),
-            Expanded(
-              child: SingleChildScrollView(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Padding(
-                  padding: const EdgeInsets.only(
-                    left: 10,
-                    right: 10,
-                  ),
+      body: SafeArea(
+        child: Container(
+          height: MediaQuery.of(context).size.height, // Adjust as needed
+          color: backgroundColor,
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Custom_Appbar(
+                titleFontSize: 25,
+                hasBrgy: false,
+                Baranggay: "Profile",
+                Apptitle: "Add Profile",
+                hasbackIcon: true,
+                hasRightIcon: false,
+                iconColor: Colors.white,
+                DistinationBack: () => goToPage(context, const Dashboard()),
+              ),
+              Expanded(
+                child: SingleChildScrollView(
                   child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      CustomTextField(
-                        controller: nameController,
-                        labelText: 'Name:',
-                      ),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      CustomTextField(
-                        controller: ageController,
-                        labelText: 'Age:',
-                      ),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      CustomTextField(
-                        controller: addressController,
-                        labelText: 'Address:',
-                      ),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Text(
-                            'Medication:',
-                            style: TextStyle(
-                              color: periwinkleColor,
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          Container(
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              border: Border.all(
-                                color: periwinkleColor, // Set the border color
-                                width: 2.0, // Set the border width
-                              ),
-                              borderRadius: BorderRadius.circular(
-                                  12.0), // Set the border radius
-                            ),
-                            child: SizedBox(
-                              height:
-                                  150.0, // Set a specific height for the container
-                              child: Padding(
-                                padding: const EdgeInsets.all(4.0),
-                                child: ListView.builder(
-                                  itemCount: medicationList.length,
-                                  itemBuilder: (context, index) {
-                                    Map<String, dynamic> medicationDetails =
-                                        medicationList[index];
-                                    return ListTile(
-                                      title: Text(
-                                        medicationDetails['med_name'] ?? '',
-                                        style: const TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          color: periwinkleColor,
-                                        ),
-                                      ),
-                                      subtitle: Text(
-                                        '${medicationDetails['dosage'] ?? ''}',
-                                        style: const TextStyle(
-                                          fontSize:
-                                              13, // Adjust the font size as needed
-                                          color: periwinkleColor,
-                                        ),
-                                      ),
-                                      // You can customize the ListTile further if needed
-                                    );
-                                  },
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(
-                        height: 5,
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          GestureDetector(
-                            onTap: () {
-                              _showMyDialog(context);
-                            },
-                            child: const Text(
-                              'Add Medication',
-                              style: TextStyle(
-                                color: periwinkleColor, // Set the text color
-                                fontWeight: FontWeight.bold,
-                                fontSize: 18,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      CustomTextField(
-                        controller: contactNumberController,
-                        labelText: 'Contact Number:',
-                      ),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      CustomTextField(
-                        controller: physicianController,
-                        labelText: 'Physician:',
-                      ),
-                      const SizedBox(height: 10,),
-                      Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                      CustomActionButton(  
-                          onPressed: () {
-                            addProfileToFirebase();
-                          },
-                          buttonText: "Add",
+                      Padding(
+                        padding: const EdgeInsets.only(
+                          left: 10,
+                          right: 10,
                         ),
-                      ],)                  
+                        child: Column(
+                          children: [
+                            const SizedBox(
+                              height: 10,
+                            ),
+                            CustomTextField(
+                              controller: nameController,
+                              labelText: 'Name:',
+                            ),
+                            const SizedBox(
+                              height: 10,
+                            ),
+                            CustomTextField(
+                              controller: ageController,
+                              labelText: 'Age:',
+                            ),
+                            const SizedBox(
+                              height: 10,
+                            ),
+                            CustomTextField(
+                              controller: addressController,
+                              labelText: 'Address:',
+                            ),
+                            const SizedBox(
+                              height: 10,
+                            ),
+                            Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const Text(
+                                  'Medication:',
+                                  style: TextStyle(
+                                    color: periwinkleColor,
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                Container(
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    border: Border.all(
+                                      color:
+                                          periwinkleColor, // Set the border color
+                                      width: 2.0, // Set the border width
+                                    ),
+                                    borderRadius: BorderRadius.circular(
+                                        12.0), // Set the border radius
+                                  ),
+                                  child: SizedBox(
+                                    height:
+                                        150.0, // Set a specific height for the container
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(4.0),
+                                      child: ListView.builder(
+                                        itemCount: medicationList.length,
+                                        itemBuilder: (context, index) {
+                                          Map<String, dynamic>
+                                              medicationDetails =
+                                              medicationList[index];
+                                          return ListTile(
+                                            title: Text(
+                                              medicationDetails['med_name'] ??
+                                                  '',
+                                              style: const TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                color: periwinkleColor,
+                                              ),
+                                            ),
+                                            subtitle: Text(
+                                              '${medicationDetails['dosage'] ?? ''}',
+                                              style: const TextStyle(
+                                                fontSize:
+                                                    13, // Adjust the font size as needed
+                                                color: periwinkleColor,
+                                              ),
+                                            ),
+                                            // You can customize the ListTile further if needed
+                                          );
+                                        },
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(
+                              height: 5,
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                GestureDetector(
+                                  onTap: () {
+                                    _showMyDialog(context);
+                                  },
+                                  child: const Text(
+                                    'Add Medication',
+                                    style: TextStyle(
+                                      color:
+                                          periwinkleColor, // Set the text color
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 18,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(
+                              height: 10,
+                            ),
+                            CustomTextField(
+                              controller: contactNumberController,
+                              labelText: 'Contact Number:',
+                            ),
+                            const SizedBox(
+                              height: 10,
+                            ),
+                            CustomTextField(
+                              controller: physicianController,
+                              labelText: 'Physician:',
+                            ),
+                            const SizedBox(
+                              height: 10,
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                CustomActionButton(
+                                  onPressed: () {
+                                    addProfileToFirebase();
+                                  },
+                                  buttonText: "Add",
+                                ),
+                              ],
+                            )
+                          ],
+                        ),
+                      ),
                     ],
                   ),
                 ),
-                  ], ),
-              ),
-            )
-            
-          ],
+              )
+            ],
+          ),
         ),
-      ),),
-      
-      
+      ),
     );
   }
 }
