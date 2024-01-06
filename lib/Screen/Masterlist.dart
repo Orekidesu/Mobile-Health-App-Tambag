@@ -80,7 +80,7 @@ class _MasterlistState extends State<Masterlist> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        child: Container(
+          child: Container(
         height: MediaQuery.of(context).size.height, // Adjust as needed
         color: backgroundColor,
         padding: const EdgeInsets.all(30.0),
@@ -129,7 +129,8 @@ class _MasterlistState extends State<Masterlist> {
                     FutureBuilder<Map<String, int>>(
                       future: _medicationQuantitiesFuture,
                       builder: (context, snapshot) {
-                        if (snapshot.connectionState == ConnectionState.waiting) {
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
                           return const Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
@@ -138,8 +139,10 @@ class _MasterlistState extends State<Masterlist> {
                             ],
                           );
                         } else if (snapshot.hasError) {
-                          return Center(child: Text('Error: ${snapshot.error}'));
-                        } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                          return Center(
+                              child: Text('Error: ${snapshot.error}'));
+                        } else if (!snapshot.hasData ||
+                            snapshot.data!.isEmpty) {
                           return const Text(
                             'Not available.',
                             style: TextStyle(
@@ -150,17 +153,18 @@ class _MasterlistState extends State<Masterlist> {
                           );
                         } else {
                           // Extract medication data from the snapshot
-                          Map<String, int> medicationQuantities = snapshot.data!;
-                
+                          Map<String, int> medicationQuantities =
+                              snapshot.data!;
+
                           // Build rows for the table using sorted data
                           List<MapEntry<String, int>> sortedRows =
                               medicationQuantities.entries.toList()
                                 ..sort((a, b) => a.key.compareTo(b.key));
-                
+
                           List<List<String>> rows = sortedRows.map((entry) {
                             return [entry.key, entry.value.toString()];
                           }).toList();
-                
+
                           return MyTable(columns: columns, rows: rows);
                         }
                       },
@@ -188,7 +192,8 @@ class _MasterlistState extends State<Masterlist> {
                     FutureBuilder<List<medication_inventory>>(
                       future: _allMedicalInventoryFuture,
                       builder: (context, snapshot) {
-                        if (snapshot.connectionState == ConnectionState.waiting) {
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
                           return const Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
@@ -197,8 +202,10 @@ class _MasterlistState extends State<Masterlist> {
                             ],
                           );
                         } else if (snapshot.hasError) {
-                          return Center(child: Text('Error: ${snapshot.error}'));
-                        } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                          return Center(
+                              child: Text('Error: ${snapshot.error}'));
+                        } else if (!snapshot.hasData ||
+                            snapshot.data!.isEmpty) {
                           return const Text(
                             'Not available.',
                             style: TextStyle(
@@ -214,13 +221,13 @@ class _MasterlistState extends State<Masterlist> {
                           sortedMedicationInventory.sort((a, b) => a.med_name
                               .toLowerCase()
                               .compareTo(b.med_name.toLowerCase()));
-                
+
                           // Build rows for the table using sorted data
                           List<List<String>> rows =
                               sortedMedicationInventory.map((med) {
                             return [med.med_name, med.med_quan.toString()];
                           }).toList();
-                
+
                           return MyTable(columns: columns, rows: rows);
                         }
                       },
