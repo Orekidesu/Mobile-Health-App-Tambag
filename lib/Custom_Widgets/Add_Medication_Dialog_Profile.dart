@@ -113,10 +113,6 @@ class _AddMedicationProfileState extends State<AddMedicationProfile> {
 
           widget.addMedicationCallback(medicationDetails);
 
-          // Update the quantity in the medication inventory
-          await docRef
-              .update({'med_quan': availableQuantity - requestedQuantity});
-
           showSuccessNotification('Medication added successfully.');
 
           frequencyController.clear();

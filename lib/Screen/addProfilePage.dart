@@ -36,6 +36,7 @@ class _AddProfilePageState extends State<AddProfilePage> {
   final CollectionReference followUpCollection =
       FirebaseFirestore.instance.collection('follow_up_history');
 
+  //
   Future<void> addProfileToFirebase() async {
     try {
       if (_validateInput()) {
@@ -52,6 +53,12 @@ class _AddProfilePageState extends State<AddProfilePage> {
         for (Map<String, dynamic> medicationDetails in medicationList) {
           await medicationCollection.add(medicationDetails);
         }
+
+        // Update the medication inventory only when the patient addition is confirmed
+        for (Map<String, dynamic> medicationDetails in medicationList) {
+          await updateMedicationInventory(medicationDetails);
+        }
+
         showSuccessNotification('Successfully added');
 
         // Navigate to the Dashboard after successful addition
@@ -64,6 +71,29 @@ class _AddProfilePageState extends State<AddProfilePage> {
       showErrorNotification('Error adding profile to Firebase: $e');
     }
   }
+
+  Future<void> updateMedicationInventory(
+      Map<String, dynamic> medicationDetails) async {
+    String medName = medicationDetails['med_name'];
+    int requestedQuantity = medicationDetails['med_quan'];
+
+    // Get the available quantity from the medication inventory
+    QuerySnapshot<Map<String, dynamic>> inventorySnapshot =
+        await FirebaseFirestore.instance
+            .collection('medication_inventory')
+            .where('med_name', isEqualTo: medName)
+            .limit(1)
+            .get();
+
+    int availableQuantity =
+        inventorySnapshot.docs.first.data()['med_quan'] as int;
+    DocumentReference docRef = inventorySnapshot.docs.first.reference;
+
+    // Check if the requested quantity is greater than the available quantity
+    await docRef.update({'med_quan': availableQuantity - requestedQuantity});
+  }
+
+  //
 
   Future<String> getHighestIdDocument() async {
     try {
