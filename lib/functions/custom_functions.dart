@@ -9,10 +9,6 @@ import 'package:fluttertoast/fluttertoast.dart';
 import '../constants/light_constants.dart';
 import 'package:http/http.dart' as http;
 
-const apiKey = 'de3cece6f45d6d678c794c37a3625650';
-const senderName = '';
-const apiUrl = 'https://semaphore.co/api/v4/messages';
-
 void showSuccessNotification(String msg) {
   Fluttertoast.showToast(
       msg: msg,
@@ -90,34 +86,60 @@ void showSignOutDialog(BuildContext context) {
   );
 }
 
+// Future<bool> sendSMS(String message, String number) async {
+//   // Replace with your Semaphore API key
+//   const apiKey = 'de3cece6f45d6d678c794c37a3625650';
 
+//   // Optional sender name (if approved in your Semaphore account)
+//   //final senderName = 'YOUR_SENDER_NAME';
+
+//   try {
+//     final response = await http.post(
+//       Uri.parse('https://semaphore.co/api/v4/messages'),
+//       headers: {
+//         'Authorization': 'Bearer $apiKey',
+//       },
+//       body: {
+//         'number': number,
+//         'message': message,
+//         //'sendername': senderName,
+//       },
+//     );
+
+//     if (response.statusCode == 200) {
+//       showSuccessNotification('SMS sent successfully: ${response.body}');
+//       return true;
+//     } else {
+//       showErrorNotification('Error sending SMS: ${response.body}');
+//       return false;
+//     }
+//   } catch (e) {
+//     showErrorNotification('Error: $e');
+//     return false;
+//   }
+// }
 
 Future<bool> sendSMS(String message, String number) async {
-  try {
-    final response = await http.post(
-      Uri.parse(apiUrl),
-      body: {
-        'apikey': apiKey,
-        'sendername': senderName,
-        'message': message,
-        'number': number,
-      },
-    );
+  const apiKey = 'de3cece6f45d6d678c794c37a3625650';
 
-    if (response.statusCode == 200) {
-      showSuccessNotification('Message Sent!');
-      return true;
-    } else {
-      showErrorNotification('Error sending message: ${response.statusCode}');
-      final errorData = jsonDecode(response.body);
-      showErrorNotification('Error details: ${errorData['error']}');
-      return false;
-    }
-  } catch (e) {
-    showErrorNotification('Error: $e');
+  var uri = Uri.https('semaphore.co', '/api/v4/messages', {
+    'apikey': apiKey,
+    'message': message,
+    'number': number,
+  });
+
+  var response = await http.post(uri);
+
+  if (response.statusCode == 200) {
+    showSuccessNotification('Message Sent!');
+    return true;
+  } else {
+    showErrorNotification('Failed to send message. Status code: ${response.statusCode}');
     return false;
   }
 }
+
+
 
 
 
