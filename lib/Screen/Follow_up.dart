@@ -65,7 +65,7 @@ class _Follow_upState extends State<Follow_up> {
   }
 
   Future<bool> sendSMSAndUpdateStatus(String num, String msg, DocumentReference subdocReference) async {
-      num = convertToInternationalFormat(num);
+      //num = convertToInternationalFormat(num);
       
       bool status = await sendSMS(num, msg);
       if (status) {

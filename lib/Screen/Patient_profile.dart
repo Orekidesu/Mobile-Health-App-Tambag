@@ -1,9 +1,7 @@
-// ignore_for_file: camel_case_types
 
 import 'package:Tambag_Health_App/custom_widgets/Drug_interaction.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import '../Screen/Dashboard.dart';
 import '../custom_widgets/text_widget_info.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -11,7 +9,6 @@ import '../functions/custom_functions.dart';
 import '../Custom_Widgets/Custom_Appbar.dart';
 import '../constants/light_constants.dart';
 import '../Firebase_Query/Firebase_Functions.dart';
-import 'package:Tambag_Health_App/custom_widgets/Custom_Tile.dart';
 
 class Patient_Profile extends StatefulWidget {
   final String patientId;
@@ -207,8 +204,8 @@ class _Patient_ProfileState extends State<Patient_Profile> {
             child: Column(
               children: [
                 Container(
-                  padding: EdgeInsets.fromLTRB(10.0, 10.0, 10.0, 0.0),
-                  child: Center(
+                  padding: const EdgeInsets.fromLTRB(10.0, 10.0, 10.0, 0.0),
+                  child: const Center(
                     child: Text(
                       'DRUG MEDICATION INTERACTIONS',
                       style: TextStyle(
@@ -223,108 +220,111 @@ class _Patient_ProfileState extends State<Patient_Profile> {
                   child: Container(
                     height: 120.0,
                     width: 400.0,
-                    padding: EdgeInsets.fromLTRB(8.0, 0.0, 8.0, 0.0),
+                    padding: const EdgeInsets.fromLTRB(8.0, 0.0, 8.0, 0.0),
                     child: Card(
                       shape: RoundedRectangleBorder(
-                        side: BorderSide(
+                        side: const BorderSide(
                           color: Colors.white,
                           width: 2.0,
                         ),
                         borderRadius: BorderRadius.circular(20.0),
                       ),
                       child: SingleChildScrollView(
-                        child: Column(children: [
-                          FutureBuilder<List<Map<String, dynamic>>>(
-                            future: interactingMedications,
-                            builder: (context, snapshot) {
-                              if (snapshot.connectionState ==
-                                  ConnectionState.waiting) {
-                                return const Center(
-                                    child: CircularProgressIndicator());
-                              } else if (snapshot.hasError) {
-                                return Text('Error: ${snapshot.error}');
-                              } else if (!snapshot.hasData ||
-                                  snapshot.data!.isEmpty) {
-                                return const Text(
-                                    'No interacting medications available.');
-                              } else {
-                                final interactingMedicationsList =
-                                    snapshot.data!;
-                                return Column(
-                                  children: interactingMedicationsList
-                                      .map((interaction) {
-                                    return ListTile(
-                                      title: Text(
-                                        interaction['name']
-                                                .toString()
-                                                .toUpperCase() ??
-                                            'N/A',
-                                        style: TextStyle(
-                                          fontSize: 16.0,
-                                          fontWeight: FontWeight.bold,
-                                          color: periwinkleColor,
-                                        ),
-                                      ),
-                                      subtitle: Text(
-                                        '${interaction['dosage'] ?? 'N/A'}',
-                                        style: TextStyle(
-                                          color: periwinkleColor,
-                                        ),
-                                      ),
-                                    );
-                                  }).toList(),
-                                );
-                              }
-                            },
-                          ),
-
-                          //INTERACTION DETAILS SECTION: IT SHOULD CONTAIN A CENTERED HEADING CALLED "INTERACTIONS" AND BELOW IT ARE THE INTERACTION DETAILS //
-
-                          FutureBuilder<List<String>>(
-                            future: interactionDetails,
-                            builder: (context, snapshot) {
-                              if (snapshot.connectionState ==
-                                  ConnectionState.waiting) {
-                                return const Text('');
-                              } else if (snapshot.hasError) {
-                                return Text('Error: ${snapshot.error}');
-                              } else if (!snapshot.hasData ||
-                                  snapshot.data!.isEmpty) {
-                                return const Text('');
-                              } else {
-                                final interactionDetailsList = snapshot.data!;
-                                return Column(
-                                  children: [
-                                    const SizedBox(height: 10.0),
-                                    Center(
-                                      child: Text(
-                                        'INTERACTIONS',
-                                        style: TextStyle(
-                                          fontSize: 18.0,
-                                          fontWeight: FontWeight.bold,
-                                          color: periwinkleColor,
-                                        ),
-                                      ),
-                                    ),
-                                    ListView.builder(
-                                      shrinkWrap: true,
-                                      itemCount: interactionDetailsList.length,
-                                      itemBuilder: (context, index) {
-                                        return ListTile(
-                                          title: Text(
-                                            interactionDetailsList[index],
-                                            style: TextStyle(
-                                                color: periwinkleColor),
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Column(children: [
+                            FutureBuilder<List<Map<String, dynamic>>>(
+                              future: interactingMedications,
+                              builder: (context, snapshot) {
+                                if (snapshot.connectionState ==
+                                    ConnectionState.waiting) {
+                                  return const Center(
+                                      child: CircularProgressIndicator());
+                                } else if (snapshot.hasError) {
+                                  return Text('Error: ${snapshot.error}');
+                                } else if (!snapshot.hasData ||
+                                    snapshot.data!.isEmpty) {
+                                  return const Text(
+                                      'No interacting medications available.');
+                                } else {
+                                  final interactingMedicationsList =
+                                      snapshot.data!;
+                                  return Column(
+                                    children: interactingMedicationsList
+                                        .map((interaction) {
+                                      return ListTile(
+                                        title: Text(
+                                          interaction['name']
+                                                  .toString()
+                                                  .toUpperCase() ??
+                                              'N/A',
+                                          style: const TextStyle(
+                                            fontSize: 16.0,
+                                            fontWeight: FontWeight.bold,
+                                            color: periwinkleColor,
                                           ),
-                                        );
-                                      },
-                                    ),
-                                  ],
-                                );
-                              }
-                            },
-                          ),
-                        ]),
+                                        ),
+                                        subtitle: Text(
+                                          '${interaction['dosage'] ?? 'N/A'}',
+                                          style: const TextStyle(
+                                            color: periwinkleColor,
+                                          ),
+                                        ),
+                                      );
+                                    }).toList(),
+                                  );
+                                }
+                              },
+                            ),
+                          
+                            //INTERACTION DETAILS SECTION: IT SHOULD CONTAIN A CENTERED HEADING CALLED "INTERACTIONS" AND BELOW IT ARE THE INTERACTION DETAILS //
+                          
+                            FutureBuilder<List<String>>(
+                              future: interactionDetails,
+                              builder: (context, snapshot) {
+                                if (snapshot.connectionState ==
+                                    ConnectionState.waiting) {
+                                  return const Text('');
+                                } else if (snapshot.hasError) {
+                                  return Text('Error: ${snapshot.error}');
+                                } else if (!snapshot.hasData ||
+                                    snapshot.data!.isEmpty) {
+                                  return const Text('');
+                                } else {
+                                  final interactionDetailsList = snapshot.data!;
+                                  return Column(
+                                    children: [
+                                      const SizedBox(height: 10.0),
+                                      const Center(
+                                        child: Text(
+                                          'INTERACTIONS',
+                                          style: TextStyle(
+                                            fontSize: 18.0,
+                                            fontWeight: FontWeight.bold,
+                                            color: periwinkleColor,
+                                          ),
+                                        ),
+                                      ),
+                                      ListView.builder(
+                                        shrinkWrap: true,
+                                        itemCount: interactionDetailsList.length,
+                                        itemBuilder: (context, index) {
+                                          return ListTile(
+                                            title: Text(
+                                              interactionDetailsList[index],
+                                              style: const TextStyle(
+                                                  color: periwinkleColor),
+                                            ),
+                                          );
+                                        },
+                                      ),
+                                    ],
+                                  );
+                                }
+                              },
+                            ),
+                          ]),
+                        ),
                       ),
                     ),
                   ),
