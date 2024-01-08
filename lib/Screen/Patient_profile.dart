@@ -231,7 +231,7 @@ class _Patient_ProfileState extends State<Patient_Profile> {
                       ),
                       child: SingleChildScrollView(
                         child: Padding(
-                          padding: const EdgeInsets.all(8.0),
+                          padding: const EdgeInsets.only(top: 8.0),
                           child: Column(children: [
                             FutureBuilder<List<Map<String, dynamic>>>(
                               future: interactingMedications,
