@@ -9,22 +9,22 @@ class MedicationInteractionChecker {
     for (String medicine in medicines) {
       if (interactionMaps.containsKey(medicine)) {
         final interactions = interactionMaps[medicine]!;
-        print('Checking interactions for: $medicine');
+        // print('Checking interactions for: $medicine');
 
         for (String otherMedicine in medicines) {
           if (medicine != otherMedicine &&
               interactions.containsKey(otherMedicine)) {
             interactingMedicines ??= [];
             interactingMedicines.add(medicine);
-            print('Interaction found with: $otherMedicine');
+            //  print('Interaction found with: $otherMedicine');
             break; // No need to check further for this medicine
           }
         }
       }
     }
 
-    print('Medicines: $medicines');
-    print('Interacting Medicines: $interactingMedicines');
+    //  print('Medicines: $medicines');
+    // print('Interacting Medicines: $interactingMedicines');
 
     return interactingMedicines;
   }
@@ -50,9 +50,43 @@ class MedicationInteractionChecker {
       }
     }
 
+    // print('Interactions Details: $interactionsDetails');
+    return interactionsDetails;
+  }
+
+//
+  List<Map<String, dynamic>> getInteractions(List<String> medicines) {
+    List<Map<String, dynamic>> interactionsDetails = [];
+    Set<String> processedInteractions = Set();
+
+    for (int i = 0; i < medicines.length; i++) {
+      String medicine1 = medicines[i];
+      if (interactionMaps.containsKey(medicine1)) {
+        final interactions = interactionMaps[medicine1]!;
+
+        for (int j = i + 1; j < medicines.length; j++) {
+          String medicine2 = medicines[j];
+          if (interactions.containsKey(medicine2)) {
+            final interactionKey = '$medicine1-$medicine2';
+            if (!processedInteractions.contains(interactionKey)) {
+              interactionsDetails.add({
+                'medicine1': medicine1,
+                'medicine2': medicine2,
+                'interactionDetails': interactions[medicine2],
+              });
+              processedInteractions.add(interactionKey);
+            }
+          }
+        }
+      }
+    }
+
+    print('Medicines: $medicines');
     print('Interactions Details: $interactionsDetails');
     return interactionsDetails;
   }
+
+  //
 }
 
 final Map<String, Map<String, String>> allInteractions = {
