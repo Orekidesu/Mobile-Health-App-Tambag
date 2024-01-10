@@ -9,9 +9,6 @@ import 'package:fluttertoast/fluttertoast.dart';
 import '../constants/light_constants.dart';
 import 'package:http/http.dart' as http;
 
-const apiKey = '0EAC57AC-ECAF-6206-24DB-2688BF5EF58F';
-const username = 'Kael_fiel';
-
 void showSuccessNotification(String msg) {
   Fluttertoast.showToast(
       msg: msg,
@@ -89,52 +86,62 @@ void showSignOutDialog(BuildContext context) {
   );
 }
 
+// Future<bool> sendSMS(String message, String number) async {
+//   // Replace with your Semaphore API key
+//   const apiKey = 'de3cece6f45d6d678c794c37a3625650';
 
-Future<bool> sendSMS(String recipient, String message) async {
-  final credentials = base64Encode(utf8.encode('$username:$apiKey'));
-  final headers = {
-    'Authorization': 'Basic $credentials',
-    'Content-Type': 'application/json'
-  };
+//   // Optional sender name (if approved in your Semaphore account)
+//   //final senderName = 'YOUR_SENDER_NAME';
 
-  final url = Uri.parse('https://rest.clicksend.com/v3/sms/send');
-  final body = jsonEncode({
-    'messages': [
-      {
-        'body': message,
-        'from': '+639380363909',
-        'to': recipient
-      }
-    ]
+//   try {
+//     final response = await http.post(
+//       Uri.parse('https://semaphore.co/api/v4/messages'),
+//       headers: {
+//         'Authorization': 'Bearer $apiKey',
+//       },
+//       body: {
+//         'number': number,
+//         'message': message,
+//         //'sendername': senderName,
+//       },
+//     );
+
+//     if (response.statusCode == 200) {
+//       showSuccessNotification('SMS sent successfully: ${response.body}');
+//       return true;
+//     } else {
+//       showErrorNotification('Error sending SMS: ${response.body}');
+//       return false;
+//     }
+//   } catch (e) {
+//     showErrorNotification('Error: $e');
+//     return false;
+//   }
+// }
+
+Future<bool> sendSMS(String message, String number) async {
+  const apiKey = 'de3cece6f45d6d678c794c37a3625650';
+
+  var uri = Uri.https('semaphore.co', '/api/v4/messages', {
+    'apikey': apiKey,
+    'message': message,
+    'number': number,
   });
 
-  try {
-    final response = await http.post(url, headers: headers, body: body);
-    if (response.statusCode == 200) {
-      final responseData = jsonDecode(response.body);
-      if (responseData["data"]["messages"][0]["status"] == 'INSUFFICIENT_CREDIT')
-      {
-        showErrorNotification('Insufficient Credits!\nContact Admin to reload.');
-        return false;
-      }
-      else if (responseData["data"]["messages"][0]["status"] == 'INVALID_RECIPIENT')
-      {
-        showErrorNotification('Invalid Recipient!');
-        return false;
-      }
-      else{
-        return true; // SMS sent successfully
-      }
-      
-    } else {
-      return false; // Failed to send SMS
-    }
+  var response = await http.post(uri);
 
-  } catch (e) {
-    showErrorNotification('Error sending SMS: $e');
-    return false; // Error sending SMS
+  if (response.statusCode == 200) {
+    showSuccessNotification('Message Sent!');
+    return true;
+  } else {
+    showErrorNotification('Failed to send message. Status code: ${response.statusCode}');
+    return false;
   }
 }
+
+
+
+
 
 
   

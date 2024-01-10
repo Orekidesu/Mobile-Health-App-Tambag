@@ -1,9 +1,7 @@
-// ignore_for_file: camel_case_types
 
 import 'package:Tambag_Health_App/custom_widgets/Drug_interaction.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import '../Screen/Dashboard.dart';
 import '../custom_widgets/text_widget_info.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -11,7 +9,6 @@ import '../functions/custom_functions.dart';
 import '../Custom_Widgets/Custom_Appbar.dart';
 import '../constants/light_constants.dart';
 import '../Firebase_Query/Firebase_Functions.dart';
-import 'package:Tambag_Health_App/custom_widgets/Custom_Tile.dart';
 
 class Patient_Profile extends StatefulWidget {
   final String patientId;
@@ -207,8 +204,8 @@ class _Patient_ProfileState extends State<Patient_Profile> {
             child: Column(
               children: [
                 Container(
-                  padding: EdgeInsets.fromLTRB(10.0, 10.0, 10.0, 0.0),
-                  child: Center(
+                  padding: const EdgeInsets.fromLTRB(10.0, 10.0, 10.0, 0.0),
+                  child: const Center(
                     child: Text(
                       'DRUG MEDICATION INTERACTIONS',
                       style: TextStyle(

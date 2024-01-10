@@ -8,7 +8,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import '../constants/light_constants.dart';
 
-
 class Login extends StatefulWidget {
   const Login({super.key});
 
@@ -19,40 +18,59 @@ class Login extends StatefulWidget {
 class _LoginState extends State<Login> {
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
+  bool isLoading = false;
 
+  void showErrorNotification(String? errorMessage) {
+    Fluttertoast.showToast(
+      msg: 'Error: ${errorMessage ?? "Unknown error"}',
+      toastLength: Toast.LENGTH_LONG,
+      gravity: ToastGravity.TOP,
+      timeInSecForIosWeb: 3,
+      backgroundColor: periwinkleColor,
+      textColor: Colors.white,
+      fontSize: 16.0,
+      webPosition: "center",
+      webBgColor: "$periwinkleGradient",
+    );
+  }
 
-    void showErrorNotification(String? errorMessage) {
-      Fluttertoast.showToast(
-        msg: 'Error: ${errorMessage ?? "Unknown error"}',
-        toastLength: Toast.LENGTH_LONG,
-        gravity: ToastGravity.TOP,
-        timeInSecForIosWeb: 3,
-        backgroundColor: periwinkleColor,
-        textColor: Colors.white,
-        fontSize: 16.0,
-        webPosition: "center",
-        webBgColor: "$periwinkleGradient",
-      );
-    }
+  void showSuccessNotification(String message) {
+    Fluttertoast.showToast(
+      msg: message,
+      toastLength: Toast.LENGTH_LONG,
+      gravity: ToastGravity.TOP,
+      timeInSecForIosWeb: 3,
+      backgroundColor: periwinkleColor,
+      textColor: Colors.white,
+      fontSize: 16.0,
+      webPosition: "center",
+      webBgColor: "$periwinkleGradient",
+    );
+  }
 
-    // Modify the submitDatabase method
-  Future<void> submitDatabase(BuildContext context,String email, String password) async {
+  Future<void> submitDatabase(
+      BuildContext context, String email, String password) async {
+    setState(() {
+      isLoading = true;
+    });
+
     try {
       await FirebaseAuth.instance.signInWithEmailAndPassword(
         email: email,
         password: password,
       );
-      // Show success notification and auto-close
-      showSuccessNotification('Signin Sucsess');
-      // ignore: use_build_context_synchronously
-      goToPageNoReturn(context,const Dashboard());
-        } on FirebaseAuthException catch (e) {
-          // Handle specific FirebaseAuth exceptions
-          showErrorNotification(e.message);
-        } catch (e) {
-          showErrorNotification(e as String?);
-        }
-      }
+      showSuccessNotification('Signin Success');
+      goToPageNoReturn(context, const Dashboard());
+    } on FirebaseAuthException catch (e) {
+      showErrorNotification(e.message);
+    } catch (e) {
+      showErrorNotification(e as String?);
+    } finally {
+      setState(() {
+        isLoading = false;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -155,23 +173,37 @@ class _LoginState extends State<Login> {
                 width: 150,
                 height: 50,
                 child: ElevatedButton(
-                  onPressed: () {
-                    if (emailController.text.isNotEmpty && passwordController.text.isNotEmpty) {
-                      submitDatabase(context, emailController.text, passwordController.text);
-                    } else {
-                      showErrorNotification("Email and password cannot be empty");
-                    }
-                  },
+                  onPressed: isLoading
+                      ? null
+                      : () {
+                          if (emailController.text.isNotEmpty &&
+                              passwordController.text.isNotEmpty) {
+                            submitDatabase(context, emailController.text,
+                                passwordController.text);
+                          } else {
+                            showErrorNotification(
+                                "Email and password cannot be empty");
+                          }
+                        },
                   style: ElevatedButton.styleFrom(
-                    foregroundColor: backgroundColor, // Use primary for background color
+                    foregroundColor: backgroundColor,
                   ),
-                  child: const Text(
-                    'Login',
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: periwinkleColor // Use Colors.blue as an example color
-                    ),
-                  ),
+                  child: isLoading
+                      ? const SizedBox(
+                        width: 20,
+                        height: 20,
+                        child: CircularProgressIndicator(
+                            valueColor: AlwaysStoppedAnimation<Color>(
+                                periwinkleColor),
+                          ),
+                      )
+                      : const Text(
+                          'Login',
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: periwinkleColor,
+                          ),
+                        ),
                 ),
               ),
             ],
