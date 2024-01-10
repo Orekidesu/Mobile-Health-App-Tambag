@@ -1,6 +1,7 @@
 // Import necessary libraries
 // ignore_for_file: library_private_types_in_public_api
 
+import 'package:Tambag_Health_App/custom_widgets/Medication_info.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import '../constants/light_constants.dart';
@@ -34,7 +35,7 @@ class _AddMedicationProfileState extends State<AddMedicationProfile> {
   late String selectedMedInd = '';
 
   List<MapEntry<String, String>> medicationDataList = [];
-
+  late Map<String, String> medicationInfo;
   @override
   void initState() {
     super.initState();
@@ -97,6 +98,8 @@ class _AddMedicationProfileState extends State<AddMedicationProfile> {
             inventorySnapshot.docs.first.data()['med_quan'] as int;
         DocumentReference docRef = inventorySnapshot.docs.first.reference;
 
+        medicationInfo = MedicationInfoProvider.getMedicationInfo(medName);
+
         // Check if the requested quantity is greater than the available quantity
         if (requestedQuantity > availableQuantity) {
           showErrorNotification(
@@ -109,6 +112,10 @@ class _AddMedicationProfileState extends State<AddMedicationProfile> {
             'med_quan': int.parse(quantity),
             'dosage':
                 '$dosage mg usa kada tablets kada $frequency ka-oras\n$medInd',
+            'frequency': int.parse(frequency),
+            'reminder': medicationInfo['reminder'],
+            'contraindication': medicationInfo['contraindication'],
+            'diet': medicationInfo['diet'],
           };
 
           widget.addMedicationCallback(medicationDetails);

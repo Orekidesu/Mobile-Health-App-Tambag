@@ -1,10 +1,10 @@
+import 'package:Tambag_Health_App/Screen/TrackerPDF.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart'; // Import Firebase Auth
 import '../Screen/Login.dart';
 import '../Screen/Dashboard.dart'; // Import Dashboard
 import 'firebase_options.dart';
-
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -23,20 +23,18 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Mobile Health App Tambag',
-       theme: ThemeData(
+      theme: ThemeData(
         // Set the default font family for the entire app
         textTheme: const TextTheme(
           bodyMedium: TextStyle(fontFamily: 'Arial'),
         ),
       ),
       home: StreamBuilder(
-        
         stream: FirebaseAuth.instance.authStateChanges(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const CircularProgressIndicator(); // Display loading indicator while checking authentication state.
-          } 
-          else {
+          } else {
             if (snapshot.hasData) {
               // return Patient_Profile();
               return const Dashboard();

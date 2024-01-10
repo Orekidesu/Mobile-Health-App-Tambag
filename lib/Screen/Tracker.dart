@@ -1,3 +1,4 @@
+import 'package:Tambag_Health_App/Screen/TrackerPDF.dart';
 import 'package:Tambag_Health_App/custom_widgets/Custom_Tile.dart';
 import 'package:intl/intl.dart';
 
@@ -115,7 +116,7 @@ class _TrackerState extends State<Tracker> {
                       // LIST MEDICATION //
                       Container(
                         margin: const EdgeInsets.fromLTRB(0, 16, 0, 0),
-                        height: 250,
+                        height: 350,
                         child: Card(
                           shape: RoundedRectangleBorder(
                             side: const BorderSide(
@@ -191,84 +192,84 @@ class _TrackerState extends State<Tracker> {
                       const SizedBox(
                         height: 5,
                       ),
-                      Card(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(20.0),
-                        ),
-                        color: periwinkleColor,
-                        child: Padding(
-                          padding: const EdgeInsets.all(16.0),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.spaceAround,
-                            children: [
-                              const Text(
-                                'Reminder:',
-                                style: TextStyle(
-                                  fontSize: 16.0,
-                                  color: backgroundColor,
-                                ),
-                              ),
-                              TextField(
-                                controller: reminderController,
-                                decoration: InputDecoration(
-                                  filled: true,
-                                  fillColor: Colors.white,
-                                  border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(10.0),
-                                    borderSide: const BorderSide(
-                                      color: backgroundColor,
-                                      width: 4,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              const Text(
-                                'Contraindication:',
-                                style: TextStyle(
-                                  fontSize: 16.0,
-                                  color: backgroundColor,
-                                ),
-                              ),
-                              TextField(
-                                controller: contraindicationController,
-                                decoration: InputDecoration(
-                                  filled: true,
-                                  fillColor: Colors.white,
-                                  border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(10.0),
-                                    borderSide: const BorderSide(
-                                      color: backgroundColor,
-                                      width: 4,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              const Text(
-                                'Diet:',
-                                style: TextStyle(
-                                  fontSize: 16.0,
-                                  color: backgroundColor,
-                                ),
-                              ),
-                              TextField(
-                                controller: dietController,
-                                decoration: InputDecoration(
-                                  filled: true,
-                                  fillColor: Colors.white,
-                                  border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(10.0),
-                                    borderSide: const BorderSide(
-                                      color: backgroundColor,
-                                      width: 4,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
+                      // Card(
+                      //   shape: RoundedRectangleBorder(
+                      //     borderRadius: BorderRadius.circular(20.0),
+                      //   ),
+                      //   color: periwinkleColor,
+                      //   child: Padding(
+                      //     padding: const EdgeInsets.all(16.0),
+                      //     child: Column(
+                      //       crossAxisAlignment: CrossAxisAlignment.start,
+                      //       mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      //       children: [
+                      //         const Text(
+                      //           'Reminder:',
+                      //           style: TextStyle(
+                      //             fontSize: 16.0,
+                      //             color: backgroundColor,
+                      //           ),
+                      //         ),
+                      //         TextField(
+                      //           controller: reminderController,
+                      //           decoration: InputDecoration(
+                      //             filled: true,
+                      //             fillColor: Colors.white,
+                      //             border: OutlineInputBorder(
+                      //               borderRadius: BorderRadius.circular(10.0),
+                      //               borderSide: const BorderSide(
+                      //                 color: backgroundColor,
+                      //                 width: 4,
+                      //               ),
+                      //             ),
+                      //           ),
+                      //         ),
+                      //         const Text(
+                      //           'Contraindication:',
+                      //           style: TextStyle(
+                      //             fontSize: 16.0,
+                      //             color: backgroundColor,
+                      //           ),
+                      //         ),
+                      //         TextField(
+                      //           controller: contraindicationController,
+                      //           decoration: InputDecoration(
+                      //             filled: true,
+                      //             fillColor: Colors.white,
+                      //             border: OutlineInputBorder(
+                      //               borderRadius: BorderRadius.circular(10.0),
+                      //               borderSide: const BorderSide(
+                      //                 color: backgroundColor,
+                      //                 width: 4,
+                      //               ),
+                      //             ),
+                      //           ),
+                      //         ),
+                      //         const Text(
+                      //           'Diet:',
+                      //           style: TextStyle(
+                      //             fontSize: 16.0,
+                      //             color: backgroundColor,
+                      //           ),
+                      //         ),
+                      //         TextField(
+                      //           controller: dietController,
+                      //           decoration: InputDecoration(
+                      //             filled: true,
+                      //             fillColor: Colors.white,
+                      //             border: OutlineInputBorder(
+                      //               borderRadius: BorderRadius.circular(10.0),
+                      //               borderSide: const BorderSide(
+                      //                 color: backgroundColor,
+                      //                 width: 4,
+                      //               ),
+                      //             ),
+                      //           ),
+                      //         ),
+                      //       ],
+                      //     ),
+                      //   ),
+                      // ),
                       const SizedBox(
                         height: 5,
                       ),
@@ -276,8 +277,16 @@ class _TrackerState extends State<Tracker> {
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
                           CustomActionButton(
-                            onPressed: () {},
-                            buttonText: "Print",
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      TrackerPDF(patientId: widget.patientId),
+                                ),
+                              );
+                            },
+                            buttonText: "Save as PDF",
                           ),
                         ],
                       )
