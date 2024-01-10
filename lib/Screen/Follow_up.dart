@@ -65,7 +65,9 @@ class _Follow_upState extends State<Follow_up> {
   }
 
   Future<bool> sendSMSAndUpdateStatus(String num, String msg, DocumentReference subdocReference) async {
+      msg = 'Maayong Adlaw! Kini usa ka\npahinumdom sa imong\nfollow-up checkup ugma:\n\n$msg.\n\nTAMBAG, kanunay andam\nmoabag!!';
       bool status = await sendSMS(msg,num);
+      //bool status = false;
       if (status) {
         await subdocReference.update({
           'smsError': false,

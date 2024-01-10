@@ -86,39 +86,6 @@ void showSignOutDialog(BuildContext context) {
   );
 }
 
-// Future<bool> sendSMS(String message, String number) async {
-//   // Replace with your Semaphore API key
-//   const apiKey = 'de3cece6f45d6d678c794c37a3625650';
-
-//   // Optional sender name (if approved in your Semaphore account)
-//   //final senderName = 'YOUR_SENDER_NAME';
-
-//   try {
-//     final response = await http.post(
-//       Uri.parse('https://semaphore.co/api/v4/messages'),
-//       headers: {
-//         'Authorization': 'Bearer $apiKey',
-//       },
-//       body: {
-//         'number': number,
-//         'message': message,
-//         //'sendername': senderName,
-//       },
-//     );
-
-//     if (response.statusCode == 200) {
-//       showSuccessNotification('SMS sent successfully: ${response.body}');
-//       return true;
-//     } else {
-//       showErrorNotification('Error sending SMS: ${response.body}');
-//       return false;
-//     }
-//   } catch (e) {
-//     showErrorNotification('Error: $e');
-//     return false;
-//   }
-// }
-
 Future<bool> sendSMS(String message, String number) async {
   const apiKey = 'de3cece6f45d6d678c794c37a3625650';
 
