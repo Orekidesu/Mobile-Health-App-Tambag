@@ -93,6 +93,7 @@ Future<bool> sendSMS(String message, String number) async {
     'apikey': apiKey,
     'message': message,
     'number': number,
+    'sendername':'VSUTambag',
   });
 
   var response = await http.post(uri);
