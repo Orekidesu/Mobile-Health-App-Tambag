@@ -6,6 +6,7 @@ import '../Custom_Widgets/Add_Medication_Dialog_Profile.dart';
 import '../Custom_Widgets/CustomActionButton.dart';
 import '../Custom_Widgets/Custom_Appbar.dart';
 import '../Custom_Widgets/Custom_TextField.dart';
+import '../Custom_Widgets/Custom_dropdown.dart';
 import '../Screen/Dashboard.dart';
 import '../constants/light_constants.dart';
 import '../functions/custom_functions.dart';
@@ -36,7 +37,8 @@ class _AddProfilePageState extends State<AddProfilePage> {
   final CollectionReference followUpCollection =
       FirebaseFirestore.instance.collection('follow_up_history');
 
-  //
+  String selectedBrgy = 'Baranggay Guadalupe';
+
   Future<void> addProfileToFirebase() async {
     try {
       if (_validateInput()) {
@@ -124,7 +126,7 @@ class _AddProfilePageState extends State<AddProfilePage> {
     return {
       'name': nameController.text,
       'age': ageController.text,
-      'address': addressController.text,
+      'address': selectedBrgy,
       'contact_number': contactNumberController.text,
       'physician': physicianController.text,
       'id': id,
@@ -138,11 +140,13 @@ class _AddProfilePageState extends State<AddProfilePage> {
     };
   }
 
+  List<String> Brgy = ['Baranggay Guadalupe', 'Baranggay Patag', 'Baranggay Gabas'];
+
   bool _validateInput() {
     // Check if any of the text fields are empty
     return nameController.text.isNotEmpty &&
         ageController.text.isNotEmpty &&
-        addressController.text.isNotEmpty &&
+        selectedBrgy.isNotEmpty &&
         contactNumberController.text.isNotEmpty &&
         physicianController.text.isNotEmpty &&
         medicationList.isNotEmpty;
@@ -251,9 +255,47 @@ class _AddProfilePageState extends State<AddProfilePage> {
                             const SizedBox(
                               height: 10,
                             ),
-                            CustomTextField(
-                              controller: addressController,
-                              labelText: 'Address:',
+                            const Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  'Baranggay:',
+                                  style: TextStyle(
+                                    color: periwinkleColor,
+                                    fontSize: 17,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                  textAlign: TextAlign.left, // Set the text alignment to left
+                                ),
+                              ],
+                            ),
+                            const SizedBox(
+                              height: 10,
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Expanded(
+                                  child: Container(
+                                    width: 100,
+                                    decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.circular(8.0),
+                                    ),
+                                    child: CustomDropdown(
+                                      items: Brgy,
+                                      value: selectedBrgy,
+                                      onChanged: (String newValue) {
+                                        setState(() {
+                                          selectedBrgy = newValue;
+                                        });
+                                      },
+                                    ),
+                                  ),
+                                ),
+                              ],
                             ),
                             const SizedBox(
                               height: 10,
