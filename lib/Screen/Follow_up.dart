@@ -1,5 +1,6 @@
 // ignore_for_file: non_constant_identifier_names, file_names
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import '../Custom_Widgets/CustomActionButton.dart';
 import '../Custom_Widgets/Custom_TextField.dart';
@@ -321,10 +322,42 @@ class _Follow_upState extends State<Follow_up> {
         selectedYear.isNotEmpty &&
         selectedTime.isNotEmpty;
   }
+  String baranggay = ''; // Added variable to store Baranggay field
+
+  Future<void> fetchBaranggay() async {
+    try {
+      // Get the current user
+      User? user = FirebaseAuth.instance.currentUser;
+
+      if (user != null) {
+        // Get the user's ID
+        String userId = user.uid;
+
+        // Reference to Firestore collection
+        patientsCollection = FirebaseFirestore.instance.collection('admin');
+
+        // Query Firestore to get the document for the current user
+        DocumentSnapshot<Object?> snapshot =
+            await patientsCollection.doc(userId).get();
+
+        // Get the Baranggay field value
+        String userBaranggay = snapshot.get('Baranggay');
+
+        // Update the state with the Baranggay field value
+        setState(() {
+          baranggay = userBaranggay;
+        });
+      }
+    } catch (e) {
+      // Handle errors here
+      showErrorNotification('Error fetching Baranggay: $e');
+    }
+  }
 
   @override
   void initState() {
     super.initState();
+    fetchBaranggay();
     // Call the function when the widget is initialized
     followUpCollection =
         FirebaseFirestore.instance.collection('follow_up_history');
@@ -347,7 +380,7 @@ class _Follow_upState extends State<Follow_up> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Custom_Appbar(
-                Baranggay: "Baranggay Guadalupe",
+                Baranggay: "Baranggay $baranggay",
                 Apptitle: "TAMBAG",
                 hasbackIcon: true,
                 hasRightIcon: false,

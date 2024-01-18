@@ -1,4 +1,6 @@
-// ignore_for_file: camel_case_types, library_private_types_in_public_api, use_build_context_synchronously, file_names
+// ignore_for_file: camel_case_types, library_private_types_in_public_api, use_build_context_synchronously, file_names, non_constant_identifier_names
+
+import 'package:firebase_auth/firebase_auth.dart';
 
 import '../functions/custom_functions.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -10,8 +12,9 @@ import 'Custom_Dialog.dart';
 import 'PatientCard.dart';
 
 class DashboardListFirebase extends StatefulWidget {
-  
-  const DashboardListFirebase({super.key});
+  final String Baranggay;
+
+  const DashboardListFirebase({super.key, required this.Baranggay});
 
   @override
   _DashboardListFirebaseState createState() => _DashboardListFirebaseState();
@@ -25,7 +28,7 @@ class _DashboardListFirebaseState extends State<DashboardListFirebase> {
   void initState() {
     super.initState();
     setState(() {
-      patientData = getAllPatients();
+      patientData = getAllPatients(widget.Baranggay);
     });
   }
 
@@ -43,7 +46,7 @@ class _DashboardListFirebaseState extends State<DashboardListFirebase> {
 
     // Refresh the patient list
     setState(() {
-      patientData = getAllPatients();
+      patientData = getAllPatients(widget.Baranggay);
     });
 
   } catch (error) {

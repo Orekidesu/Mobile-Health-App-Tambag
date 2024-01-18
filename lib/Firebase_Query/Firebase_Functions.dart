@@ -8,14 +8,16 @@ CollectionReference patientsCollection =
 CollectionReference medicationInventoryCollection =
     FirebaseFirestore.instance.collection('medication_inventory');
 
-Future<List<Patient>> getAllPatients() async {
+Future<List<Patient>> getAllPatients(String userBaranggay) async {
   QuerySnapshot querySnapshot = await patientsCollection.get();
   return querySnapshot.docs.map((DocumentSnapshot document) {
     return Patient(
       id: document['id'],
       name: document['name'],
+      address: document['address'],
     );
-  }).toList();
+  })
+  .where((patient) => patient.address == userBaranggay).toList();
 }
 
 Future<List<medication_inventory>> getAllMedicalInventory() async {
