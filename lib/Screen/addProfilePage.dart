@@ -37,7 +37,7 @@ class _AddProfilePageState extends State<AddProfilePage> {
   final CollectionReference followUpCollection =
       FirebaseFirestore.instance.collection('follow_up_history');
 
-  String selectedBrgy = 'Baranggay Guadalupe';
+  String selectedBrgy = 'Guadalupe';
 
   Future<void> addProfileToFirebase() async {
     try {
@@ -140,7 +140,7 @@ class _AddProfilePageState extends State<AddProfilePage> {
     };
   }
 
-  List<String> Brgy = ['Baranggay Guadalupe', 'Baranggay Patag', 'Baranggay Gabas'];
+  List<String> Brgy = ['Guadalupe', 'Patag', 'Gabas'];
 
   bool _validateInput() {
     // Check if any of the text fields are empty
