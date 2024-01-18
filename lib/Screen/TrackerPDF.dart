@@ -1,7 +1,10 @@
+import 'package:Tambag_Health_App/Custom_Widgets/CustomActionButton.dart';
 import 'package:Tambag_Health_App/Firebase_Query/Firebase_Functions.dart';
 import 'package:Tambag_Health_App/custom_widgets/Drug_interaction.dart';
 import 'package:Tambag_Health_App/custom_widgets/text_widget_info.dart';
 import 'package:flutter/material.dart';
+import 'package:pdf/pdf.dart';
+import 'package:pdf/widgets.dart' as pw;
 
 class TrackerPDF extends StatefulWidget {
   final String patientId;
@@ -42,6 +45,36 @@ class _TrackerPDFState extends State<TrackerPDF> {
   }
 
   //
+  List<TableRow> _buildTableRows(List<Map<String, dynamic>> dataList,
+      List<String> columnNames, List<String> keyNames) {
+    return [
+      TableRow(
+        children: columnNames.map((columnName) {
+          return TableCell(
+            child: Center(
+              child: Text(
+                columnName,
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+          );
+        }).toList(),
+      ),
+      for (var data in dataList)
+        TableRow(
+          children: keyNames.map((keyName) {
+            return TableCell(
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text(data[keyName] ?? 'N/A'),
+              ),
+            );
+          }).toList(),
+        ),
+    ];
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -98,14 +131,14 @@ class _TrackerPDFState extends State<TrackerPDF> {
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
+                  const Text(
                     'PATIENT PROFILE',
                     style: TextStyle(
                       fontSize: 12,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 10.0,
                   ),
                   FutureBuilder<Map<String, dynamic>>(
@@ -143,16 +176,128 @@ class _TrackerPDFState extends State<TrackerPDF> {
                 ],
               ),
             ),
-            SizedBox(
-              height: 20,
-            ),
-            Center(
-              child: Text(
-                'MGA TAMBAL',
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12),
+            Expanded(
+              child: Container(
+                margin: EdgeInsets.only(bottom: 50.0),
+                child: SingleChildScrollView(
+                  scrollDirection: Axis.vertical,
+                  child: Column(
+                    children: [
+                      // ====================MGA TAMBAL AREA ================= //
+                      const SizedBox(
+                        height: 20,
+                      ),
+                      const Center(
+                        child: Text(
+                          'MGA TAMBAL',
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: 12),
+                        ),
+                      ),
+                      Container(
+                        child: FutureBuilder<List<Map<String, dynamic>>>(
+                          future: medications,
+                          builder: (context, snapshot) {
+                            if (snapshot.connectionState ==
+                                ConnectionState.waiting) {
+                              return const Center(
+                                  child: CircularProgressIndicator());
+                            } else if (snapshot.hasError) {
+                              return Text('Error: ${snapshot.error}');
+                            } else if (!snapshot.hasData ||
+                                snapshot.data!.isEmpty) {
+                              return const Text(
+                                  'No medication data available.');
+                            } else {
+                              final medicationsList = snapshot.data!;
+                              return SingleChildScrollView(
+                                scrollDirection: Axis.horizontal,
+                                child: Table(
+                                  border: TableBorder.all(color: Colors.grey),
+                                  defaultColumnWidth: IntrinsicColumnWidth(),
+                                  children: _buildTableRows(
+                                    medicationsList,
+                                    [
+                                      'TAMBAL',
+                                      'GIDAG-HANUN',
+                                      'PARA ASA KINI',
+                                      'KONTRAINDIKASYON',
+                                      'KONSIDERASYON SA PAGKAON'
+                                    ],
+                                    [
+                                      'name',
+                                      'dosage',
+                                      'indication',
+                                      'contraindication',
+                                      'diet'
+                                    ],
+                                  ),
+                                ),
+                              );
+                            }
+                          },
+                        ),
+                      ),
+                      //======================== DRUG INTERACTION AREA ================== //
+                      const SizedBox(
+                        height: 20,
+                      ),
+                      const Center(
+                        child: Text(
+                          'INTERACTION SA MGA TAMBAL',
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: 12),
+                        ),
+                      ),
+
+                      Container(
+                        child: FutureBuilder<List<Map<String, dynamic>>>(
+                          future: medicationInteractions,
+                          builder: (context, snapshot) {
+                            if (snapshot.connectionState ==
+                                ConnectionState.waiting) {
+                              return const Center(
+                                  child: CircularProgressIndicator());
+                            } else if (snapshot.hasError) {
+                              return Text('Error: ${snapshot.error}');
+                            } else if (!snapshot.hasData ||
+                                snapshot.data!.isEmpty) {
+                              return const Text(
+                                  'No medication data available.');
+                            } else {
+                              final medicationsList = snapshot.data!;
+                              return SingleChildScrollView(
+                                scrollDirection: Axis.horizontal,
+                                child: Table(
+                                  border: TableBorder.all(color: Colors.grey),
+                                  defaultColumnWidth: IntrinsicColumnWidth(),
+                                  children: _buildTableRows(
+                                    medicationsList,
+                                    ['TAMBAL 1', 'TAMBAL 2', 'INTERAKSYON'],
+                                    [
+                                      'medicine1',
+                                      'medicine2',
+                                      'interactionDetails'
+                                    ],
+                                  ),
+                                ),
+                              );
+                            }
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
               ),
             ),
-            Container(),
+            Align(
+              alignment: Alignment.bottomRight,
+              child: IconButton(
+                icon: Icon(Icons.download),
+                onPressed: () {},
+              ),
+            ),
           ],
         ),
       ),

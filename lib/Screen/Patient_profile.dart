@@ -1,4 +1,3 @@
-
 import 'package:Tambag_Health_App/custom_widgets/Drug_interaction.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -174,7 +173,9 @@ class _Patient_ProfileState extends State<Patient_Profile> {
                                 return CardWithIcon(
                                   icon: FontAwesomeIcons.pills,
                                   title: "${medication['name']}",
-                                  subtitle: medication['dosage'] ?? 'N/A',
+                                  subtitle:
+                                      "${medication['dosage']}.\n${medication['indication']}." ??
+                                          'N/A',
                                 );
                               }).toList(),
                             );
@@ -272,7 +273,7 @@ class _Patient_ProfileState extends State<Patient_Profile> {
                                                 ),
                                               ),
                                               subtitle: Text(
-                                                '${interactingMedicationsList[index]['dosage'] ?? 'N/A'}',
+                                                '${interactingMedicationsList[index]['dosage'] ?? 'N/A'}.',
                                                 style: TextStyle(
                                                   color: periwinkleColor,
                                                 ),
