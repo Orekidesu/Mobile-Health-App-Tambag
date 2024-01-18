@@ -176,7 +176,8 @@ class _TrackerState extends State<Tracker> {
                                               medicationName:
                                                   medication['name'] ?? 'N/A',
                                               text:
-                                                  medication['dosage'] ?? 'N/A',
+                                                  "${medication['dosage']}.\n${medication['indication']}." ??
+                                                      'N/A',
                                             );
                                           },
                                         );

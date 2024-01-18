@@ -91,6 +91,9 @@ class DataService {
           return {
             'name': medicationDoc['med_name'],
             'dosage': medicationDoc['dosage'].toString(),
+            'indication': medicationDoc['med_ind'].toString(),
+            'contraindication': medicationDoc['contraindication'].toString(),
+            'diet': medicationDoc['diet'].toString(),
             'count': count,
           };
         }).toList();

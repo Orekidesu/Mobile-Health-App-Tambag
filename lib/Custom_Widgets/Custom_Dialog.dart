@@ -4,10 +4,11 @@ import 'package:firebase_auth/firebase_auth.dart';
 class CustomDialog extends StatelessWidget {
   final VoidCallback onSignOut;
   final String message;
-  final bool? showtitle; 
+  final bool? showtitle;
   final String buttonText;
 
-  const CustomDialog({super.key, 
+  const CustomDialog({
+    super.key,
     required this.buttonText,
     required this.onSignOut,
     required this.message,
@@ -27,9 +28,7 @@ class CustomDialog extends StatelessWidget {
       ),
       actions: <Widget>[
         CupertinoDialogAction(
-          textStyle: const TextStyle(
-            color: Color.fromARGB(255, 0, 0, 255)
-          ),
+          textStyle: const TextStyle(color: Color.fromARGB(255, 0, 0, 255)),
           child: const Text("Cancel"),
           onPressed: () {
             Navigator.of(context).pop(); // Close the dialog

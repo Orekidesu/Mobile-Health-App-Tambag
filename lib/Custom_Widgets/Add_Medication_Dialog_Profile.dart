@@ -110,12 +110,11 @@ class _AddMedicationProfileState extends State<AddMedicationProfile> {
             'med_name': medName,
             'med_ind': medInd,
             'med_quan': int.parse(quantity),
-            'dosage':
-                '$dosage mg usa kada tablets kada $frequency ka-oras\n$medInd',
+            'dosage': '$dosage mg, tumaron ka-$frequency kada adlaw ',
             'frequency': int.parse(frequency),
             'reminder': medicationInfo['reminder'],
-            'contraindication': medicationInfo['contraindication'],
-            'diet': medicationInfo['diet'],
+            // 'contraindication': medicationInfo['contraindication'],
+            // 'diet': medicationInfo['diet'],
           };
 
           widget.addMedicationCallback(medicationDetails);
