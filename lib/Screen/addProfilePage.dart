@@ -266,7 +266,8 @@ class _AddProfilePageState extends State<AddProfilePage> {
                                     fontSize: 17,
                                     fontWeight: FontWeight.bold,
                                   ),
-                                  textAlign: TextAlign.left, // Set the text alignment to left
+                                  textAlign: TextAlign
+                                      .left, // Set the text alignment to left
                                 ),
                               ],
                             ),

@@ -221,15 +221,13 @@ class _TrackerPDFState extends State<TrackerPDF> {
                                       'TAMBAL',
                                       'GIDAG-HANUN',
                                       'PARA ASA KINI',
-                                      'KONTRAINDIKASYON',
-                                      'KONSIDERASYON SA PAGKAON'
+                                      'PAHINUMDOM',
                                     ],
                                     [
                                       'name',
                                       'dosage',
                                       'indication',
-                                      'contraindication',
-                                      'diet'
+                                      'special_reminder'
                                     ],
                                   ),
                                 ),

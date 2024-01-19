@@ -91,13 +91,12 @@ class DataService {
 
         return medicationsSubcollection.docs.map((medicationDoc) {
           count++;
-          print(medicationDoc['med_name']);
+          // print(medicationDoc['med_name']);
           return {
             'name': medicationDoc['med_name'],
             'dosage': medicationDoc['dosage'].toString(),
             'indication': medicationDoc['med_ind'].toString(),
-            'contraindication': medicationDoc['contraindication'].toString(),
-            'diet': medicationDoc['diet'].toString(),
+            'special_reminder': medicationDoc['reminder'].toString(),
             'count': count,
           };
         }).toList();
