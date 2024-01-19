@@ -1,6 +1,5 @@
 // ignore_for_file: camel_case_types, library_private_types_in_public_api, use_build_context_synchronously, file_names, non_constant_identifier_names
 
-import 'package:firebase_auth/firebase_auth.dart';
 
 import '../functions/custom_functions.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';

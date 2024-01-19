@@ -44,13 +44,15 @@ void goToPage(BuildContext context, Widget? page) {
 }
 
 void goToPageNoReturn(BuildContext context, Widget? page) {
-  Navigator.pushReplacement(
+  Navigator.pushAndRemoveUntil(
     context,
     MaterialPageRoute(
       builder: (context) => page!,
     ),
+    (route) => false, // This line prevents going back
   );
 }
+
 
 void signout(BuildContext context) {
   Fluttertoast.showToast(

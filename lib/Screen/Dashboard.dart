@@ -91,6 +91,7 @@ Widget build(BuildContext context) {
                 iconColor: Colors.white,
                 hasRightIcon: true,
                 Distination: () => showSignOutDialog(context),
+                hasMessageIcon: true,
               ),
               const SizedBox(height: 10),
               Expanded(
