@@ -49,6 +49,7 @@ class _CustomDropdownState extends State<CustomDropdown> {
         }).toList(),
         underline: Container(),
         icon: const Icon(Icons.arrow_drop_down),
+        isExpanded: true,
       ),
     );
   }

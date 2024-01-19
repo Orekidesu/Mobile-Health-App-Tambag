@@ -165,6 +165,7 @@ class _AddMedicationState extends State<AddMedication> {
                       );
                     }).toList(),
                     hint: const Text('Select Medication'),
+                    isExpanded: true,
                   ),
                 ),
               ),
