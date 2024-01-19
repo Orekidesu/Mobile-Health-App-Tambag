@@ -4,7 +4,9 @@ import 'package:Tambag_Health_App/Custom_Widgets/Custom_dropdown.dart';
 import 'package:Tambag_Health_App/constants/light_constants.dart';
 import 'package:flutter/material.dart';
 
+import '../Custom_Widgets/CustomActionButton.dart';
 import '../Custom_Widgets/Custom_Appbar.dart';
+import '../Custom_Widgets/Custom_TextField.dart';
 import '../functions/custom_functions.dart';
 import 'Dashboard.dart';
 
@@ -15,8 +17,9 @@ class smsSender extends StatefulWidget {
   State<smsSender> createState() => _smsSenderState();
 }
 
+TextEditingController messageController = TextEditingController();
 String selectedBrgy = 'Guadalupe';
-List<String> Brgy = ['Guadalupe', 'Patag', 'Gabas'];
+List<String> Brgy = ['Guadalupe', 'Patag', 'Gabas','All'];
 
 class _smsSenderState extends State<smsSender> {
   @override
@@ -46,7 +49,7 @@ class _smsSenderState extends State<smsSender> {
                       Row(
                         children: [
                           const Text('To:',style: TextStyle(color: periwinkleColor),),
-                          SizedBox(width: 15,),
+                          const SizedBox(width: 15,),
                           Expanded(
                             child: CustomDropdown(
                                         items: Brgy,
@@ -60,6 +63,24 @@ class _smsSenderState extends State<smsSender> {
                           ),
                         ],
                       ),
+                      const SizedBox(height: 10,),
+                      CustomTextField(
+                              controller: messageController,
+                              labelText: 'Message:',
+                              maxLines: 10,
+                      ),
+                      const SizedBox(height: 10,),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          CustomActionButton(
+                                          onPressed: () {
+              
+                                          },
+                                          buttonText: "Send",
+                                        ),
+                        ],
+                      )
                     ],
                   ),
                 ))

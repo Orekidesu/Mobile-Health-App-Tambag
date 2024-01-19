@@ -8,6 +8,7 @@ class CustomTextField extends StatelessWidget {
   final double textFieldHeight;
   final double borderRadius;
   final bool obscureText;
+  final int? maxLines;
 
   const CustomTextField({
     super.key,
@@ -17,6 +18,7 @@ class CustomTextField extends StatelessWidget {
     this.textFieldHeight = 5.0,
     this.borderRadius = 15.0,
     this.obscureText = false,
+    this.maxLines = 1,
   });
 
   @override
@@ -38,6 +40,7 @@ class CustomTextField extends StatelessWidget {
         TextField(
           controller: controller,
           obscureText: obscureText,
+          maxLines: maxLines,
           decoration: InputDecoration(
             filled: true,
             fillColor: Colors.white,
@@ -48,11 +51,13 @@ class CustomTextField extends StatelessWidget {
                 width: 4,
               ),
             ),
-            contentPadding: const EdgeInsets.symmetric(
-                horizontal: 15.0), // Adjust the vertical padding
+            contentPadding: const EdgeInsets.all(
+              15
+            ),
           ),
           // Additional properties for the TextField can be added here
         ),
+
       ],
     );
   }
