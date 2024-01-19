@@ -163,7 +163,7 @@ class _TrackerState extends State<Tracker> {
                                       } else if (!snapshot.hasData ||
                                           snapshot.data!.isEmpty) {
                                         return const Text(
-                                            'No medication data available.');
+                                            'No medication data available. ');
                                       } else {
                                         final List<Map<String, dynamic>>
                                             medicationList = snapshot.data!;
