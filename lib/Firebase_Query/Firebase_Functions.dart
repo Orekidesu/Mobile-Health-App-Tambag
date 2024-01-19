@@ -10,14 +10,16 @@ CollectionReference medicationInventoryCollection =
 
 Future<List<Patient>> getAllPatients(String userBaranggay) async {
   QuerySnapshot querySnapshot = await patientsCollection.get();
-  return querySnapshot.docs.map((DocumentSnapshot document) {
-    return Patient(
-      id: document['id'],
-      name: document['name'],
-      address: document['address'],
-    );
-  })
-  .where((patient) => patient.address == userBaranggay).toList();
+  return querySnapshot.docs
+      .map((DocumentSnapshot document) {
+        return Patient(
+          id: document['id'],
+          name: document['name'],
+          address: document['address'],
+        );
+      })
+      .where((patient) => patient.address == userBaranggay)
+      .toList();
 }
 
 Future<List<medication_inventory>> getAllMedicalInventory() async {
@@ -86,8 +88,10 @@ class DataService {
             await patientDoc.reference.collection('medications').get();
 
         int count = 0;
+
         return medicationsSubcollection.docs.map((medicationDoc) {
           count++;
+          print(medicationDoc['med_name']);
           return {
             'name': medicationDoc['med_name'],
             'dosage': medicationDoc['dosage'].toString(),

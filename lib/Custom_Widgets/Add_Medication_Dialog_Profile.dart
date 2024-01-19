@@ -1,6 +1,7 @@
 // Import necessary libraries
 // ignore_for_file: library_private_types_in_public_api
 
+import 'package:Tambag_Health_App/custom_widgets/Custom_dropdown.dart';
 import 'package:Tambag_Health_App/custom_widgets/Medication_info.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -33,6 +34,12 @@ class _AddMedicationProfileState extends State<AddMedicationProfile> {
 
   String? selectedMedName;
   late String selectedMedInd = '';
+
+  List<String> Tukma = [
+    'Sa dili pa mukaon',
+    'Human ug kaon',
+  ];
+  String? selectedTukma;
 
   List<MapEntry<String, String>> medicationDataList = [];
   late Map<String, String> medicationInfo;
@@ -82,6 +89,7 @@ class _AddMedicationProfileState extends State<AddMedicationProfile> {
     String dosage,
     String quantity,
     String frequency,
+    String Tukma,
   ) async {
     try {
       int requestedQuantity = int.parse(quantity);
@@ -113,8 +121,9 @@ class _AddMedicationProfileState extends State<AddMedicationProfile> {
             'dosage': '$dosage mg, tumaron ka-$frequency kada adlaw ',
             'frequency': int.parse(frequency),
             'reminder': medicationInfo['reminder'],
-            // 'contraindication': medicationInfo['contraindication'],
-            // 'diet': medicationInfo['diet'],
+            'tukma': Tukma,
+            'contraindication': medicationInfo['contraindication'],
+            'diet': medicationInfo['diet'],
           };
 
           widget.addMedicationCallback(medicationDetails);
@@ -138,7 +147,8 @@ class _AddMedicationProfileState extends State<AddMedicationProfile> {
     return selectedMedName != null &&
         dosageController.text.isNotEmpty &&
         frequencyController.text.isNotEmpty &&
-        quantityController.text.isNotEmpty;
+        quantityController.text.isNotEmpty &&
+        selectedTukma != null;
   }
 
   @override
@@ -189,6 +199,7 @@ class _AddMedicationProfileState extends State<AddMedicationProfile> {
                     );
                   }).toList(),
                   hint: const Text('Select Medication'),
+                  isExpanded: true,
                 ),
               ),
             )
@@ -197,58 +208,113 @@ class _AddMedicationProfileState extends State<AddMedicationProfile> {
         const SizedBox(
           height: 10,
         ),
-        const Text(
-          'Dosage and Frequency:',
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-            fontSize: 16.0,
-            color: periwinkleColor,
-          ),
-        ),
         const SizedBox(
           height: 5,
         ),
         Row(
           children: [
             Expanded(
-              child: SizedBox(
-                height: 45,
-                child: TextField(
-                  controller: dosageController,
-                  decoration: InputDecoration(
-                    filled: true,
-                    fillColor: Colors.white,
-                    hintText: 'Dosage (mg)',
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10.0),
-                      borderSide: const BorderSide(
-                        color: periwinkleColor,
-                        width: 4,
+                child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text(
+                  'Dosage:',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16.0,
+                    color: periwinkleColor,
+                  ),
+                ),
+                SizedBox(
+                  height: 45,
+                  child: TextField(
+                    controller: dosageController,
+                    decoration: InputDecoration(
+                      filled: true,
+                      fillColor: Colors.white,
+                      hintText: '(mg)',
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10.0),
+                        borderSide: const BorderSide(
+                          color: periwinkleColor,
+                          width: 4,
+                        ),
                       ),
                     ),
                   ),
                 ),
-              ),
-            ),
+              ],
+            )),
             const SizedBox(width: 8.0),
             Expanded(
-              child: SizedBox(
-                height: 45,
-                child: TextField(
-                  controller: frequencyController,
-                  decoration: InputDecoration(
-                    filled: true,
-                    fillColor: Colors.white,
-                    hintText: 'Freq (Oras)',
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10.0),
-                      borderSide: const BorderSide(
-                        color: periwinkleColor,
-                        width: 4,
+                child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text(
+                  'Frequency:',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16.0,
+                    color: periwinkleColor,
+                  ),
+                ),
+                SizedBox(
+                  height: 45,
+                  child: TextField(
+                    controller: frequencyController,
+                    decoration: InputDecoration(
+                      filled: true,
+                      fillColor: Colors.white,
+                      hintText: '(Per Day)',
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10.0),
+                        borderSide: const BorderSide(
+                          color: periwinkleColor,
+                          width: 4,
+                        ),
                       ),
                     ),
                   ),
                 ),
+              ],
+            )),
+          ],
+        ),
+        const SizedBox(
+          height: 15,
+        ),
+        Row(
+          children: [
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    'Quantity:',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16.0,
+                      color: periwinkleColor,
+                    ),
+                  ),
+                  SizedBox(
+                    height: 45,
+                    child: TextField(
+                      controller: quantityController,
+                      decoration: InputDecoration(
+                        filled: true,
+                        fillColor: Colors.white,
+                        hintText: '', //
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10.0),
+                          borderSide: const BorderSide(
+                            color: periwinkleColor,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
           ],
@@ -256,37 +322,50 @@ class _AddMedicationProfileState extends State<AddMedicationProfile> {
         const SizedBox(
           height: 15,
         ),
-        const Text(
-          'Quantity:',
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-            fontSize: 16.0,
-            color: periwinkleColor,
-          ),
-        ),
-        const SizedBox(
-          height: 5,
-        ),
         Row(
           children: [
             Expanded(
-              child: SizedBox(
-                height: 45,
-                child: TextField(
-                  controller: quantityController,
-                  decoration: InputDecoration(
-                    filled: true,
-                    fillColor: Colors.white,
-                    hintText: '', //
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10.0),
-                      borderSide: const BorderSide(
-                        color: periwinkleColor,
-                        width: 4,
-                      ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    'Tukma:',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16.0,
+                      color: periwinkleColor,
                     ),
                   ),
-                ),
+                  Container(
+                    height: 45,
+                    padding: const EdgeInsets.all(4.0),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(8.0),
+                      border: Border.all(
+                        color: periwinkleColor, // Set your desired border color
+                        width: 2.0, // Set your desired border width
+                      ),
+                    ),
+                    child: DropdownButton<String>(
+                      value: selectedTukma,
+                      onChanged: (String? value) {
+                        setState(() {
+                          selectedTukma = value ?? '';
+                        });
+                      },
+                      items:
+                          Tukma.map<DropdownMenuItem<String>>((String value) {
+                        return DropdownMenuItem<String>(
+                          value: value,
+                          child: Text(value),
+                        );
+                      }).toList(),
+                      hint: const Text('Before or After meal'),
+                      isExpanded: true,
+                    ),
+                  ),
+                ],
               ),
             ),
           ],
@@ -336,6 +415,7 @@ class _AddMedicationProfileState extends State<AddMedicationProfile> {
                     dosageController.text,
                     quantityController.text,
                     frequencyController.text,
+                    selectedTukma!,
                   );
                   Navigator.pop(context);
                 } else {
