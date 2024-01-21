@@ -11,14 +11,15 @@ import '../functions/custom_functions.dart';
 import 'Dashboard.dart';
 
 class smsSender extends StatefulWidget {
-  const smsSender({super.key});
+  final String selectedBrgy;
+  const smsSender({super.key, required this.selectedBrgy});
 
   @override
   State<smsSender> createState() => _smsSenderState();
 }
 
 TextEditingController messageController = TextEditingController();
-String selectedBrgy = 'Guadalupe';
+
 List<String> Brgy = ['Guadalupe', 'Patag', 'Gabas','All'];
 
 class _smsSenderState extends State<smsSender> {
@@ -53,11 +54,10 @@ class _smsSenderState extends State<smsSender> {
                           Expanded(
                             child: CustomDropdown(
                                         items: Brgy,
-                                        value: selectedBrgy,
+                                        isEnabled: false,
+                                        value: widget.selectedBrgy,
                                         onChanged: (String newValue) {
-                                          setState(() {
-                                            selectedBrgy = newValue;
-                                          });
+                                          
                                         },
                                       ),
                           ),

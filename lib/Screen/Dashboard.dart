@@ -91,6 +91,7 @@ Widget build(BuildContext context) {
                 hasRightIcon: true,
                 Distination: () => showSignOutDialog(context),
                 hasMessageIcon: true,
+                selectedBrgy: baranggay?? '',
               ),
               const SizedBox(height: 10),
               Expanded(

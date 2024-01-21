@@ -38,8 +38,6 @@ class _AddProfilePageState extends State<AddProfilePage> {
   final CollectionReference followUpCollection =
       FirebaseFirestore.instance.collection('follow_up_history');
 
-  String selectedBrgy = 'Guadalupe';
-
   Future<void> addProfileToFirebase() async {
     try {
       if (_validateInput()) {
@@ -127,7 +125,7 @@ class _AddProfilePageState extends State<AddProfilePage> {
     return {
       'name': nameController.text,
       'age': ageController.text,
-      'address': selectedBrgy,
+      'address': widget.selectedBrgy,
       'contact_number': contactNumberController.text,
       'physician': physicianController.text,
       'id': id,
@@ -147,7 +145,7 @@ class _AddProfilePageState extends State<AddProfilePage> {
     // Check if any of the text fields are empty
     return nameController.text.isNotEmpty &&
         ageController.text.isNotEmpty &&
-        selectedBrgy.isNotEmpty &&
+        widget.selectedBrgy.isNotEmpty &&
         contactNumberController.text.isNotEmpty &&
         physicianController.text.isNotEmpty &&
         medicationList.isNotEmpty;
@@ -289,11 +287,9 @@ class _AddProfilePageState extends State<AddProfilePage> {
                                     child: CustomDropdown(
                                       isEnabled: false,
                                       items: Brgy,
-                                      value: selectedBrgy,
+                                      value: widget.selectedBrgy,
                                       onChanged: (String newValue) {
-                                        setState(() {
-                                          selectedBrgy = newValue;
-                                        });
+                                        
                                       },
                                     ),
                                   ),
