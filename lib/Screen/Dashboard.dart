@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
   import '../constants/light_constants.dart';
   import '../Custom_Widgets/Dashboard_List_Firebase.dart';
   import '../functions/custom_functions.dart';
+import 'SmsSender.dart';
 
   class Patient {
     final String id;
@@ -89,9 +90,9 @@ Widget build(BuildContext context) {
                 hasbackIcon: false,
                 iconColor: Colors.white,
                 hasRightIcon: true,
-                Distination: () => showSignOutDialog(context),
+                Distination: baranggay == null ? null : () => showSignOutDialog(context),
+                MessagePage: baranggay == null ? null : ()=>goToPage(context, smsSender(selectedBrgy: baranggay??'',)),
                 hasMessageIcon: true,
-                selectedBrgy: baranggay?? '',
               ),
               const SizedBox(height: 10),
               Expanded(
@@ -102,7 +103,7 @@ Widget build(BuildContext context) {
                       ),
               ),
               const SizedBox(height: 20),
-              ProfileAndMasterlistRow(selectedBrgy: baranggay?? '',),
+              ProfileAndMasterlistRow(selectedBrgy: baranggay?? '', Barangay: baranggay,),
             ],
           ),
         ),

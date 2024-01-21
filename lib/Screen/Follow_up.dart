@@ -597,7 +597,7 @@ class _Follow_upState extends State<Follow_up> {
                                             submitFollowUpData(
                                                 message, contact_number);
                                           },
-                                          buttonText: "Submit",
+                                          buttonText: isSendingInProgress ? 'Submitting...' : 'Submit',
                                         ),
                                       ],
                                     ),

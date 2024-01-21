@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import '../constants/light_constants.dart';
 
 class CustomActionButton extends StatelessWidget {
-  final VoidCallback onPressed;
+  final VoidCallback? onPressed;
   final String buttonText;
   final Color? foreground;
   final Color? background;

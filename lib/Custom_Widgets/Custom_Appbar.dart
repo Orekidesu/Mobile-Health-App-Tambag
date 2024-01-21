@@ -15,13 +15,12 @@ class Custom_Appbar extends StatefulWidget {
   final bool? hasMessageIcon;
   final VoidCallback? Distination;
   final VoidCallback? DistinationBack;
+  final VoidCallback? MessagePage;
   final bool hasBrgy;
   final double titleFontSize;
-  final String? selectedBrgy;
 
   const Custom_Appbar({
     super.key,
-    this.selectedBrgy,
     this.titleFontSize = 20,
     this.hasBrgy = true,
     required this.Apptitle,
@@ -32,7 +31,8 @@ class Custom_Appbar extends StatefulWidget {
     this.icon,
     required this.hasbackIcon,
     required this.hasRightIcon,
-    this.hasMessageIcon = false,
+    this.hasMessageIcon = false, 
+    this.MessagePage,
   });
 
   @override
@@ -72,7 +72,7 @@ class _Custom_AppbarState extends State<Custom_Appbar> {
             ],
           ),
         ),
-        if (widget.hasMessageIcon!) Custom_Button(hasIcon: true, icon: Icons.message, color: periwinkleColor,iconColor: widget.iconColor,onTap: (()=>goToPage(context, smsSender(selectedBrgy: widget.selectedBrgy??'',)))),
+        if (widget.hasMessageIcon!) Custom_Button(hasIcon: true, icon: Icons.message, color: periwinkleColor,iconColor: widget.iconColor,onTap: widget.MessagePage),
         const SizedBox(width: 10),
         if (widget.hasRightIcon) Custom_Button(hasIcon: true, icon: widget.icon, color: periwinkleColor,iconColor: widget.iconColor,onTap: widget.Distination),
         const SizedBox(width: 10),

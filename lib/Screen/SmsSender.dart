@@ -23,6 +23,7 @@ class smsSender extends StatefulWidget {
 class _smsSenderState extends State<smsSender> {
   TextEditingController messageController = TextEditingController();
   List<String> Brgy = ['Guadalupe', 'Patag', 'Gabas', 'All'];
+  bool isSending = false;
   
   @override
   void dispose() {
@@ -61,17 +62,28 @@ class _smsSenderState extends State<smsSender> {
   }
 
 void sendMessage() async {
+  if (messageController.text.isEmpty) {
+    showErrorNotification('Message is Empty');
+    return;
+  }
+
+  setState(() {
+    isSending = true;
+  });
+
   List<String?> numbers = await getContactNumbersWithBaranggay();
 
   String commaSeparatedNumbers = numbers
       .where((number) => number != null)
-      .join(', '); // Join non-null numbers with commas
+      .join(', ');
 
-  // You can replace the following line with your SMS sending logic
-  // For demonstration purposes, we'll print the comma-separated numbers and message
-  //print('Sending SMS to $commaSeparatedNumbers: ${messageController.text}');
   sendSMS(messageController.text, commaSeparatedNumbers);
+
+  setState(() {
+    isSending = false;
+  });
 }
+
 
 
 
@@ -134,7 +146,7 @@ void sendMessage() async {
                         children: [
                           CustomActionButton(
                             onPressed: () {sendMessage();},
-                            buttonText: "Send",
+                            buttonText: isSending? 'Sending...':'Send',
                           ),
                         ],
                       )

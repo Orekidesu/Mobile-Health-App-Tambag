@@ -6,7 +6,9 @@ import '../Custom_Widgets/CustomActionButton.dart';
 
 class ProfileAndMasterlistRow extends StatelessWidget {
   final String selectedBrgy;
-  const ProfileAndMasterlistRow({super.key, required this.selectedBrgy});
+  final String? Barangay;
+  const ProfileAndMasterlistRow(
+      {super.key, required this.selectedBrgy, this.Barangay});
 
   @override
   Widget build(BuildContext context) {
@@ -23,17 +25,18 @@ class ProfileAndMasterlistRow extends StatelessWidget {
           background: Colors.white,
           borderColor: periwinkleColor,
           borderWidth: 2,
-          onPressed: () {
-            Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => const Masterlist(),
-            ),
-          );
-          },
+          onPressed: Barangay == null
+              ? null
+              : () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const Masterlist(),
+                    ),
+                  );
+                },
           buttonText: "MEDICATION\nMASTERLIST",
           fontWeight: FontWeight.bold,
-
         ),
       ],
     );
@@ -48,14 +51,18 @@ class ProfileAndMasterlistRow extends StatelessWidget {
       child: IconButton(
         icon: const Icon(Icons.add),
         color: Colors.white,
-        onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => AddProfilePage(selectedBrgy: selectedBrgy,),
-            ),
-          );
-        },
+        onPressed: Barangay == null
+            ? null
+            : () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => AddProfilePage(
+                      selectedBrgy: selectedBrgy,
+                    ),
+                  ),
+                );
+              },
       ),
     );
   }

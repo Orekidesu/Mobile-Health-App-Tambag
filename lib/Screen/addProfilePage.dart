@@ -27,6 +27,7 @@ class _AddProfilePageState extends State<AddProfilePage> {
   TextEditingController physicianController = TextEditingController();
   List<Map<String, dynamic>> medicationList = [];
   String highestIdValue = '';
+  bool isAddingProfile = false;
 
   @override
   void dispose() {
@@ -51,6 +52,10 @@ class _AddProfilePageState extends State<AddProfilePage> {
   Future<void> addProfileToFirebase() async {
     try {
       if (_validateInput()) {
+        setState(() {
+          isAddingProfile = true;
+        });
+
         // All fields are non-empty, proceed with adding to Firebase
         String id = await getHighestIdDocument();
         DocumentReference profileReference =
@@ -72,6 +77,9 @@ class _AddProfilePageState extends State<AddProfilePage> {
 
         showSuccessNotification('Successfully added');
 
+        setState(() {
+          isAddingProfile = false;
+        });
         // Navigate to the Dashboard after successful addition
         goToPage(context, const Dashboard());
       } else {
@@ -80,6 +88,9 @@ class _AddProfilePageState extends State<AddProfilePage> {
       }
     } catch (e) {
       showErrorNotification('Error adding profile to Firebase: $e');
+      setState(() {
+        isAddingProfile = false;
+      });
     }
   }
 
@@ -415,7 +426,7 @@ class _AddProfilePageState extends State<AddProfilePage> {
                                   onPressed: () {
                                     addProfileToFirebase();
                                   },
-                                  buttonText: "Add",
+                                  buttonText: isAddingProfile ? 'Adding...' : 'Add',
                                 ),
                               ],
                             )
