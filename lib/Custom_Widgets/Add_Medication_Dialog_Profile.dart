@@ -122,8 +122,8 @@ class _AddMedicationProfileState extends State<AddMedicationProfile> {
             'frequency': int.parse(frequency),
             'reminder': medicationInfo['reminder'],
             'tukma': Tukma,
-            'contraindication': medicationInfo['contraindication'],
-            'diet': medicationInfo['diet'],
+            // 'contraindication': medicationInfo['contraindication'],
+            // 'diet': medicationInfo['diet'],
           };
 
           widget.addMedicationCallback(medicationDetails);

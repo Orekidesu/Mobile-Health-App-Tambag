@@ -155,7 +155,7 @@ final Map<String, Map<String, String>> allInteractions = {
         "Ang Simvastatin makapaus-os sa proseso sa pagpagawas sa Atorvastatin sa atong lawas; nangahulogan nga magpabilin nga taas ang lebel sa Atorvastatin sa atong dugo.",
     // "Citicoline": "",
     "Rosuvastatin":
-        "Ang Simvastatin makapaus-os sa proseso sa pagpagawas sa Rosuvastatin sa atong lawas; nangahulogan nga magpabilin nga taas ang lebel sa Rosuvastatin sa atong lawas.",
+        "Makapaus-os sa proseso sa pagpagawas sa Rosuvastatin sa atong lawas; nangahulogan nga magpabilin nga taas ang lebel sa Rosuvastatin sa atong lawas.",
     "Valproic Acid":
         "Makapaus-os sa proseso nga metabolismo sa Simvastatin kon i-kombinar pagtumar sa Valproic Acid.",
     "Carvedilol":
@@ -272,7 +272,7 @@ final Map<String, Map<String, String>> allInteractions = {
     // "Salbutamol":"",
     // "Citicoline":"",
     "Rosuvastatin":
-        "Ang Atorvastatin makapaus-os sa proseso sa pagpagawas sa Rosuvastatin sa atong lawas; nangahulogan nga magpabilin nga taas ang lebel sa Rosuvastatin sa atong lawas.",
+        "Makapaus-os sa proseso sa pagpagawas sa Rosuvastatin sa atong lawas; nangahulogan nga magpabilin nga taas ang lebel sa Rosuvastatin sa atong lawas.",
     "Valproic Acid":
         "Makapaus-os sa proseso nga metabolismo sa Atorvastatin kon i-kombinar pagtumar sa Valproic Acid.",
     // "Carvedilol":"",
@@ -301,17 +301,17 @@ final Map<String, Map<String, String>> allInteractions = {
     "Metformin":
         "Makapadugang sa epekto sa Rosuvastatin ang Metformin; nangahulogan nga mas makapaus-os og samot sa Cholesterol sa dugo.",
     "Simvastatin":
-        "Ang Simvastatin makapaus-os sa proseso sa pagpagawas sa Rosuvastatin sa atong lawas; nangahulogan nga magpabilin nga taas ang lebel sa Rosuvastatin sa atong lawas.",
+        "Makapaus-os sa proseso sa pagpagawas sa Rosuvastatin sa atong lawas; nangahulogan nga magpabilin nga taas ang lebel sa Rosuvastatin sa atong lawas.",
     "Gliclazide":
         "Makapadugang sa epekto sa Gliclazide kon i-kombinar sa Rosuvastatin; nangahulogan nga makapaus-os og samot sa blood sugar.",
     // "Metoprolol": "",
     // "Losartan": "",
     // "Salbutamol": "",
     "Atorvastatin":
-        "Ang Atorvastatin makapaus-os sa proseso sa pagpagawas sa Rosuvastatin sa atong lawas; nangahulogan nga magpabilin nga taas ang lebel sa Rosuvastatin sa atong lawas.",
+        "Makapaus-os sa proseso sa pagpagawas sa Rosuvastatin sa atong lawas; nangahulogan nga magpabilin nga taas ang lebel sa Rosuvastatin sa atong lawas.",
     // "Citicoline": "",
     "Valproic Acid":
-        "Ang Rosuvastatin makapaus-os sa proseso sa pagpagawas sa Valproic Acid sa atong lawas; nangahulogan nga magpabilin nga taas ang lebel sa Valproic Acid sa atong lawas.",
+        "Makapaus-os sa proseso sa pagpagawas sa Valproic Acid sa atong lawas; nangahulogan nga magpabilin nga taas ang lebel sa Valproic Acid sa atong lawas.",
     "Carvedilol":
         "Makapaus-os sa proseso nga metabolismo sa Carvedilol kon i-kombinar pagtumar sa Rosuvastatin.",
     "Clopidogrel":
@@ -336,7 +336,7 @@ final Map<String, Map<String, String>> allInteractions = {
         "Makapaus-os sa proseso nga metabolismo sa Atorvastatin kon i-kombinar pagtumar sa Valproic Acid.",
     // "Citicoline": "",
     "Rosuvastatin":
-        "Ang Rosuvastatin makapaus-os sa proseso sa pagpagawas sa Valproic Acid sa atong lawas; nangahulogan nga magpabilin nga taas ang lebel sa Valproic Acid sa atong lawas.",
+        "Makapaus-os sa proseso sa pagpagawas sa Valproic Acid sa atong lawas; nangahulogan nga magpabilin nga taas ang lebel sa Valproic Acid sa atong lawas.",
     "Carvedilol":
         "Makapaus-os sa proseso nga metabolismo sa Carvedilol kon i-kombinar pagtumar sa Valproic Acid.",
     "Clopidogrel":
