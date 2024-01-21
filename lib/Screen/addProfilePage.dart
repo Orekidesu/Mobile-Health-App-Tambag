@@ -29,6 +29,16 @@ class _AddProfilePageState extends State<AddProfilePage> {
   String highestIdValue = '';
 
   @override
+  void dispose() {
+    // Dispose of the controllers when the widget is disposed
+    nameController.dispose();
+    ageController.dispose();
+    contactNumberController.dispose();
+    physicianController.dispose();
+    super.dispose();
+  }
+
+  @override
   void initState() {
     super.initState();
   }
