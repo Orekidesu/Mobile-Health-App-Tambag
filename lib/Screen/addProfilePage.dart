@@ -12,7 +12,8 @@ import '../constants/light_constants.dart';
 import '../functions/custom_functions.dart';
 
 class AddProfilePage extends StatefulWidget {
-  const AddProfilePage({super.key});
+  final String selectedBrgy;
+  const AddProfilePage({super.key, required this.selectedBrgy});
 
   @override
   _AddProfilePageState createState() => _AddProfilePageState();
@@ -216,7 +217,7 @@ class _AddProfilePageState extends State<AddProfilePage> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Custom_Appbar(
-                titleFontSize: 25,
+                titleFontSize: 21,
                 hasBrgy: false,
                 Baranggay: "Profile",
                 Apptitle: "Add Profile",
@@ -286,6 +287,7 @@ class _AddProfilePageState extends State<AddProfilePage> {
                                       borderRadius: BorderRadius.circular(8.0),
                                     ),
                                     child: CustomDropdown(
+                                      isEnabled: false,
                                       items: Brgy,
                                       value: selectedBrgy,
                                       onChanged: (String newValue) {

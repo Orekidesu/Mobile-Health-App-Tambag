@@ -40,7 +40,6 @@ import 'package:flutter/material.dart';
       }
     }
 
-
   Future<void> fetchBaranggay() async {
     try {
       // Get the current user
@@ -84,7 +83,7 @@ Widget build(BuildContext context) {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Custom_Appbar(
-                Baranggay: 'Baranggay ${baranggay ?? ''}',
+                Baranggay: 'Baranggay ${baranggay ?? 'Loading...'}',
                 Apptitle: "TAMBAG",
                 icon: Icons.logout,
                 hasbackIcon: false,
@@ -98,11 +97,11 @@ Widget build(BuildContext context) {
                 child: baranggay == null
                     ? const Center(child: CircularProgressIndicator()) // Show a loading indicator
                     : DashboardListFirebase(
-                        Baranggay: baranggay!,
+                        Baranggay: baranggay?? '',
                       ),
               ),
               const SizedBox(height: 20),
-              const ProfileAndMasterlistRow(),
+              ProfileAndMasterlistRow(selectedBrgy: baranggay?? '',),
             ],
           ),
         ),

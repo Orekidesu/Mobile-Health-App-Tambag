@@ -5,13 +5,15 @@ class CustomDropdown extends StatefulWidget {
   final List<String> items;
   final String value;
   final Function(String) onChanged;
+  final bool isEnabled; // Add this property
 
   const CustomDropdown({
-    super.key,
+    Key? key,
     required this.items,
     required this.value,
     required this.onChanged,
-  });
+    this.isEnabled = true, // Default is enabled
+  }) : super(key: key);
 
   @override
   _CustomDropdownState createState() => _CustomDropdownState();
@@ -26,18 +28,20 @@ class _CustomDropdownState extends State<CustomDropdown> {
       decoration: BoxDecoration(
         border: Border.all(
           color: periwinkleColor,
-          width: 2.0, // Set the desired border thickness
+          width: 2.0,
         ),
         borderRadius: BorderRadius.circular(15.0),
       ),
       padding: const EdgeInsets.all(10),
       child: DropdownButton<String>(
         value: widget.value,
-        onChanged: (String? newValue) {
-          if (newValue != null) {
-            widget.onChanged(newValue);
-          }
-        },
+        onChanged: widget.isEnabled
+            ? (String? newValue) {
+                if (newValue != null) {
+                  widget.onChanged(newValue);
+                }
+              }
+            : null, // Set onChanged to null if disabled
         items: widget.items.map<DropdownMenuItem<String>>((String value) {
           return DropdownMenuItem<String>(
             value: value,
@@ -48,7 +52,9 @@ class _CustomDropdownState extends State<CustomDropdown> {
           );
         }).toList(),
         underline: Container(),
-        icon: const Icon(Icons.arrow_drop_down),
+        icon: widget.isEnabled
+            ? const Icon(Icons.arrow_drop_down)
+            : null, // Set icon to null if disabled
         isExpanded: true,
       ),
     );

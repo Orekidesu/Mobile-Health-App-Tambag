@@ -5,7 +5,8 @@ import '../constants/light_constants.dart';
 import '../Custom_Widgets/CustomActionButton.dart';
 
 class ProfileAndMasterlistRow extends StatelessWidget {
-  const ProfileAndMasterlistRow({super.key});
+  final String selectedBrgy;
+  const ProfileAndMasterlistRow({super.key, required this.selectedBrgy});
 
   @override
   Widget build(BuildContext context) {
@@ -51,7 +52,7 @@ class ProfileAndMasterlistRow extends StatelessWidget {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => const AddProfilePage(),
+              builder: (context) => AddProfilePage(selectedBrgy: selectedBrgy,),
             ),
           );
         },
