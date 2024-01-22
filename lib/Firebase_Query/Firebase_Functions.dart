@@ -97,6 +97,9 @@ class DataService {
             'dosage': medicationDoc['dosage'].toString(),
             'indication': medicationDoc['med_ind'].toString(),
             'special_reminder': medicationDoc['reminder'].toString(),
+            'tukma': medicationDoc['tukma'].toString(),
+            'frequency': medicationDoc['frequency'].toString(),
+            'quantity': medicationDoc['med_quan'].toString(),
             'count': count,
           };
         }).toList();
