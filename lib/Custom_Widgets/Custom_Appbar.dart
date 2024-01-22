@@ -1,9 +1,7 @@
-// ignore_for_file: camel_case_types, non_constant_identifier_names, prefer_typing_uninitialized_variables
-import 'package:Tambag_Health_App/functions/custom_functions.dart';
+// ignore_for_file: camel_case_types, non_constant_identifier_names, prefer_typing_uninitialized_variables, file_names
 import 'package:flutter/material.dart';
 import '../constants/light_constants.dart';
 import 'Custom_ButtonRound.dart';
-import '../Screen/SmsSender.dart';
 
 class Custom_Appbar extends StatefulWidget {
   final String Baranggay;

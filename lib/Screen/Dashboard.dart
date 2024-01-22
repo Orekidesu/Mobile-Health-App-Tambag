@@ -32,13 +32,21 @@ import 'SmsSender.dart';
     String? baranggay; // Added variable to store Baranggay field
 
     late CollectionReference patientsCollection;
+    bool _isMounted = false;
 
     @override
     void initState() {
       super.initState();
+      _isMounted = true;
       if (baranggay == null) {
         fetchBaranggay();
       }
+    }
+
+    @override
+    void dispose() {
+      _isMounted = false;
+      super.dispose();
     }
 
   Future<void> fetchBaranggay() async {
@@ -64,10 +72,21 @@ import 'SmsSender.dart';
         setState(() {
           baranggay = userBaranggay;
         });
+
+        // Update the state with the Baranggay field value only if the widget is still mounted
+        if (_isMounted) {
+          setState(() {
+            baranggay = userBaranggay;
+          });
+        }
       }
+      
     } catch (e) {
       // Handle errors here
-      showErrorNotification('Error fetching Baranggay: $e');
+      if (_isMounted) {
+        showErrorNotification('Error fetching Baranggay: $e');
+        print(e);
+      }
     }
   }
 

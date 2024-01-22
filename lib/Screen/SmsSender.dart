@@ -1,4 +1,4 @@
-// ignore_for_file: camel_case_types, file_names
+// ignore_for_file: camel_case_types, file_names, non_constant_identifier_names
 
 import 'package:Tambag_Health_App/Custom_Widgets/Custom_dropdown.dart';
 import 'package:Tambag_Health_App/constants/light_constants.dart';
@@ -14,7 +14,7 @@ import 'Dashboard.dart';
 
 class smsSender extends StatefulWidget {
   final String selectedBrgy;
-  const smsSender({Key? key, required this.selectedBrgy}) : super(key: key);
+  const smsSender({super.key, required this.selectedBrgy});
 
   @override
   State<smsSender> createState() => _smsSenderState();
@@ -22,7 +22,7 @@ class smsSender extends StatefulWidget {
 
 class _smsSenderState extends State<smsSender> {
   TextEditingController messageController = TextEditingController();
-  List<String> Brgy = ['Guadalupe', 'Patag', 'Gabas', 'All'];
+  List<String> Brgy = ['Guadalupe', 'Patag', 'Gabas'];
   bool isSending = false;
   
   @override
@@ -62,30 +62,38 @@ class _smsSenderState extends State<smsSender> {
   }
 
 void sendMessage() async {
-  if (messageController.text.isEmpty) {
-    showErrorNotification('Message is Empty');
-    return;
+  try {
+    if (messageController.text.isEmpty) {
+      showErrorNotification('Message is Empty');
+      return;
+    }
+
+    setState(() {
+      isSending = true;
+    });
+
+    List<String?> numbers = await getContactNumbersWithBaranggay();
+
+    if (numbers.isEmpty) {
+      showErrorNotification('No contact numbers available');
+      return;
+    }
+
+    String commaSeparatedNumbers = numbers
+        .where((number) => number != null)
+        .join(', ');
+
+    await sendSMS(messageController.text, commaSeparatedNumbers);
+
+  } catch (e) {
+    // Handle exceptions appropriately
+    showErrorNotification('Failed to send message');
+  } finally {
+    setState(() {
+      isSending = false;
+    });
   }
-
-  setState(() {
-    isSending = true;
-  });
-
-  List<String?> numbers = await getContactNumbersWithBaranggay();
-
-  String commaSeparatedNumbers = numbers
-      .where((number) => number != null)
-      .join(', ');
-
-  sendSMS(messageController.text, commaSeparatedNumbers);
-
-  setState(() {
-    isSending = false;
-  });
 }
-
-
-
 
 
   @override
@@ -104,7 +112,7 @@ void sendMessage() async {
                 hasbackIcon: true,
                 hasRightIcon: false,
                 iconColor: Colors.white,
-                DistinationBack: () => goToPage(context, const Dashboard()),
+                DistinationBack: isSending ? null :  () => goToPage(context, const Dashboard()),
               ),
               Expanded(
                 child: Padding(

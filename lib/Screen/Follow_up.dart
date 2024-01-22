@@ -50,7 +50,7 @@ class _Follow_upState extends State<Follow_up> {
 
   String selectedMonth = 'Enero';
   String selectedDay = '1';
-  String selectedYear = '2023';
+  String selectedYear = '2024';
   String selectedTime = 'alas-otso sa buntag';
   bool isSendingInProgress = false;
 
@@ -115,7 +115,6 @@ class _Follow_upState extends State<Follow_up> {
 
         // Optional: Show a success message or navigate to another screen
         if (smsStatus) {
-          showSuccessNotification('Successful to send SMS');
           // Update the existing document with the new data
           await subdoc.reference.update({
             'physician': physicianController.text,
@@ -537,7 +536,7 @@ class _Follow_upState extends State<Follow_up> {
                                             child: CustomDropdown(
                                               items: List<String>.generate(
                                                   10,
-                                                  (index) => (2023 + index)
+                                                  (index) => (2024 + index)
                                                       .toString()),
                                               value: selectedYear,
                                               onChanged: (String newValue) {

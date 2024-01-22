@@ -30,6 +30,12 @@ class _AddProfilePageState extends State<AddProfilePage> {
   bool isAddingProfile = false;
 
   @override
+  void initState() {
+    super.initState();
+    
+  }
+
+  @override
   void dispose() {
     // Dispose of the controllers when the widget is disposed
     nameController.dispose();
@@ -37,11 +43,6 @@ class _AddProfilePageState extends State<AddProfilePage> {
     contactNumberController.dispose();
     physicianController.dispose();
     super.dispose();
-  }
-
-  @override
-  void initState() {
-    super.initState();
   }
 
   final CollectionReference patientsCollection =
@@ -52,9 +53,9 @@ class _AddProfilePageState extends State<AddProfilePage> {
   Future<void> addProfileToFirebase() async {
     try {
       if (_validateInput()) {
-        setState(() {
-          isAddingProfile = true;
-        });
+          setState(() {
+            isAddingProfile = true;
+          });
 
         // All fields are non-empty, proceed with adding to Firebase
         String id = await getHighestIdDocument();
@@ -78,13 +79,15 @@ class _AddProfilePageState extends State<AddProfilePage> {
         showSuccessNotification('Successfully added');
 
         setState(() {
-          isAddingProfile = false;
-        });
-        // Navigate to the Dashboard after successful addition
-        goToPage(context, const Dashboard());
+            isAddingProfile = false;
+          });
+          // Navigate to the Dashboard after successful addition
+          goToPage(context, const Dashboard());
+      
       } else {
         // Show an error notification if there are empty fields
         showErrorNotification('Please fill in all fields.');
+
       }
     } catch (e) {
       showErrorNotification('Error adding profile to Firebase: $e');
@@ -243,7 +246,7 @@ class _AddProfilePageState extends State<AddProfilePage> {
                 hasbackIcon: true,
                 hasRightIcon: false,
                 iconColor: Colors.white,
-                DistinationBack: () => goToPage(context, const Dashboard()),
+                DistinationBack:isAddingProfile ? null : () => goToPage(context, const Dashboard()),
               ),
               Expanded(
                 child: SingleChildScrollView(

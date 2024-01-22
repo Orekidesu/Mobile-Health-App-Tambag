@@ -28,6 +28,14 @@ class _AddMedicationState extends State<AddMedication> {
     _getMedicationNames(); // Fetch medication names when the widget is initialized
   }
 
+  @override
+  void dispose() {
+    // Dispose of the controllers when the widget is disposed
+    medicationController.dispose();
+    quantityController.dispose();
+    super.dispose();
+  }
+
   Future<void> _getMedicationNames() async {
     try {
       // Query the Firestore collection to get all medication names

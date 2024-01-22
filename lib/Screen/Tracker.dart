@@ -16,7 +16,7 @@ import 'package:intl/date_symbol_data_local.dart';
 class Tracker extends StatefulWidget {
   final String patientId;
 
-  const Tracker({Key? key, required this.patientId}) : super(key: key);
+  const Tracker({super.key, required this.patientId});
 
   @override
   State<Tracker> createState() => _TrackerState();
