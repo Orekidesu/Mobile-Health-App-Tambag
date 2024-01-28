@@ -82,8 +82,8 @@ class MedicationInteractionChecker {
       }
     }
 
-    print('Medicines: $medicines');
-    print('Interactions Details: $interactionsDetails');
+    // print('Medicines: $medicines');
+    // print('Interactions Details: $interactionsDetails');
     return interactionsDetails;
   }
 
