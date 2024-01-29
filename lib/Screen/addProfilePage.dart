@@ -32,7 +32,6 @@ class _AddProfilePageState extends State<AddProfilePage> {
   @override
   void initState() {
     super.initState();
-    
   }
 
   @override
@@ -53,9 +52,9 @@ class _AddProfilePageState extends State<AddProfilePage> {
   Future<void> addProfileToFirebase() async {
     try {
       if (_validateInput()) {
-          setState(() {
-            isAddingProfile = true;
-          });
+        setState(() {
+          isAddingProfile = true;
+        });
 
         // All fields are non-empty, proceed with adding to Firebase
         String id = await getHighestIdDocument();
@@ -79,15 +78,13 @@ class _AddProfilePageState extends State<AddProfilePage> {
         showSuccessNotification('Successfully added');
 
         setState(() {
-            isAddingProfile = false;
-          });
-          // Navigate to the Dashboard after successful addition
-          goToPage(context, const Dashboard());
-      
+          isAddingProfile = false;
+        });
+        // Navigate to the Dashboard after successful addition
+        goToPage(context, const Dashboard());
       } else {
         // Show an error notification if there are empty fields
         showErrorNotification('Please fill in all fields.');
-
       }
     } catch (e) {
       showErrorNotification('Error adding profile to Firebase: $e');
@@ -114,7 +111,7 @@ class _AddProfilePageState extends State<AddProfilePage> {
         inventorySnapshot.docs.first.data()['med_quan'] as int;
     DocumentReference docRef = inventorySnapshot.docs.first.reference;
 
-    // Check if the requested quantity is greater than the available quantity
+    // Check if the requested quantity is greater thanS the available quantity
     await docRef.update({'med_quan': availableQuantity - requestedQuantity});
   }
 
@@ -246,7 +243,9 @@ class _AddProfilePageState extends State<AddProfilePage> {
                 hasbackIcon: true,
                 hasRightIcon: false,
                 iconColor: Colors.white,
-                DistinationBack:isAddingProfile ? null : () => goToPage(context, const Dashboard()),
+                DistinationBack: isAddingProfile
+                    ? null
+                    : () => goToPage(context, const Dashboard()),
               ),
               Expanded(
                 child: SingleChildScrollView(
@@ -312,9 +311,7 @@ class _AddProfilePageState extends State<AddProfilePage> {
                                       isEnabled: false,
                                       items: Brgy,
                                       value: widget.selectedBrgy,
-                                      onChanged: (String newValue) {
-                                        
-                                      },
+                                      onChanged: (String newValue) {},
                                     ),
                                   ),
                                 ),
@@ -429,7 +426,8 @@ class _AddProfilePageState extends State<AddProfilePage> {
                                   onPressed: () {
                                     addProfileToFirebase();
                                   },
-                                  buttonText: isAddingProfile ? 'Adding...' : 'Add',
+                                  buttonText:
+                                      isAddingProfile ? 'Adding...' : 'Add',
                                 ),
                               ],
                             )

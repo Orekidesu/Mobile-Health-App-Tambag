@@ -1,53 +1,52 @@
-  // ignore_for_file: file_names, depend_on_referenced_packages
-  import 'package:firebase_auth/firebase_auth.dart';
+// ignore_for_file: file_names, depend_on_referenced_packages
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-  import '../Custom_Widgets/Custom_Footer.dart';
-  import 'package:cloud_firestore/cloud_firestore.dart';
-  import '../Custom_Widgets/Custom_Appbar.dart';
-  import '../constants/light_constants.dart';
-  import '../Custom_Widgets/Dashboard_List_Firebase.dart';
-  import '../functions/custom_functions.dart';
+import '../Custom_Widgets/Custom_Footer.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import '../Custom_Widgets/Custom_Appbar.dart';
+import '../constants/light_constants.dart';
+import '../Custom_Widgets/Dashboard_List_Firebase.dart';
+import '../functions/custom_functions.dart';
 import 'SmsSender.dart';
 
-  class Patient {
-    final String id;
-    final String name;
-    final String address;
-    Patient({required this.id, required this.name, required this.address});
+class Patient {
+  final String id;
+  final String name;
+  final String address;
+  Patient({required this.id, required this.name, required this.address});
+}
+
+class Dashboard extends StatefulWidget {
+  const Dashboard({super.key});
+
+  @override
+  // ignore: library_private_types_in_public_api
+  _DashboardState createState() => _DashboardState();
+}
+
+class _DashboardState extends State<Dashboard> {
+  int tappedCardIndex = -1;
+  bool isSnackbarVisible = false;
+  String patientId = '';
+  String? baranggay; // Added variable to store Baranggay field
+
+  late CollectionReference patientsCollection;
+  bool _isMounted = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _isMounted = true;
+    if (baranggay == null) {
+      fetchBaranggay();
+    }
   }
 
-  class Dashboard extends StatefulWidget {
-    const Dashboard({super.key});
-
-    @override
-    // ignore: library_private_types_in_public_api
-    _DashboardState createState() => _DashboardState();
+  @override
+  void dispose() {
+    _isMounted = false;
+    super.dispose();
   }
-
-
-  class _DashboardState extends State<Dashboard> {
-    int tappedCardIndex = -1;
-    bool isSnackbarVisible = false;
-    String patientId = '';
-    String? baranggay; // Added variable to store Baranggay field
-
-    late CollectionReference patientsCollection;
-    bool _isMounted = false;
-
-    @override
-    void initState() {
-      super.initState();
-      _isMounted = true;
-      if (baranggay == null) {
-        fetchBaranggay();
-      }
-    }
-
-    @override
-    void dispose() {
-      _isMounted = false;
-      super.dispose();
-    }
 
   Future<void> fetchBaranggay() async {
     try {
@@ -80,7 +79,6 @@ import 'SmsSender.dart';
           });
         }
       }
-      
     } catch (e) {
       // Handle errors here
       if (_isMounted) {
@@ -90,44 +88,57 @@ import 'SmsSender.dart';
     }
   }
 
-   @override
-Widget build(BuildContext context) {
-  return Scaffold(
-    body: SafeArea(
-      child: Container(
-        color: backgroundColor,
-        padding: const EdgeInsets.all(16.0),
-        child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Custom_Appbar(
-                Baranggay: 'Baranggay ${baranggay ?? 'Loading...'}',
-                Apptitle: "TAMBAG",
-                icon: Icons.logout,
-                hasbackIcon: false,
-                iconColor: Colors.white,
-                hasRightIcon: true,
-                Distination: baranggay == null ? null : () => showSignOutDialog(context),
-                MessagePage: baranggay == null ? null : ()=>goToPage(context, smsSender(selectedBrgy: baranggay??'',)),
-                hasMessageIcon: true,
-              ),
-              const SizedBox(height: 10),
-              Expanded(
-                child: baranggay == null
-                    ? const Center(child: CircularProgressIndicator()) // Show a loading indicator
-                    : DashboardListFirebase(
-                        Baranggay: baranggay?? '',
-                      ),
-              ),
-              const SizedBox(height: 20),
-              ProfileAndMasterlistRow(selectedBrgy: baranggay?? '', Barangay: baranggay,),
-            ],
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: SafeArea(
+        child: Container(
+          color: backgroundColor,
+          padding: const EdgeInsets.all(16.0),
+          child: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Custom_Appbar(
+                  Baranggay: 'Baranggay ${baranggay ?? 'Loading...'}',
+                  Apptitle: "TAMBAG",
+                  icon: Icons.logout,
+                  hasbackIcon: false,
+                  iconColor: Colors.white,
+                  hasRightIcon: true,
+                  Distination: baranggay == null
+                      ? null
+                      : () => showSignOutDialog(context),
+                  MessagePage: baranggay == null
+                      ? null
+                      : () => goToPage(
+                          context,
+                          smsSender(
+                            selectedBrgy: baranggay ?? '',
+                          )),
+                  hasMessageIcon: true,
+                ),
+                const SizedBox(height: 10),
+                Expanded(
+                  child: baranggay == null
+                      ? const Center(
+                          child:
+                              CircularProgressIndicator()) // Show a loading indicator
+                      : DashboardListFirebase(
+                          Baranggay: baranggay ?? '',
+                        ),
+                ),
+                const SizedBox(height: 20),
+                ProfileAndMasterlistRow(
+                  selectedBrgy: baranggay ?? '',
+                  Barangay: baranggay,
+                ),
+              ],
+            ),
           ),
         ),
       ),
-    ),
-  );
-}
+    );
+  }
 }
