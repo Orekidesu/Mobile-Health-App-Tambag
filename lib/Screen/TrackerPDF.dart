@@ -1,6 +1,7 @@
 import 'package:Tambag_Health_App/Custom_Widgets/CustomActionButton.dart';
 import 'package:Tambag_Health_App/Firebase_Query/Firebase_Functions.dart';
 import 'package:Tambag_Health_App/custom_widgets/Drug_interaction.dart';
+import 'package:Tambag_Health_App/custom_widgets/Medication_schedule.dart';
 import 'package:Tambag_Health_App/custom_widgets/text_widget_info.dart';
 import 'package:flutter/material.dart';
 import 'package:pdf/pdf.dart';
@@ -19,7 +20,7 @@ class _TrackerPDFState extends State<TrackerPDF> {
   late Future<Map<String, dynamic>> patientData;
   late Future<List<Map<String, dynamic>>> medications;
   late Future<List<Map<String, dynamic>>> medicationInteractions;
-
+  late Future<Map<String, Map<String, String>>> processedMedications;
   @override
   void initState() {
     super.initState();
@@ -28,6 +29,7 @@ class _TrackerPDFState extends State<TrackerPDF> {
     patientData = DataService.getPatientData(widget.patientId);
     medications = DataService.getMedications(widget.patientId);
     medicationInteractions = _initializeMedicationInteractions();
+    processedMedications = _initializeProcessedMedications();
   }
 
   //
@@ -43,8 +45,20 @@ class _TrackerPDFState extends State<TrackerPDF> {
 
     return medicationInteractions;
   }
+  //
 
   //
+  Future<Map<String, Map<String, String>>>
+      _initializeProcessedMedications() async {
+    final patientMedications = await medications;
+    final processedMedications =
+        MedicationProcessor.processMedications(patientMedications);
+
+    return processedMedications;
+  }
+
+  //
+
   List<TableRow> _buildTableRows(List<Map<String, dynamic>> dataList,
       List<String> columnNames, List<String> keyNames) {
     return [
@@ -145,7 +159,7 @@ class _TrackerPDFState extends State<TrackerPDF> {
                     future: patientData,
                     builder: (context, snapshot) {
                       if (snapshot.connectionState == ConnectionState.waiting) {
-                        return const Center(child: CircularProgressIndicator());
+                        return const Center(child: Text(''));
                       } else if (snapshot.hasError) {
                         return Text('Error: ${snapshot.error}');
                       } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
@@ -184,6 +198,7 @@ class _TrackerPDFState extends State<TrackerPDF> {
                   child: Column(
                     children: [
                       // ====================MGA TAMBAL AREA ================= //
+                      // #############FIRST TABLE############# //
                       const SizedBox(
                         height: 20,
                       ),
@@ -194,6 +209,132 @@ class _TrackerPDFState extends State<TrackerPDF> {
                               fontWeight: FontWeight.bold, fontSize: 12),
                         ),
                       ),
+
+                      Container(
+                        // THIS IS WHERE I WANT THE TABLE
+                        child: FutureBuilder<Map<String, Map<String, String>>>(
+                          future: processedMedications,
+                          builder: (context, snapshot) {
+                            if (snapshot.connectionState ==
+                                ConnectionState.waiting) {
+                              return const Center(child: Text(''));
+                            } else if (snapshot.hasError) {
+                              return Text('Error: ${snapshot.error}');
+                            } else if (!snapshot.hasData ||
+                                snapshot.data!.isEmpty) {
+                              return const Text(
+                                  'No processed medication data available.');
+                            } else {
+                              final processedMedicationsData = snapshot.data!;
+                              return SingleChildScrollView(
+                                scrollDirection: Axis.horizontal,
+                                child: Table(
+                                  border: TableBorder.all(color: Colors.grey),
+                                  defaultColumnWidth: IntrinsicColumnWidth(),
+                                  children: [
+                                    TableRow(
+                                      children: [
+                                        TableCell(
+                                            child: Center(
+                                                child: Text(
+                                          'TIME',
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.bold),
+                                        ))),
+                                        TableCell(
+                                            child: Center(
+                                                child: Text(
+                                          'TUKMA',
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.bold),
+                                        ))),
+                                        for (var day in [
+                                          'LUNES',
+                                          'MARTES',
+                                          'MIYERKULES',
+                                          'HUWEBES',
+                                          'BIYERNES',
+                                          'SABADO',
+                                          'DOMINGO',
+                                        ])
+                                          TableCell(
+                                              child: Center(
+                                                  child: Text(
+                                            day,
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.bold),
+                                          ))),
+                                      ],
+                                    ),
+                                    for (var timeSlot in [
+                                      'Buntag',
+                                      'Udto',
+                                      'Gabie'
+                                    ])
+                                      for (var tukma in [
+                                        'Sa dili pa mukaon',
+                                        'Human ug kaon'
+                                      ])
+                                        TableRow(
+                                          children: [
+                                            TableCell(
+                                              child: Center(
+                                                child: tukma == 'Human ug kaon'
+                                                    ? Text('')
+                                                    : Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                .all(8.0),
+                                                        child: Text(timeSlot),
+                                                      ),
+                                              ),
+                                            ),
+                                            TableCell(
+                                              child: Padding(
+                                                padding:
+                                                    const EdgeInsets.all(8.0),
+                                                child:
+                                                    Center(child: Text(tukma)),
+                                              ),
+                                            ),
+                                            for (var day in [
+                                              'Monday',
+                                              'Tuesday',
+                                              'Wednesday',
+                                              'Thursday',
+                                              'Friday',
+                                              'Saturday',
+                                              'Sunday',
+                                            ])
+                                              TableCell(
+                                                child: Center(
+                                                  child: Padding(
+                                                    padding:
+                                                        const EdgeInsets.all(
+                                                            8.0),
+                                                    child: Text(
+                                                      processedMedicationsData[
+                                                                  timeSlot]
+                                                              ?[tukma] ??
+                                                          'N/A',
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                          ],
+                                        ),
+                                  ],
+                                ),
+                              );
+                            }
+                          },
+                        ),
+                      ),
+
+                      const SizedBox(
+                        height: 20,
+                      ),
+
                       Container(
                         child: FutureBuilder<List<Map<String, dynamic>>>(
                           future: medications,
@@ -236,6 +377,7 @@ class _TrackerPDFState extends State<TrackerPDF> {
                           },
                         ),
                       ),
+
                       //======================== DRUG INTERACTION AREA ================== //
                       const SizedBox(
                         height: 20,
@@ -254,8 +396,7 @@ class _TrackerPDFState extends State<TrackerPDF> {
                           builder: (context, snapshot) {
                             if (snapshot.connectionState ==
                                 ConnectionState.waiting) {
-                              return const Center(
-                                  child: CircularProgressIndicator());
+                              return const Center(child: Text(''));
                             } else if (snapshot.hasError) {
                               return Text('Error: ${snapshot.error}');
                             } else if (!snapshot.hasData ||
