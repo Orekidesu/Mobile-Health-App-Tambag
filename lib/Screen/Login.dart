@@ -198,13 +198,13 @@ class _LoginState extends State<Login> {
                   ),
                   child: isLoading
                       ? const SizedBox(
-                        width: 20,
-                        height: 20,
-                        child: CircularProgressIndicator(
-                            valueColor: AlwaysStoppedAnimation<Color>(
-                                periwinkleColor),
+                          width: 20,
+                          height: 20,
+                          child: CircularProgressIndicator(
+                            valueColor:
+                                AlwaysStoppedAnimation<Color>(periwinkleColor),
                           ),
-                      )
+                        )
                       : const Text(
                           'Login',
                           style: TextStyle(

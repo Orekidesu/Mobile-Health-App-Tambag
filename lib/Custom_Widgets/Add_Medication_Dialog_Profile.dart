@@ -113,25 +113,29 @@ class _AddMedicationProfileState extends State<AddMedicationProfile> {
               'Requested quantity exceeds available quantity.');
           return;
         } else {
-          Map<String, dynamic> medicationDetails = {
-            'med_name': medName,
-            'med_ind': medInd,
-            'med_quan': int.parse(quantity),
-            'dosage': '$dosage mg, tumaron ka-$frequency kada adlaw ',
-            'frequency': int.parse(frequency),
-            'reminder': medicationInfo['reminder'],
-            'tukma': Tukma,
-            // 'contraindication': medicationInfo['contraindication'],
-            // 'diet': medicationInfo['diet'],
-          };
+          if (int.parse(frequency) <= int.parse(quantity)) {
+            Map<String, dynamic> medicationDetails = {
+              'med_name': medName,
+              'med_ind': medInd,
+              'med_quan': int.parse(quantity),
+              'dosage': '$dosage mg, tumaron ka-$frequency kada adlaw ',
+              'frequency': int.parse(frequency),
+              'reminder': medicationInfo['reminder'],
+              'tukma': Tukma,
+              // 'contraindication': medicationInfo['contraindication'],
+              // 'diet': medicationInfo['diet'],
+            };
 
-          widget.addMedicationCallback(medicationDetails);
+            widget.addMedicationCallback(medicationDetails);
 
-          showSuccessNotification('Medication added successfully.');
+            showSuccessNotification('Medication added successfully.');
 
-          frequencyController.clear();
-          dosageController.clear();
-          quantityController.clear();
+            frequencyController.clear();
+            dosageController.clear();
+            quantityController.clear();
+          } else {
+            showErrorNotification('Invalid input for quantity and frequency.');
+          }
         }
       } else {
         showErrorNotification(
@@ -149,7 +153,7 @@ class _AddMedicationProfileState extends State<AddMedicationProfile> {
         quantityController.text.isNotEmpty &&
         selectedTukma != null;
   }
-  
+
   @override
   Widget build(BuildContext context) {
     return Column(
