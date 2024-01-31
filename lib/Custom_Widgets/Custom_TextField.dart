@@ -11,6 +11,7 @@ class CustomTextField extends StatefulWidget {
   final double borderRadius;
   final bool obscureText;
   final int? maxLines;
+  final bool readOnly;
 
   const CustomTextField({
     super.key,
@@ -21,6 +22,7 @@ class CustomTextField extends StatefulWidget {
     this.borderRadius = 15.0,
     this.obscureText = false,
     this.maxLines = 1,
+    this.readOnly = false
   });
 
   @override
@@ -52,6 +54,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
           height: widget.textFieldHeight,
         ),
         TextField(
+          readOnly: widget.readOnly,
           controller: widget.controller,
           obscureText: widget.obscureText,
           maxLines: widget.maxLines,

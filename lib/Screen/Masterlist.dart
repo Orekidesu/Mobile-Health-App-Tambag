@@ -1,10 +1,9 @@
-// ignore_for_file: non_constant_identifier_names, camel_case_types, file_names, library_private_types_in_public_api
+// ignore_for_file: non_constant_identifier_names, camel_case_types, file_names, library_private_types_in_public_api, use_build_context_synchronously
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import '../Custom_Widgets/Add_Medication_Dialog.dart';
 import '../Custom_Widgets/Custom_Appbar.dart';
-import '../Custom_Widgets/Custom_Dialog.dart';
 import '../Firebase_Query/Firebase_Functions.dart';
 import '../constants/light_constants.dart';
 import 'Dashboard.dart';
@@ -19,7 +18,6 @@ class medication_inventory {
 }
 
 class Masterlist extends StatefulWidget {
-  // ignore: use_key_in_widget_constructors
   const Masterlist({super.key});
 
   @override
@@ -239,8 +237,11 @@ class _MasterlistState extends State<Masterlist> {
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
                         CustomActionButton(
-                          onPressed: () => showTestDialog(context),
-                          buttonText: 'Print',
+                          onPressed: ()  {
+                            
+                          
+                          },
+                          buttonText: 'Save as PDF',
                         ),
                       ],
                     )
@@ -254,16 +255,5 @@ class _MasterlistState extends State<Masterlist> {
     );
   }
 
-  void showTestDialog(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return CustomDialog(
-          buttonText: 'Print',
-          onSignOut: () {},
-          message: 'Do you want to Print?',
-        );
-      },
-    );
-  }
+  
 }
