@@ -1,37 +1,37 @@
 // ignore_for_file: depend_on_referenced_packages, unused_element
 import 'package:flutter/material.dart';
 import '../Custom_Widgets/Custom_Dialog.dart';
-import '../Screen/Login.dart';  
+import '../Screen/Login.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import '../constants/light_constants.dart';
 import 'package:http/http.dart' as http;
 
 void showSuccessNotification(String msg) {
   Fluttertoast.showToast(
-      msg: msg,
-      toastLength: Toast.LENGTH_LONG,
-      gravity: ToastGravity.TOP,
-      timeInSecForIosWeb: 3,
-      backgroundColor: periwinkleColor,
-      textColor: Colors.white,
-      fontSize: 16.0,
-      webPosition: "center",
-      webBgColor: "$periwinkleGradient",
-    );
+    msg: msg,
+    toastLength: Toast.LENGTH_LONG,
+    gravity: ToastGravity.TOP,
+    timeInSecForIosWeb: 3,
+    backgroundColor: periwinkleColor,
+    textColor: Colors.white,
+    fontSize: 16.0,
+    webPosition: "center",
+    webBgColor: "$periwinkleGradient",
+  );
 }
 
 void showErrorNotification(String? errorMessage) {
   Fluttertoast.showToast(
-      msg: 'Error: ${errorMessage ?? "Unknown error"}',
-      toastLength: Toast.LENGTH_LONG,
-      gravity: ToastGravity.TOP,
-      timeInSecForIosWeb: 3,
-      backgroundColor: periwinkleColor,
-      textColor: Colors.white,
-      fontSize: 16.0,
-      webPosition: "center",
-      webBgColor: "$periwinkleGradient",
-    );
+    msg: 'Error: ${errorMessage ?? "Unknown error"}',
+    toastLength: Toast.LENGTH_LONG,
+    gravity: ToastGravity.TOP,
+    timeInSecForIosWeb: 3,
+    backgroundColor: error,
+    textColor: Colors.white,
+    fontSize: 16.0,
+    webPosition: "center",
+    webBgColor: "$errorGradient",
+  );
 }
 
 void goToPage(BuildContext context, Widget? page) {
@@ -53,19 +53,18 @@ void goToPageNoReturn(BuildContext context, Widget? page) {
   );
 }
 
-
 void signout(BuildContext context) {
   Fluttertoast.showToast(
-      msg: 'Signout Success',
-      toastLength: Toast.LENGTH_LONG,
-      gravity: ToastGravity.TOP,
-      timeInSecForIosWeb: 3,
-      backgroundColor: periwinkleColor,
-      textColor: Colors.white,
-      fontSize: 16.0,
-      webPosition: "center",
-      webBgColor: "$periwinkleGradient",
-    );
+    msg: 'Signout Success',
+    toastLength: Toast.LENGTH_LONG,
+    gravity: ToastGravity.TOP,
+    timeInSecForIosWeb: 3,
+    backgroundColor: periwinkleColor,
+    textColor: Colors.white,
+    fontSize: 16.0,
+    webPosition: "center",
+    webBgColor: "$periwinkleGradient",
+  );
   // Navigate to the login page
   goToPageNoReturn(context, const Login());
 }
@@ -92,7 +91,7 @@ Future<bool> sendSMS(String message, String number) async {
     'apikey': apiKey,
     'message': message,
     'number': number,
-    'sendername':'VSUTambag',
+    'sendername': 'VSUTambag',
   });
 
   var response = await http.post(uri);
@@ -101,16 +100,8 @@ Future<bool> sendSMS(String message, String number) async {
     showSuccessNotification('Message Sent!');
     return true;
   } else {
-    showErrorNotification('Failed to send message. Status code: ${response.statusCode}');
+    showErrorNotification(
+        'Failed to send message. Status code: ${response.statusCode}');
     return false;
   }
 }
-
-
-
-
-
-
-
-
-  
