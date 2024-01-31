@@ -33,6 +33,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
   @override
   void initState() {
     super.initState();
+    getPatientNameById(widget.selectedPatient);
   }
 
   @override
@@ -140,6 +141,27 @@ class _EditProfilePageState extends State<EditProfilePage> {
     };
   }
 
+  Future<void> getPatientNameById(String patientId) async {
+  try {
+    CollectionReference patientsCollection = FirebaseFirestore.instance.collection('patients');
+    QuerySnapshot querySnapshot = await patientsCollection.where('id', isEqualTo: patientId).get();
+
+    if (querySnapshot.docs.isNotEmpty) {
+      DocumentSnapshot documentSnapshot = querySnapshot.docs.first;
+      Map<String, dynamic> data = documentSnapshot.data() as Map<String, dynamic>;
+      
+      // Assuming the name field is stored in the 'name' field in the document
+      String name = data['name'] as String;
+      
+      nameController.text = name;
+    } 
+  } catch (e) {
+    // Handle any errors that may occur during the process
+    showErrorNotification('Error getting patient name: $e');
+  }
+}
+
+
   List<String> Brgy = ['Guadalupe', 'Patag', 'Gabas'];
 
   bool _validateInput() {
@@ -241,6 +263,11 @@ class _EditProfilePageState extends State<EditProfilePage> {
                           children: [
                             const SizedBox(
                               height: 10,
+                            ),
+                            CustomTextField(
+                              readOnly: true,
+                              controller: nameController,
+                              labelText: 'Name:',
                             ),
                             CustomTextField(
                               controller: ageController,
