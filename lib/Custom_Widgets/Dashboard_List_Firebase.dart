@@ -163,24 +163,27 @@ class _DashboardListFirebaseState extends State<DashboardListFirebase> {
                 margin: const EdgeInsets.all(4.0),
                 child: Slidable(
                   key: ValueKey(index),
+                  startActionPane:
+                      ActionPane(motion: const StretchMotion(), children: [
+                    SlidableAction(
+                      borderRadius: const BorderRadius.all(Radius.circular(10)),
+                      onPressed: (context) => Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => EditProfilePage(
+                              selectedPatient: patient.id,
+                              selectedBrgy: widget.Baranggay),
+                        ),
+                      ),
+                      backgroundColor: Colors.green,
+                      foregroundColor: Colors.white,
+                      icon: Icons.update,
+                      label: 'Update',
+                    ),
+                  ]),
                   endActionPane: ActionPane(
                     motion: const StretchMotion(),
                     children: [
-                      SlidableAction(
-                        borderRadius:
-                            const BorderRadius.all(Radius.circular(10)),
-                        onPressed: (context) => Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) =>
-                                EditProfilePage(selectedPatient: patient.id,selectedBrgy: widget.Baranggay),
-                          ),
-                        ),
-                        backgroundColor: Colors.green,
-                        foregroundColor: Colors.white,
-                        icon: Icons.update,
-                        label: 'Update',
-                      ),
                       SlidableAction(
                         borderRadius:
                             const BorderRadius.all(Radius.circular(10)),
@@ -193,6 +196,7 @@ class _DashboardListFirebaseState extends State<DashboardListFirebase> {
                       ),
                     ],
                   ),
+                  
                   child: PatientCard(
                     patient: patient,
                     count: count,
