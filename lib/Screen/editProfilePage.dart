@@ -265,6 +265,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                               height: 10,
                             ),
                             CustomTextField(
+                              labelColor: Colors.grey,
                               readOnly: true,
                               controller: nameController,
                               labelText: 'Name:',
