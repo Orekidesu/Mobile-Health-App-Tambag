@@ -81,7 +81,7 @@ class _MasterlistState extends State<Masterlist> {
           child: Container(
         height: MediaQuery.of(context).size.height, // Adjust as needed
         color: backgroundColor,
-        padding: const EdgeInsets.all(30.0),
+        padding: const EdgeInsets.all(20.0),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
