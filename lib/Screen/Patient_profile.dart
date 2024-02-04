@@ -104,6 +104,8 @@ class _Patient_ProfileState extends State<Patient_Profile> {
                       DistinationBack: () =>
                           goToPage(context, const Dashboard()),
                     ),
+                    const Divider(),
+                    const SizedBox(height:5),
                     Container(
                       padding: const EdgeInsets.fromLTRB(16.0, 10.0, 16.0, 0.0),
                       child: Column(

@@ -94,6 +94,8 @@ class _TrackerState extends State<Tracker> {
                 iconColor: Colors.white,
                 DistinationBack: () => goToPage(context, const Dashboard()),
               ),
+              const Divider(),
+              const SizedBox(height:5),
               Expanded(
                 child: SingleChildScrollView(
                   child: Column(

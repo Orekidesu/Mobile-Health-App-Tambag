@@ -98,6 +98,8 @@ class _smsSenderState extends State<smsSender> {
     return SafeArea(
       child: Scaffold(
         body: Container(
+          color: backgroundColor,
+          height: MediaQuery.of(context).size.height, // Adjust as needed
           padding: const EdgeInsets.all(20),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
@@ -113,6 +115,8 @@ class _smsSenderState extends State<smsSender> {
                     ? null
                     : () => goToPage(context, const Dashboard()),
               ),
+              const Divider(),
+              const SizedBox(height:5),
               Expanded(
                 child: Padding(
                   padding: const EdgeInsets.fromLTRB(16.0, 10.0, 16.0, 0.0),

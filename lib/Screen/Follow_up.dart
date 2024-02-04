@@ -389,9 +389,8 @@ class _Follow_upState extends State<Follow_up> {
                 iconColor: Colors.white,
                 DistinationBack: () => goToPage(context, const Dashboard()),
               ),
-              const SizedBox(
-                height: 10,
-              ),
+              const Divider(),
+              const SizedBox(height:5),
               Expanded(
                 child: Column(
                   children: [

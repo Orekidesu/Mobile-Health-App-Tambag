@@ -232,6 +232,8 @@ class _AddProfilePageState extends State<AddProfilePage> {
                     ? null
                     : () => goToPage(context, const Dashboard()),
               ),
+              const Divider(),
+              const SizedBox(height:5),
               Expanded(
                 child: SingleChildScrollView(
                   child: Column(
@@ -246,7 +248,7 @@ class _AddProfilePageState extends State<AddProfilePage> {
                         child: Column(
                           children: [
                             const SizedBox(
-                              height: 10,
+                              height: 5,
                             ),
                             CustomTextField(
                               controller: nameController,
@@ -313,7 +315,7 @@ class _AddProfilePageState extends State<AddProfilePage> {
                                   'Medication:',
                                   style: TextStyle(
                                     color: periwinkleColor,
-                                    fontSize: 20,
+                                    fontSize: 17,
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
@@ -401,6 +403,8 @@ class _AddProfilePageState extends State<AddProfilePage> {
                               controller: physicianController,
                               labelText: 'Physician:',
                             ),
+                            const SizedBox(height: 10,),
+
                           ],
                         ),
                       ),
