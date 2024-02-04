@@ -12,7 +12,6 @@ import '../constants/light_constants.dart';
 import '../functions/custom_functions.dart';
 import 'dart:math';
 
-
 class AddProfilePage extends StatefulWidget {
   final String selectedBrgy;
   const AddProfilePage({super.key, required this.selectedBrgy});
@@ -49,7 +48,7 @@ class _AddProfilePageState extends State<AddProfilePage> {
         });
 
         // All fields are non-empty, proceed with adding to Firebase
-       String id = generateRandomNumber().toString();
+        String id = generateRandomNumber().toString();
         DocumentReference profileReference =
             await patientsCollection.add(getProfileData(id));
 
@@ -87,43 +86,44 @@ class _AddProfilePageState extends State<AddProfilePage> {
   }
 
   Future<void> updateMedicationInventory(
-    Map<String, dynamic> medicationDetails) async {
-  try {
-    String medName = medicationDetails['med_name'];
-    int requestedQuantity = medicationDetails['med_quan'];
+      Map<String, dynamic> medicationDetails) async {
+    try {
+      String medName = medicationDetails['med_name'];
+      int requestedQuantity = medicationDetails['med_quan'];
 
-    // Get the available quantity from the medication inventory
-    QuerySnapshot<Map<String, dynamic>> inventorySnapshot =
-        await FirebaseFirestore.instance
-            .collection('medication_inventory')
-            .where('med_name', isEqualTo: medName)
-            .limit(1)
-            .get();
+      // Get the available quantity from the medication inventory
+      QuerySnapshot<Map<String, dynamic>> inventorySnapshot =
+          await FirebaseFirestore.instance
+              .collection('medication_inventory')
+              .where('med_name', isEqualTo: medName)
+              .limit(1)
+              .get();
 
-    if (inventorySnapshot.docs.isNotEmpty) {
-      int availableQuantity =
-          inventorySnapshot.docs.first.data()['med_quan'] as int;
-      DocumentReference docRef = inventorySnapshot.docs.first.reference;
+      if (inventorySnapshot.docs.isNotEmpty) {
+        int availableQuantity =
+            inventorySnapshot.docs.first.data()['med_quan'] as int;
+        DocumentReference docRef = inventorySnapshot.docs.first.reference;
 
-      // Check if the requested quantity is greater than the available quantity
-      await docRef.update({'med_quan': availableQuantity - requestedQuantity});
-    } else {
-      // Handle the case where the medication is not found in the inventory
-      showErrorNotification('Medication not found in the inventory.');
-      return;
+        // Check if the requested quantity is greater than the available quantity
+        await docRef
+            .update({'med_quan': availableQuantity - requestedQuantity});
+      } else {
+        // Handle the case where the medication is not found in the inventory
+        showErrorNotification('Medication not found in the inventory.');
+        return;
+      }
+    } catch (e) {
+      // Handle any potential exceptions or errors
+      showErrorNotification('Error updating medication inventory: $e');
+      // You can choose to rethrow the error or handle it gracefully based on your use case
+      // throw e;
     }
-  } catch (e) {
-    // Handle any potential exceptions or errors
-    showErrorNotification('Error updating medication inventory: $e');
-    // You can choose to rethrow the error or handle it gracefully based on your use case
-    // throw e;
   }
-}
 
   int generateRandomNumber() {
-  Random random = Random();
-  return random.nextInt(900000) + 100000;
-}
+    Random random = Random();
+    return random.nextInt(900000) + 100000;
+  }
 
   Map<String, dynamic> getProfileData(String id) {
     return {
@@ -133,10 +133,10 @@ class _AddProfilePageState extends State<AddProfilePage> {
       'contact_number': contactNumberController.text,
       'physician': physicianController.text,
       'id': id,
-      'addedDate': DateTime.now().toString(), // or use the appropriate date format
+      'addedDate':
+          DateTime.now().toString(), // or use the appropriate date format
     };
   }
-
 
   Map<String, dynamic> newFolowup(String id) {
     return {
@@ -401,27 +401,25 @@ class _AddProfilePageState extends State<AddProfilePage> {
                               controller: physicianController,
                               labelText: 'Physician:',
                             ),
-                            const SizedBox(
-                              height: 10,
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: [
-                                CustomActionButton(
-                                  onPressed: () {
-                                    addProfileToFirebase();
-                                  },
-                                  buttonText:
-                                      isAddingProfile ? 'Adding...' : 'Add',
-                                ),
-                              ],
-                            )
                           ],
                         ),
                       ),
                     ],
                   ),
                 ),
+              ),
+              const Divider(),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  CustomActionButton(
+                    custom_width: 320,
+                    onPressed: () {
+                      addProfileToFirebase();
+                    },
+                    buttonText: isAddingProfile ? 'Adding...' : 'Add',
+                  ),
+                ],
               )
             ],
           ),

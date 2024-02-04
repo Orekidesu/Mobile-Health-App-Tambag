@@ -54,7 +54,6 @@ class _Follow_upState extends State<Follow_up> {
   String selectedTime = 'alas-otso sa buntag';
   bool isSendingInProgress = false;
 
-
   String convertToInternationalFormat(String localPhoneNumber) {
     // Assuming local phone numbers in the Philippines start with "09" and are 11 digits long
     if (localPhoneNumber.length == 11 && localPhoneNumber.startsWith("09")) {
@@ -66,72 +65,74 @@ class _Follow_upState extends State<Follow_up> {
     }
   }
 
-  Future<bool> sendSMSAndUpdateStatus(String num, String msg, DocumentReference subdocReference) async {
-      msg = 'Maayong Adlaw! Kini usa ka\npahinumdom sa imong\nfollow-up checkup ugma:\n\n$msg.\n\nTAMBAG, kanunay andam\nmoabag!!';
-      bool status = await sendSMS(msg,num);
-      //bool status = false;
-      if (status) {
-        await subdocReference.update({
-          'smsError': false,
-        });
-      } else {
-        await subdocReference.update({
-          'smsError': true,
-        });
-      }
+  Future<bool> sendSMSAndUpdateStatus(
+      String num, String msg, DocumentReference subdocReference) async {
+    msg =
+        'Maayong Adlaw! Kini usa ka\npahinumdom sa imong\nfollow-up checkup ugma:\n\n$msg.\n\nTAMBAG, kanunay andam\nmoabag!!';
+    bool status = await sendSMS(msg, num);
+    //bool status = false;
+    if (status) {
+      await subdocReference.update({
+        'smsError': false,
+      });
+    } else {
+      await subdocReference.update({
+        'smsError': true,
+      });
+    }
 
-      return status;
+    return status;
   }
 
   // Function to submit follow-up data to Firestore
   Future<void> submitFollowUpData(String msg, String num) async {
-  try {
-    if (isSendingInProgress) {
-      showErrorNotification('Sending ongoing...');
-      return;
-    }
-
-    if (_validateInput()) {
-      
-      // All fields are non-empty, proceed with submitting to Firestore
-      final QuerySnapshot querySnapshot = await followUpCollection
-          .where("id", isEqualTo: widget.patientId)
-          .get();
-
-      if (querySnapshot.docs.isNotEmpty) {
-        final DocumentSnapshot subdoc = querySnapshot.docs.first;
-        isSendingInProgress = true;
-        bool smsStatus = await sendSMSAndUpdateStatus(num, msg, subdoc.reference);
-
-        // Refresh the UI by loading the updated data
-        loadFollowUpData();
-
-        // Optional: Show a success message or navigate to another screen
-        if (smsStatus) {
-          // Update the existing document with the new data
-          await subdoc.reference.update({
-            'physician': physicianController.text,
-            'facility': facilityController.text,
-            'day': selectedDay,
-            'month': selectedMonth,
-            'year': selectedYear,
-            'time': selectedTime,
-            'isDone': false,
-          });
-        }
-        isSendingInProgress = false;
-      } else {
-        // Handle the case where no document with the given patientId is found
+    try {
+      if (isSendingInProgress) {
+        showErrorNotification('Sending ongoing...');
+        return;
       }
-    } else {
-      // Show an error message if any field is empty
-      showErrorNotification('Please fill in all fields.');
+
+      if (_validateInput()) {
+        // All fields are non-empty, proceed with submitting to Firestore
+        final QuerySnapshot querySnapshot = await followUpCollection
+            .where("id", isEqualTo: widget.patientId)
+            .get();
+
+        if (querySnapshot.docs.isNotEmpty) {
+          final DocumentSnapshot subdoc = querySnapshot.docs.first;
+          isSendingInProgress = true;
+          bool smsStatus =
+              await sendSMSAndUpdateStatus(num, msg, subdoc.reference);
+
+          // Refresh the UI by loading the updated data
+          loadFollowUpData();
+
+          // Optional: Show a success message or navigate to another screen
+          if (smsStatus) {
+            // Update the existing document with the new data
+            await subdoc.reference.update({
+              'physician': physicianController.text,
+              'facility': facilityController.text,
+              'day': selectedDay,
+              'month': selectedMonth,
+              'year': selectedYear,
+              'time': selectedTime,
+              'isDone': false,
+            });
+          }
+          isSendingInProgress = false;
+        } else {
+          // Handle the case where no document with the given patientId is found
+        }
+      } else {
+        // Show an error message if any field is empty
+        showErrorNotification('Please fill in all fields.');
+      }
+    } catch (e) {
+      // Handle errors, e.g., show an error message
+      showFailedSnackbar();
     }
-  } catch (e) {
-    // Handle errors, e.g., show an error message
-    showFailedSnackbar();
   }
-}
 
   // Function to submit follow-up data to Firestore
   Future<void> markAsDone() async {
@@ -322,6 +323,7 @@ class _Follow_upState extends State<Follow_up> {
         selectedYear.isNotEmpty &&
         selectedTime.isNotEmpty;
   }
+
   String baranggay = ''; // Added variable to store Baranggay field
 
   Future<void> fetchBaranggay() async {
@@ -576,22 +578,7 @@ class _Follow_upState extends State<Follow_up> {
                                       ],
                                     ),
                                     const SizedBox(
-                                      height: 10,
-                                    ),
-                                    Row(
-                                      mainAxisAlignment: MainAxisAlignment.end,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.end,
-                                      children: [
-                                        CustomActionButton(
-                                          onPressed: () {
-                                            message = 'Mo followup kang ${physicianController.text} sa ${facilityController.text} sa umaabot nga ika-$selectedDay sa $selectedMonth $selectedYear, $selectedTime';               
-                                            submitFollowUpData(
-                                                message, contact_number);
-                                          },
-                                          buttonText: isSendingInProgress ? 'Submitting...' : 'Submit',
-                                        ),
-                                      ],
+                                      height: 100,
                                     ),
                                   ],
                                 ),
@@ -607,7 +594,24 @@ class _Follow_upState extends State<Follow_up> {
                               ))
                   ],
                 ),
-              )
+              ),
+              const Divider(),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  CustomActionButton(
+                    custom_width: 320,
+                    onPressed: () {
+                      message =
+                          'Mo followup kang ${physicianController.text} sa ${facilityController.text} sa umaabot nga ika-$selectedDay sa $selectedMonth $selectedYear, $selectedTime';
+                      submitFollowUpData(message, contact_number);
+                    },
+                    buttonText:
+                        isSendingInProgress ? 'Submitting...' : 'Submit',
+                  ),
+                ],
+              ),
             ],
           ),
         ),

@@ -524,6 +524,7 @@ class _AddMedicationProfileState extends State<AddMedicationProfile> {
         const SizedBox(
           height: 15,
         ),
+        Divider(),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [

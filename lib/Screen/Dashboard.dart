@@ -104,7 +104,7 @@ class _DashboardState extends State<Dashboard> {
                           )),
                   hasMessageIcon: true,
                 ),
-                const SizedBox(height: 10),
+                const Divider(),
                 Expanded(
                   child: baranggay == null
                       ? const Center(
@@ -114,7 +114,7 @@ class _DashboardState extends State<Dashboard> {
                           Baranggay: baranggay ?? '',
                         ),
                 ),
-                const SizedBox(height: 20),
+                const Divider(),
                 ProfileAndMasterlistRow(
                   selectedBrgy: baranggay ?? '',
                   Barangay: baranggay,

@@ -81,7 +81,7 @@ class _TrackerState extends State<Tracker> {
       child: Scaffold(
         backgroundColor: backgroundColor,
         body: Container(
-          padding: const EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 0.0),
+          padding: const EdgeInsets.all(20),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -310,10 +310,17 @@ class _TrackerState extends State<Tracker> {
                       const SizedBox(
                         height: 5,
                       ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
+                      
+                    ],
+                  ),
+                ),
+              ),
+              const Divider(),
+              Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           CustomActionButton(
+                            custom_width: 320,
                             onPressed: () {
                               Navigator.push(
                                 context,
@@ -359,10 +366,6 @@ class _TrackerState extends State<Tracker> {
                           ),
                         ],
                       )
-                    ],
-                  ),
-                ),
-              ),
             ],
           ),
         ),
