@@ -47,13 +47,28 @@ class MedicationProcessor {
       String frequency = medication['frequency'];
       String tukma = medication['tukma'].toString();
       String medicationName = medication['name'].toString();
+      String oras = medication['oras'].toString();
 
       if (frequency == '1') {
-        result['Buntag']?[tukma]?.add(medicationName);
+        if (oras.contains('Buntag')) {
+          result['Buntag']?[tukma]?.add(medicationName);
+        } else if (oras.contains('Udto')) {
+          result['Udto']?[tukma]?.add(medicationName);
+        } else {
+          result['Gabie']?[tukma]?.add(medicationName);
+        }
       }
       if (frequency == '2') {
-        result['Buntag']?[tukma]?.add(medicationName);
-        result['Udto']?[tukma]?.add(medicationName);
+        if (oras.contains('Buntag ug Udto')) {
+          result['Buntag']?[tukma]?.add(medicationName);
+          result['Udto']?[tukma]?.add(medicationName);
+        } else if (oras.contains('Udto ug Gabie')) {
+          result['Udto']?[tukma]?.add(medicationName);
+          result['Gabie']?[tukma]?.add(medicationName);
+        } else {
+          result['Buntag']?[tukma]?.add(medicationName);
+          result['Gabie']?[tukma]?.add(medicationName);
+        }
       }
       if (frequency == '3') {
         result['Buntag']?[tukma]?.add(medicationName);

@@ -172,24 +172,24 @@ class _AddProfilePageState extends State<AddProfilePage> {
           content: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  IconButton(
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
-                    icon: const Icon(
-                      Icons.close,
-                      color: Colors.white,
-                    ),
-                    style: ButtonStyle(
-                      backgroundColor:
-                          MaterialStateProperty.all(periwinkleColor),
-                    ),
-                  ),
-                ],
-              ),
+              // Row(
+              //   mainAxisAlignment: MainAxisAlignment.end,
+              //   children: [
+              //     IconButton(
+              //       onPressed: () {
+              //         Navigator.of(context).pop();
+              //       },
+              //       icon: const Icon(
+              //         Icons.close,
+              //         color: Colors.white,
+              //       ),
+              //       style: ButtonStyle(
+              //         backgroundColor:
+              //             MaterialStateProperty.all(periwinkleColor),
+              //       ),
+              //     ),
+              //   ],
+              // ),
               const SizedBox(height: 10),
               AddMedicationProfile(
                 medicationList: medicationList,

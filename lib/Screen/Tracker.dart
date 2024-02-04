@@ -1,5 +1,9 @@
 import 'package:Tambag_Health_App/Screen/TrackerPDF.dart';
+import 'package:Tambag_Health_App/api/pdf_api.dart';
+import 'package:Tambag_Health_App/api/pdf_tracker_api.dart';
 import 'package:Tambag_Health_App/custom_widgets/Custom_Tile.dart';
+import 'package:Tambag_Health_App/custom_widgets/Drug_interaction.dart';
+import 'package:Tambag_Health_App/custom_widgets/Medication_schedule.dart';
 import 'package:intl/intl.dart';
 
 import '../Firebase_Query/Firebase_Functions.dart';
@@ -12,6 +16,7 @@ import '../constants/light_constants.dart';
 import '../Custom_Widgets/Custom_Appbar.dart';
 import '../functions/custom_functions.dart';
 import 'package:intl/date_symbol_data_local.dart';
+import '../model/patient_info.dart';
 
 class Tracker extends StatefulWidget {
   final String patientId;
@@ -28,6 +33,8 @@ class _TrackerState extends State<Tracker> {
   TextEditingController reminderController = TextEditingController();
   TextEditingController contraindicationController = TextEditingController();
   TextEditingController dietController = TextEditingController();
+  late Future<List<Map<String, dynamic>>> medicationInteractions;
+  late Future<Map<String, Map<String, String>>> processedMedications;
 
   @override
   void initState() {
@@ -36,7 +43,36 @@ class _TrackerState extends State<Tracker> {
     // Intl.defaultLocale = 'fil';
     patientData = DataService.getPatientData(widget.patientId);
     medications = DataService.getMedications(widget.patientId);
+    medicationInteractions = _initializeMedicationInteractions();
+    processedMedications = _initializeProcessedMedications();
   }
+
+  //
+  Future<List<Map<String, dynamic>>> _initializeMedicationInteractions() async {
+    final patientMedications = await medications;
+    final interactionChecker = MedicationInteractionChecker(allInteractions);
+
+    final List<String> medicationNames =
+        patientMedications.map((med) => med['name'] as String).toList();
+
+    final List<Map<String, dynamic>> medicationInteractions =
+        interactionChecker.getInteractions(medicationNames);
+
+    return medicationInteractions;
+  }
+  //
+
+  //
+  Future<Map<String, Map<String, String>>>
+      _initializeProcessedMedications() async {
+    final patientMedications = await medications;
+    final processedMedications =
+        MedicationProcessor.processMedications(patientMedications);
+
+    return processedMedications;
+  }
+
+  //
 
   @override
   Widget build(BuildContext context) {
@@ -287,6 +323,38 @@ class _TrackerState extends State<Tracker> {
                                 ),
                               );
                             },
+                            /*async {
+                              try {
+                                Map<String, dynamic> patientData =
+                                    await DataService.getPatientData(
+                                        widget.patientId);
+                                List<Map<String, dynamic>> medications =
+                                    await DataService.getMedications(
+                                        widget.patientId);
+                                List<Map<String, dynamic>>
+                                    medicationInteractions =
+                                    await _initializeMedicationInteractions();
+                                Map<String, Map<String, String>>
+                                    processedMedications =
+                                    await _initializeProcessedMedications();
+
+                                PatientInfo patientInfo = PatientInfo(
+                                  patientData: Future.value(patientData),
+                                  medications: Future.value(medications),
+                                  medicationInteractions:
+                                      Future.value(medicationInteractions),
+                                  processedMedications:
+                                      Future.value(processedMedications),
+                                );
+
+                                PdfTrackerApi api = PdfTrackerApi();
+                                final pdfFile = await api.generate(patientInfo);
+                                await PdfApi.openFile(pdfFile);
+                              } catch (e) {
+                                print('Error: $e');
+                              }
+                            },
+                            */
                             buttonText: "Save as PDF",
                           ),
                         ],

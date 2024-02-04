@@ -178,7 +178,8 @@ class _TrackerPDFState extends State<TrackerPDF> {
                                 label: 'Puy-anan',
                                 boldText: patientInfo['address']),
                             CustomBoldText(
-                                label: 'Doktor', boldText: patientInfo['name']),
+                                label: 'Doktor',
+                                boldText: patientInfo['physician']),
                             CustomBoldText(
                                 label: 'Numero sa Selpon',
                                 boldText: patientInfo['contact_number']),

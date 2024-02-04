@@ -352,7 +352,6 @@ class _Patient_ProfileState extends State<Patient_Profile> {
             ),
           ),
         ),
-        
       ),
     );
   }
