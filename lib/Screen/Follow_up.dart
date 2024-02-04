@@ -54,13 +54,6 @@ class _Follow_upState extends State<Follow_up> {
   String selectedTime = 'alas-otso sa buntag';
   bool isSendingInProgress = false;
 
-  @override
-  void dispose() {
-    // Dispose of the controllers when the widget is disposed
-    physicianController.dispose();
-    facilityController.dispose();
-    super.dispose();
-  }
 
   String convertToInternationalFormat(String localPhoneNumber) {
     // Assuming local phone numbers in the Philippines start with "09" and are 11 digits long
@@ -190,7 +183,7 @@ class _Follow_upState extends State<Follow_up> {
     'alas-dyis sa buntag',
     'alas-unsi sa buntag',
     'alas-dose sa buntag',
-    'ala-una sa buntag',
+    'ala-una sa hapon',
     'alas-dos sa hapon',
     'alas-tres sa hapon',
     'alas-kwatro sa hapon',

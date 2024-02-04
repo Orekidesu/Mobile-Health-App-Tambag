@@ -10,17 +10,24 @@ CollectionReference medicationInventoryCollection =
 
 Future<List<Patient>> getAllPatients(String userBaranggay) async {
   QuerySnapshot querySnapshot = await patientsCollection.get();
-  return querySnapshot.docs
+  List<Patient> patients = querySnapshot.docs
       .map((DocumentSnapshot document) {
         return Patient(
           id: document['id'],
           name: document['name'],
           address: document['address'],
+          addedDate: DateTime.parse(document['addedDate']).toString(), // Parse addedDate as DateTime
         );
       })
       .where((patient) => patient.address == userBaranggay)
       .toList();
+
+  // Sort the list based on addedDate in ascending order
+  patients.sort((a, b) => a.addedDate.compareTo(b.addedDate));
+
+  return patients;
 }
+
 
 Future<List<medication_inventory>> getAllMedicalInventory() async {
   QuerySnapshot querySnapshot = await medicationInventoryCollection.get();

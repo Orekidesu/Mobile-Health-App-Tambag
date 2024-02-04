@@ -13,7 +13,8 @@ class Patient {
   final String id;
   final String name;
   final String address;
-  Patient({required this.id, required this.name, required this.address});
+  final String addedDate;
+  Patient({required this.id, required this.name, required this.address, required this.addedDate});
 }
 
 class Dashboard extends StatefulWidget {
@@ -39,6 +40,12 @@ class _DashboardState extends State<Dashboard> {
     if (baranggay == null) {
       fetchBaranggay();
     }
+  }
+
+  @override
+  void dispose() {
+    _isMounted = false; // Set to false when the widget is disposed
+    super.dispose();
   }
 
   Future<void> fetchBaranggay() async {

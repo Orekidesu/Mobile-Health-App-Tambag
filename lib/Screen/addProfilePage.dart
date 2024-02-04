@@ -10,6 +10,8 @@ import '../Custom_Widgets/Custom_dropdown.dart';
 import '../Screen/Dashboard.dart';
 import '../constants/light_constants.dart';
 import '../functions/custom_functions.dart';
+import 'dart:math';
+
 
 class AddProfilePage extends StatefulWidget {
   final String selectedBrgy;
@@ -47,7 +49,7 @@ class _AddProfilePageState extends State<AddProfilePage> {
         });
 
         // All fields are non-empty, proceed with adding to Firebase
-        String id = await getHighestIdDocument();
+       String id = generateRandomNumber().toString();
         DocumentReference profileReference =
             await patientsCollection.add(getProfileData(id));
 
@@ -108,6 +110,7 @@ class _AddProfilePageState extends State<AddProfilePage> {
     } else {
       // Handle the case where the medication is not found in the inventory
       showErrorNotification('Medication not found in the inventory.');
+      return;
     }
   } catch (e) {
     // Handle any potential exceptions or errors
@@ -117,34 +120,10 @@ class _AddProfilePageState extends State<AddProfilePage> {
   }
 }
 
-
-  //
-
-  Future<String> getHighestIdDocument() async {
-    try {
-      // Replace 'patients' with your collection name
-      QuerySnapshot querySnapshot = await patientsCollection
-          .orderBy('id', descending: true)
-          .limit(1)
-          .get();
-
-      // Check if there are any documents
-      if (querySnapshot.docs.isNotEmpty) {
-        // Access the document with the highest 'id' value
-        DocumentSnapshot highestIdDocument = querySnapshot.docs.first;
-
-        // Access the 'id' field value from the document
-        String highestIdValue =
-            (int.parse(highestIdDocument['id']) + 1).toString();
-        return highestIdValue;
-      } else {
-        return '1'; // Return a default value if no documents are found
-      }
-    } catch (e) {
-      showErrorNotification(e.toString());
-      return ''; // Return a default value in case of an error
-    }
-  }
+  int generateRandomNumber() {
+  Random random = Random();
+  return random.nextInt(900000) + 100000;
+}
 
   Map<String, dynamic> getProfileData(String id) {
     return {
@@ -154,8 +133,10 @@ class _AddProfilePageState extends State<AddProfilePage> {
       'contact_number': contactNumberController.text,
       'physician': physicianController.text,
       'id': id,
+      'addedDate': DateTime.now().toString(), // or use the appropriate date format
     };
   }
+
 
   Map<String, dynamic> newFolowup(String id) {
     return {
