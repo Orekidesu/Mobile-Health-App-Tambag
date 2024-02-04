@@ -95,7 +95,8 @@ class _AddProfilePageState extends State<AddProfilePage> {
   }
 
   Future<void> updateMedicationInventory(
-      Map<String, dynamic> medicationDetails) async {
+    Map<String, dynamic> medicationDetails) async {
+  try {
     String medName = medicationDetails['med_name'];
     int requestedQuantity = medicationDetails['med_quan'];
 
@@ -107,13 +108,25 @@ class _AddProfilePageState extends State<AddProfilePage> {
             .limit(1)
             .get();
 
-    int availableQuantity =
-        inventorySnapshot.docs.first.data()['med_quan'] as int;
-    DocumentReference docRef = inventorySnapshot.docs.first.reference;
+    if (inventorySnapshot.docs.isNotEmpty) {
+      int availableQuantity =
+          inventorySnapshot.docs.first.data()['med_quan'] as int;
+      DocumentReference docRef = inventorySnapshot.docs.first.reference;
 
-    // Check if the requested quantity is greater thanS the available quantity
-    await docRef.update({'med_quan': availableQuantity - requestedQuantity});
+      // Check if the requested quantity is greater than the available quantity
+      await docRef.update({'med_quan': availableQuantity - requestedQuantity});
+    } else {
+      // Handle the case where the medication is not found in the inventory
+      showErrorNotification('Medication not found in the inventory.');
+    }
+  } catch (e) {
+    // Handle any potential exceptions or errors
+    showErrorNotification('Error updating medication inventory: $e');
+    // You can choose to rethrow the error or handle it gracefully based on your use case
+    // throw e;
   }
+}
+
 
   //
 
@@ -138,6 +151,7 @@ class _AddProfilePageState extends State<AddProfilePage> {
         return '1'; // Return a default value if no documents are found
       }
     } catch (e) {
+      showErrorNotification(e.toString());
       return ''; // Return a default value in case of an error
     }
   }

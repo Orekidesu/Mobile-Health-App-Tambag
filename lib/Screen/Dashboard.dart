@@ -28,8 +28,7 @@ class _DashboardState extends State<Dashboard> {
   int tappedCardIndex = -1;
   bool isSnackbarVisible = false;
   String patientId = '';
-  String? baranggay; // Added variable to store Baranggay field
-
+  String? baranggay;
   late CollectionReference patientsCollection;
   bool _isMounted = false;
 
@@ -50,29 +49,16 @@ class _DashboardState extends State<Dashboard> {
 
   Future<void> fetchBaranggay() async {
     try {
-      // Get the current user
       User? user = FirebaseAuth.instance.currentUser;
 
       if (user != null) {
-        // Get the user's ID
         String userId = user.uid;
-
-        // Reference to Firestore collection
         patientsCollection = FirebaseFirestore.instance.collection('admin');
-
-        // Query Firestore to get the document for the current user
         DocumentSnapshot<Object?> snapshot =
             await patientsCollection.doc(userId).get();
-
-        // Get the Baranggay field value
         String userBaranggay = snapshot.get('Baranggay');
 
-        // Update the state with the Baranggay field value
-        setState(() {
-          baranggay = userBaranggay;
-        });
-
-        // Update the state with the Baranggay field value only if the widget is still mounted
+        // Check if the widget is still mounted before calling setState
         if (_isMounted) {
           setState(() {
             baranggay = userBaranggay;
@@ -80,8 +66,8 @@ class _DashboardState extends State<Dashboard> {
         }
       }
     } catch (e) {
-      // Handle errors here
       if (_isMounted) {
+        // Handle errors here
         showErrorNotification('Error fetching Baranggay: $e');
         print(e);
       }
