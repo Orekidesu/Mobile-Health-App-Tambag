@@ -28,7 +28,7 @@ class AddMedicationProfile extends StatefulWidget {
 
 class _AddMedicationProfileState extends State<AddMedicationProfile> {
   final TextEditingController dosageController = TextEditingController();
-  final TextEditingController frequencyController = TextEditingController();
+  // final TextEditingController frequencyController = TextEditingController();
   final TextEditingController quantityController = TextEditingController();
 
   String? selectedMedName;
@@ -38,7 +38,27 @@ class _AddMedicationProfileState extends State<AddMedicationProfile> {
     'Sa dili pa mukaon',
     'Human ug kaon',
   ];
+  List<String> frequency = [
+    '1',
+    '2',
+    '3',
+  ];
+  List<String> getOrasOptions(String? frequency) {
+    switch (frequency) {
+      case '1':
+        return ['Buntag', 'Udto', 'Gabie'];
+      case '2':
+        return ['Buntag ug Udto', 'Buntag ug Gabie'];
+      case '3':
+        return ['Buntag, Udto, ug Gabie'];
+      default:
+        return [];
+    }
+  }
+
   String? selectedTukma;
+  String? selectedFrequency;
+  String? selectedOras;
 
   List<MapEntry<String, String>> medicationDataList = [];
   late Map<String, String> medicationInfo;
@@ -89,6 +109,7 @@ class _AddMedicationProfileState extends State<AddMedicationProfile> {
     String quantity,
     String frequency,
     String Tukma,
+    String Oras,
   ) async {
     try {
       int requestedQuantity = int.parse(quantity);
@@ -122,6 +143,7 @@ class _AddMedicationProfileState extends State<AddMedicationProfile> {
               'frequency': int.parse(frequency),
               'reminder': medicationInfo['reminder'],
               'tukma': Tukma,
+              'oras': Oras,
               // 'contraindication': medicationInfo['contraindication'],
               // 'diet': medicationInfo['diet'],
             };
@@ -130,7 +152,7 @@ class _AddMedicationProfileState extends State<AddMedicationProfile> {
 
             showSuccessNotification('Medication added successfully.');
 
-            frequencyController.clear();
+            // frequencyController.clear();
             dosageController.clear();
             quantityController.clear();
           } else {
@@ -149,9 +171,11 @@ class _AddMedicationProfileState extends State<AddMedicationProfile> {
   bool _validateInput() {
     return selectedMedName != null &&
         dosageController.text.isNotEmpty &&
-        frequencyController.text.isNotEmpty &&
         quantityController.text.isNotEmpty &&
-        selectedTukma != null;
+        selectedTukma != null &&
+        selectedFrequency != null &&
+        selectedOras != null &&
+        selectedOras != null;
   }
 
   @override
@@ -160,6 +184,7 @@ class _AddMedicationProfileState extends State<AddMedicationProfile> {
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        //==================== MEDICATION AREA ====================//
         const Text(
           'Medication:',
           style: TextStyle(
@@ -208,12 +233,13 @@ class _AddMedicationProfileState extends State<AddMedicationProfile> {
             )
           ],
         ),
+        //==================== END MEDICATION AREA ====================//
+
+        //==================== DOSAGE AND FREQUENCY AREA ====================//
         const SizedBox(
-          height: 10,
+          height: 15.0,
         ),
-        const SizedBox(
-          height: 5,
-        ),
+
         Row(
           children: [
             Expanded(
@@ -261,28 +287,60 @@ class _AddMedicationProfileState extends State<AddMedicationProfile> {
                     color: periwinkleColor,
                   ),
                 ),
-                SizedBox(
+                // SizedBox(
+                //   height: 45,
+                //   child: TextField(
+                //     controller: frequencyController,
+                //     decoration: InputDecoration(
+                //       filled: true,
+                //       fillColor: Colors.white,
+                //       hintText: '(Per Day)',
+                //       border: OutlineInputBorder(
+                //         borderRadius: BorderRadius.circular(10.0),
+                //         borderSide: const BorderSide(
+                //           color: periwinkleColor,
+                //           width: 4,
+                //         ),
+                //       ),
+                //     ),
+                //   ),
+                // ),
+                Container(
                   height: 45,
-                  child: TextField(
-                    controller: frequencyController,
-                    decoration: InputDecoration(
-                      filled: true,
-                      fillColor: Colors.white,
-                      hintText: '(Per Day)',
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10.0),
-                        borderSide: const BorderSide(
-                          color: periwinkleColor,
-                          width: 4,
-                        ),
-                      ),
+                  padding: const EdgeInsets.all(4.0),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(8.0),
+                    border: Border.all(
+                      color: periwinkleColor, // Set your desired border color
+                      width: 2.0, // Set your desired border width
                     ),
+                  ),
+                  child: DropdownButton<String>(
+                    value: selectedFrequency,
+                    onChanged: (String? value) {
+                      setState(() {
+                        selectedFrequency = value ?? '1';
+                        selectedOras = null;
+                      });
+                    },
+                    items:
+                        frequency.map<DropdownMenuItem<String>>((String value) {
+                      return DropdownMenuItem<String>(
+                        value: value,
+                        child: Text(value),
+                      );
+                    }).toList(),
+                    isExpanded: true,
                   ),
                 ),
               ],
             )),
           ],
         ),
+        //==================== END DOSAGE AND FREQUENCY AREA ====================//
+
+        //==================== QUANTITY AREA ====================//
         const SizedBox(
           height: 15,
         ),
@@ -322,9 +380,13 @@ class _AddMedicationProfileState extends State<AddMedicationProfile> {
             ),
           ],
         ),
+        //==================== END QUANTITY AREA ====================//
+
+        //====================TUKMA AREA ====================//
         const SizedBox(
           height: 15,
         ),
+
         Row(
           children: [
             Expanded(
@@ -373,6 +435,61 @@ class _AddMedicationProfileState extends State<AddMedicationProfile> {
             ),
           ],
         ),
+        //==================== END TUKMA AREA ====================//
+
+        //==================== ORAS AREA ====================//
+        const SizedBox(
+          height: 15,
+        ),
+        Row(
+          children: [
+            Expanded(
+                child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text(
+                  'Oras:',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16.0,
+                    color: periwinkleColor,
+                  ),
+                ),
+                Container(
+                    height: 45,
+                    padding: const EdgeInsets.all(4.0),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(8.0),
+                      border: Border.all(
+                        color: periwinkleColor, // Set your desired border color
+                        width: 2.0, // Set your desired border width
+                      ),
+                    ),
+                    child: DropdownButton<String>(
+                      value: selectedOras,
+                      onChanged: (String? newValue) {
+                        setState(() {
+                          selectedOras = newValue;
+                        });
+                      },
+                      items: getOrasOptions(selectedFrequency)
+                          .map<DropdownMenuItem<String>>((String value) {
+                        return DropdownMenuItem<String>(
+                          value: value,
+                          child: Text(value),
+                        );
+                      }).toList(),
+                      isExpanded: true,
+                    )),
+              ],
+            )),
+          ],
+        ),
+
+        //==================== END ORAS AREA ====================//
+
+        //====================INDICATION AREA ====================//
         const SizedBox(
           height: 15,
         ),
@@ -403,12 +520,21 @@ class _AddMedicationProfileState extends State<AddMedicationProfile> {
             )
           ],
         ),
+        //====================END INDICATION AREA ====================//
         const SizedBox(
           height: 15,
         ),
         Row(
-          mainAxisAlignment: MainAxisAlignment.end,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
+            CustomActionButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              buttonText: 'Cancel',
+              custom_width: 100,
+              custom_height: 30,
+            ),
             CustomActionButton(
               onPressed: () {
                 if (_validateInput()) {
@@ -417,8 +543,9 @@ class _AddMedicationProfileState extends State<AddMedicationProfile> {
                     selectedMedInd,
                     dosageController.text,
                     quantityController.text,
-                    frequencyController.text,
+                    selectedFrequency!,
                     selectedTukma!,
+                    selectedOras!,
                   );
                   Navigator.pop(context);
                 } else {
@@ -426,6 +553,8 @@ class _AddMedicationProfileState extends State<AddMedicationProfile> {
                   showErrorNotification('Please fill in all fields.');
                 }
               },
+              custom_height: 30,
+              custom_width: 100,
               buttonText: 'Add',
             ),
           ],

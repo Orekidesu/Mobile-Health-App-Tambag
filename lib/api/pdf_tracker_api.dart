@@ -1,5 +1,4 @@
 import 'dart:io';
-import 'dart:js';
 import 'package:Tambag_Health_App/Screen/TrackerPDF.dart';
 import 'package:Tambag_Health_App/api/pdf_api.dart';
 import 'package:flutter/services.dart';

@@ -314,33 +314,47 @@ class _TrackerState extends State<Tracker> {
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
                           CustomActionButton(
-                            onPressed: () async {
-                              Map<String, dynamic> patientData =
-                                  await DataService.getPatientData(
-                                      widget.patientId);
-                              List<Map<String, dynamic>> medications =
-                                  await DataService.getMedications(
-                                      widget.patientId);
-                              List<Map<String, dynamic>>
-                                  medicationInteractions =
-                                  await _initializeMedicationInteractions();
-                              Map<String, Map<String, String>>
-                                  processedMedications =
-                                  await _initializeProcessedMedications();
-
-                              PatientInfo patientInfo = PatientInfo(
-                                patientData: Future.value(patientData),
-                                medications: Future.value(medications),
-                                medicationInteractions:
-                                    Future.value(medicationInteractions),
-                                processedMedications:
-                                    Future.value(processedMedications),
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      TrackerPDF(patientId: widget.patientId),
+                                ),
                               );
-
-                              PdfTrackerApi api = PdfTrackerApi();
-                              final pdfFile = await api.generate(patientInfo);
-                              PdfApi.openFile(pdfFile);
                             },
+                            /*async {
+                              try {
+                                Map<String, dynamic> patientData =
+                                    await DataService.getPatientData(
+                                        widget.patientId);
+                                List<Map<String, dynamic>> medications =
+                                    await DataService.getMedications(
+                                        widget.patientId);
+                                List<Map<String, dynamic>>
+                                    medicationInteractions =
+                                    await _initializeMedicationInteractions();
+                                Map<String, Map<String, String>>
+                                    processedMedications =
+                                    await _initializeProcessedMedications();
+
+                                PatientInfo patientInfo = PatientInfo(
+                                  patientData: Future.value(patientData),
+                                  medications: Future.value(medications),
+                                  medicationInteractions:
+                                      Future.value(medicationInteractions),
+                                  processedMedications:
+                                      Future.value(processedMedications),
+                                );
+
+                                PdfTrackerApi api = PdfTrackerApi();
+                                final pdfFile = await api.generate(patientInfo);
+                                await PdfApi.openFile(pdfFile);
+                              } catch (e) {
+                                print('Error: $e');
+                              }
+                            },
+                            */
                             buttonText: "Save as PDF",
                           ),
                         ],
