@@ -34,16 +34,6 @@ class _AddProfilePageState extends State<AddProfilePage> {
     super.initState();
   }
 
-  @override
-  void dispose() {
-    // Dispose of the controllers when the widget is disposed
-    nameController.dispose();
-    ageController.dispose();
-    contactNumberController.dispose();
-    physicianController.dispose();
-    super.dispose();
-  }
-
   final CollectionReference patientsCollection =
       FirebaseFirestore.instance.collection('patients');
   final CollectionReference followUpCollection =

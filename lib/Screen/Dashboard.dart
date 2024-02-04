@@ -41,12 +41,6 @@ class _DashboardState extends State<Dashboard> {
     }
   }
 
-  @override
-  void dispose() {
-    _isMounted = false;
-    super.dispose();
-  }
-
   Future<void> fetchBaranggay() async {
     try {
       User? user = FirebaseAuth.instance.currentUser;
@@ -58,7 +52,6 @@ class _DashboardState extends State<Dashboard> {
             await patientsCollection.doc(userId).get();
         String userBaranggay = snapshot.get('Baranggay');
 
-        // Check if the widget is still mounted before calling setState
         if (_isMounted) {
           setState(() {
             baranggay = userBaranggay;
@@ -67,7 +60,6 @@ class _DashboardState extends State<Dashboard> {
       }
     } catch (e) {
       if (_isMounted) {
-        // Handle errors here
         showErrorNotification('Error fetching Baranggay: $e');
         print(e);
       }
@@ -110,7 +102,7 @@ class _DashboardState extends State<Dashboard> {
                   child: baranggay == null
                       ? const Center(
                           child:
-                              CircularProgressIndicator()) // Show a loading indicator
+                              CircularProgressIndicator())
                       : DashboardListFirebase(
                           Baranggay: baranggay ?? '',
                         ),
@@ -128,3 +120,4 @@ class _DashboardState extends State<Dashboard> {
     );
   }
 }
+
