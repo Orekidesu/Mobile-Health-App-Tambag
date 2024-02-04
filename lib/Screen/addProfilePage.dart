@@ -42,6 +42,11 @@ class _AddProfilePageState extends State<AddProfilePage> {
 
   Future<void> addProfileToFirebase() async {
     try {
+      if (!isValidPhilippinePhoneNumber(contactNumberController.text)){
+        showErrorNotification("Please enter a valid phone number starting with '09'");
+        return;
+      }
+
       if (_validateInput()) {
         setState(() {
           isAddingProfile = true;
@@ -124,6 +129,19 @@ class _AddProfilePageState extends State<AddProfilePage> {
     Random random = Random();
     return random.nextInt(900000) + 100000;
   }
+
+  bool isValidPhilippinePhoneNumber(String phoneNumber) {
+  // Remove any non-digit characters from the phone number
+  String cleanedNumber = phoneNumber.replaceAll(RegExp(r'\D'), '');
+
+  // Check if the cleaned number has the correct length and starts with a valid prefix
+  if (cleanedNumber.length == 11 &&
+      (cleanedNumber.startsWith('09'))) {
+    return true;
+  } else {
+    return false;
+  }
+}
 
   Map<String, dynamic> getProfileData(String id) {
     return {
