@@ -42,8 +42,9 @@ class _AddProfilePageState extends State<AddProfilePage> {
 
   Future<void> addProfileToFirebase() async {
     try {
-      if (!isValidPhilippinePhoneNumber(contactNumberController.text)){
-        showErrorNotification("Please enter a valid phone number starting with '09'");
+      if (!isValidPhilippinePhoneNumber(contactNumberController.text)) {
+        showErrorNotification(
+            "Please enter a valid phone number starting with '09'");
         return;
       }
 
@@ -131,17 +132,16 @@ class _AddProfilePageState extends State<AddProfilePage> {
   }
 
   bool isValidPhilippinePhoneNumber(String phoneNumber) {
-  // Remove any non-digit characters from the phone number
-  String cleanedNumber = phoneNumber.replaceAll(RegExp(r'\D'), '');
+    // Remove any non-digit characters from the phone number
+    String cleanedNumber = phoneNumber.replaceAll(RegExp(r'\D'), '');
 
-  // Check if the cleaned number has the correct length and starts with a valid prefix
-  if (cleanedNumber.length == 11 &&
-      (cleanedNumber.startsWith('09'))) {
-    return true;
-  } else {
-    return false;
+    // Check if the cleaned number has the correct length and starts with a valid prefix
+    if (cleanedNumber.length == 11 && (cleanedNumber.startsWith('09'))) {
+      return true;
+    } else {
+      return false;
+    }
   }
-}
 
   Map<String, dynamic> getProfileData(String id) {
     return {
@@ -240,9 +240,9 @@ class _AddProfilePageState extends State<AddProfilePage> {
             children: [
               Custom_Appbar(
                 titleFontSize: 21,
-                hasBrgy: false,
-                Baranggay: "Profile",
-                Apptitle: "Add Profile",
+                hasBrgy: true,
+                Baranggay: "Add Profile",
+                Apptitle: "Patient",
                 hasbackIcon: true,
                 hasRightIcon: false,
                 iconColor: Colors.white,
@@ -251,7 +251,6 @@ class _AddProfilePageState extends State<AddProfilePage> {
                     : () => goToPage(context, const Dashboard()),
               ),
               const Divider(),
-              const SizedBox(height:5),
               Expanded(
                 child: SingleChildScrollView(
                   child: Column(
@@ -395,16 +394,19 @@ class _AddProfilePageState extends State<AddProfilePage> {
                                   onTap: () {
                                     _showMyDialog(context);
                                   },
-                                  child: const Text(
-                                    'Add Medication',
-                                    style: TextStyle(
-                                      color:
-                                          periwinkleColor, // Set the text color
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 18,
+                                  child: Container(
+                                    height: 40,
+                                    width: 40,
+                                    decoration: BoxDecoration(
+                                    color: periwinkleColor, // Change to your desired color
+                                    borderRadius: BorderRadius.circular(30.0),
+                                  ),
+                                    child: const Icon(
+                                      Icons.add,
+                                      color: Colors.white, // Set the color of the icon)
                                     ),
                                   ),
-                                ),
+                                )
                               ],
                             ),
                             const SizedBox(
@@ -421,8 +423,9 @@ class _AddProfilePageState extends State<AddProfilePage> {
                               controller: physicianController,
                               labelText: 'Physician:',
                             ),
-                            const SizedBox(height: 10,),
-
+                            const SizedBox(
+                              height: 10,
+                            ),
                           ],
                         ),
                       ),

@@ -95,7 +95,6 @@ class _TrackerState extends State<Tracker> {
                 DistinationBack: () => goToPage(context, const Dashboard()),
               ),
               const Divider(),
-              const SizedBox(height:5),
               Expanded(
                 child: SingleChildScrollView(
                   child: Column(
@@ -118,7 +117,7 @@ class _TrackerState extends State<Tracker> {
                             final patientInfo = snapshot.data!;
                             return Padding(
                               padding: const EdgeInsets.fromLTRB(
-                                  16.0, 10.0, 16.0, 0.0),
+                                  16.0, 5.0, 16.0, 0.0),
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 mainAxisAlignment: MainAxisAlignment.start,
