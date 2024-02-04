@@ -266,10 +266,12 @@ class _AddMedicationState extends State<AddMedication> {
         const SizedBox(
           height: 15,
         ),
+        const Divider(),
         Row(
-          mainAxisAlignment: MainAxisAlignment.end,
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             CustomActionButton(
+              custom_width: 200,
               onPressed: () {
                 if (_validateInput()) {
                   // if (newMedication) {
