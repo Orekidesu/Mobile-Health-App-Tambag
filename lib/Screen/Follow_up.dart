@@ -594,7 +594,9 @@ class _Follow_upState extends State<Follow_up> {
                   ],
                 ),
               ),
-              const Divider(),
+              followUpData['isDone'] == true?
+              const Divider(): const SizedBox(height: 0,),
+              followUpData['isDone'] == true?
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.end,
@@ -610,7 +612,7 @@ class _Follow_upState extends State<Follow_up> {
                         isSendingInProgress ? 'Submitting...' : 'Submit',
                   ),
                 ],
-              ),
+              ):const SizedBox(height: 0,),
             ],
           ),
         ),

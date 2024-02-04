@@ -1,5 +1,6 @@
 // ignore_for_file: file_names, depend_on_referenced_packages
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import '../Custom_Widgets/Custom_Footer.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -108,8 +109,7 @@ class _DashboardState extends State<Dashboard> {
                 Expanded(
                   child: baranggay == null
                       ? const Center(
-                          child:
-                              CircularProgressIndicator())
+                          child: CupertinoActivityIndicator())
                       : DashboardListFirebase(
                           Baranggay: baranggay ?? '',
                         ),

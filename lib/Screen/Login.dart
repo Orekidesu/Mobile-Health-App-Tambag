@@ -111,7 +111,7 @@ class _LoginState extends State<Login> {
                     children: [
                       TextSpan(text: 'Telehealth And\n'),
                       TextSpan(text: 'Medication-Barangay\n'),
-                      TextSpan(text: 'Assistance for Geriatic'),
+                      TextSpan(text: 'Assistance for Geriatric'),
                     ],
                   ),
                 ),

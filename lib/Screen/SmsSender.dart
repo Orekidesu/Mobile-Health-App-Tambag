@@ -73,6 +73,7 @@ class _smsSenderState extends State<smsSender> {
       });
 
       List<String?> numbers = await getContactNumbersWithBaranggay();
+      print(numbers);
 
       if (numbers.isEmpty) {
         showErrorNotification('No contact numbers available');

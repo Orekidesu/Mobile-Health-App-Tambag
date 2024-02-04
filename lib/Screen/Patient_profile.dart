@@ -246,7 +246,7 @@ class _Patient_ProfileState extends State<Patient_Profile> {
                                       if (snapshot.connectionState ==
                                           ConnectionState.waiting) {
                                         return const Center(
-                                            child: CircularProgressIndicator());
+                                            child: CupertinoActivityIndicator());
                                       } else if (snapshot.hasError) {
                                         return Text('Error: ${snapshot.error}');
                                       } else if (!snapshot.hasData ||
