@@ -104,8 +104,9 @@ class _Patient_ProfileState extends State<Patient_Profile> {
                       DistinationBack: () =>
                           goToPage(context, const Dashboard()),
                     ),
+                    const Divider(),
                     Container(
-                      padding: const EdgeInsets.fromLTRB(16.0, 10.0, 16.0, 0.0),
+                      padding: const EdgeInsets.fromLTRB(16.0, 5.0, 16.0, 0.0),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -226,10 +227,10 @@ class _Patient_ProfileState extends State<Patient_Profile> {
                         Container(
                           height: 140.0,
                           width: 400.0,
-                          padding: EdgeInsets.fromLTRB(8.0, 0.0, 8.0, 0.0),
+                          padding: const EdgeInsets.fromLTRB(8.0, 0.0, 8.0, 0.0),
                           child: Card(
                             shape: RoundedRectangleBorder(
-                              side: BorderSide(
+                              side: const BorderSide(
                                 color: Colors.white,
                                 width: 2.0,
                               ),
@@ -244,7 +245,7 @@ class _Patient_ProfileState extends State<Patient_Profile> {
                                       if (snapshot.connectionState ==
                                           ConnectionState.waiting) {
                                         return const Center(
-                                            child: CircularProgressIndicator());
+                                            child: CupertinoActivityIndicator());
                                       } else if (snapshot.hasError) {
                                         return Text('Error: ${snapshot.error}');
                                       } else if (!snapshot.hasData ||
@@ -257,7 +258,7 @@ class _Patient_ProfileState extends State<Patient_Profile> {
                                         return ListView.builder(
                                           shrinkWrap: true,
                                           physics:
-                                              NeverScrollableScrollPhysics(),
+                                              const NeverScrollableScrollPhysics(),
                                           itemCount:
                                               interactingMedicationsList.length,
                                           itemBuilder: (context, index) {
@@ -268,7 +269,7 @@ class _Patient_ProfileState extends State<Patient_Profile> {
                                                         .toString()
                                                         .toUpperCase() ??
                                                     'N/A',
-                                                style: TextStyle(
+                                                style: const TextStyle(
                                                   fontSize: 16.0,
                                                   fontWeight: FontWeight.bold,
                                                   color: periwinkleColor,
@@ -276,7 +277,7 @@ class _Patient_ProfileState extends State<Patient_Profile> {
                                               ),
                                               subtitle: Text(
                                                 '${interactingMedicationsList[index]['dosage'] ?? 'N/A'}.',
-                                                style: TextStyle(
+                                                style: const TextStyle(
                                                   color: periwinkleColor,
                                                 ),
                                               ),
@@ -306,7 +307,7 @@ class _Patient_ProfileState extends State<Patient_Profile> {
                                         return Column(
                                           children: [
                                             const SizedBox(height: 10.0),
-                                            Center(
+                                            const Center(
                                               child: Text(
                                                 'INTERACTIONS',
                                                 style: TextStyle(
@@ -319,7 +320,7 @@ class _Patient_ProfileState extends State<Patient_Profile> {
                                             ListView.builder(
                                               shrinkWrap: true,
                                               physics:
-                                                  NeverScrollableScrollPhysics(),
+                                                  const NeverScrollableScrollPhysics(),
                                               itemCount:
                                                   interactionDetailsList.length,
                                               itemBuilder: (context, index) {
@@ -327,7 +328,7 @@ class _Patient_ProfileState extends State<Patient_Profile> {
                                                   title: Text(
                                                     interactionDetailsList[
                                                         index],
-                                                    style: TextStyle(
+                                                    style: const TextStyle(
                                                       color: periwinkleColor,
                                                     ),
                                                   ),

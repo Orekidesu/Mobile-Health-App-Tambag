@@ -248,6 +248,8 @@ class _EditProfilePageState extends State<EditProfilePage> {
                     ? null
                     : () => goToPage(context, const Dashboard()),
               ),
+              const Divider(),
+              const SizedBox(height:5),
               Expanded(
                 child: SingleChildScrollView(
                   child: Column(
@@ -265,6 +267,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                               height: 10,
                             ),
                             CustomTextField(
+                              labelColor: Colors.grey,
                               readOnly: true,
                               controller: nameController,
                               labelText: 'Name:',
@@ -375,8 +378,17 @@ class _EditProfilePageState extends State<EditProfilePage> {
                             const SizedBox(
                               height: 10,
                             ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.end,
+                            
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              Divider(),
+              Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 CustomActionButton(
                                   onPressed: () {
@@ -388,13 +400,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                                 ),
                               ],
                             )
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              )
+
             ],
           ),
         ),

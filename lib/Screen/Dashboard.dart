@@ -1,5 +1,6 @@
 // ignore_for_file: file_names, depend_on_referenced_packages
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import '../Custom_Widgets/Custom_Footer.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -13,7 +14,8 @@ class Patient {
   final String id;
   final String name;
   final String address;
-  Patient({required this.id, required this.name, required this.address});
+  final String addedDate;
+  Patient({required this.id, required this.name, required this.address, required this.addedDate});
 }
 
 class Dashboard extends StatefulWidget {
@@ -28,8 +30,7 @@ class _DashboardState extends State<Dashboard> {
   int tappedCardIndex = -1;
   bool isSnackbarVisible = false;
   String patientId = '';
-  String? baranggay; // Added variable to store Baranggay field
-
+  String? baranggay;
   late CollectionReference patientsCollection;
   bool _isMounted = false;
 
@@ -44,35 +45,21 @@ class _DashboardState extends State<Dashboard> {
 
   @override
   void dispose() {
-    _isMounted = false;
+    _isMounted = false; // Set to false when the widget is disposed
     super.dispose();
   }
 
   Future<void> fetchBaranggay() async {
     try {
-      // Get the current user
       User? user = FirebaseAuth.instance.currentUser;
 
       if (user != null) {
-        // Get the user's ID
         String userId = user.uid;
-
-        // Reference to Firestore collection
         patientsCollection = FirebaseFirestore.instance.collection('admin');
-
-        // Query Firestore to get the document for the current user
         DocumentSnapshot<Object?> snapshot =
             await patientsCollection.doc(userId).get();
-
-        // Get the Baranggay field value
         String userBaranggay = snapshot.get('Baranggay');
 
-        // Update the state with the Baranggay field value
-        setState(() {
-          baranggay = userBaranggay;
-        });
-
-        // Update the state with the Baranggay field value only if the widget is still mounted
         if (_isMounted) {
           setState(() {
             baranggay = userBaranggay;
@@ -80,7 +67,6 @@ class _DashboardState extends State<Dashboard> {
         }
       }
     } catch (e) {
-      // Handle errors here
       if (_isMounted) {
         showErrorNotification('Error fetching Baranggay: $e');
         print(e);
@@ -119,17 +105,16 @@ class _DashboardState extends State<Dashboard> {
                           )),
                   hasMessageIcon: true,
                 ),
-                const SizedBox(height: 10),
+                const Divider(),
                 Expanded(
                   child: baranggay == null
                       ? const Center(
-                          child:
-                              CircularProgressIndicator()) // Show a loading indicator
+                          child: CupertinoActivityIndicator())
                       : DashboardListFirebase(
                           Baranggay: baranggay ?? '',
                         ),
                 ),
-                const SizedBox(height: 20),
+                const Divider(),
                 ProfileAndMasterlistRow(
                   selectedBrgy: baranggay ?? '',
                   Barangay: baranggay,
@@ -142,3 +127,4 @@ class _DashboardState extends State<Dashboard> {
     );
   }
 }
+

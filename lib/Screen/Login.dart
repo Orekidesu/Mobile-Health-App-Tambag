@@ -20,14 +20,6 @@ class _LoginState extends State<Login> {
   TextEditingController passwordController = TextEditingController();
   bool isLoading = false;
 
-  @override
-  void dispose() {
-    // Dispose of the controllers when the widget is disposed
-    emailController.dispose();
-    passwordController.dispose();
-    super.dispose();
-  }
-
   void showErrorNotification(String? errorMessage) {
     Fluttertoast.showToast(
       msg: 'Error: ${errorMessage ?? "Unknown error"}',
@@ -119,7 +111,7 @@ class _LoginState extends State<Login> {
                     children: [
                       TextSpan(text: 'Telehealth And\n'),
                       TextSpan(text: 'Medication-Barangay\n'),
-                      TextSpan(text: 'Assistance for Geriatic'),
+                      TextSpan(text: 'Assistance for Geriatric'),
                     ],
                   ),
                 ),

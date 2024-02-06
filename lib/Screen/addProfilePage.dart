@@ -10,6 +10,7 @@ import '../Custom_Widgets/Custom_dropdown.dart';
 import '../Screen/Dashboard.dart';
 import '../constants/light_constants.dart';
 import '../functions/custom_functions.dart';
+import 'dart:math';
 
 class AddProfilePage extends StatefulWidget {
   final String selectedBrgy;
@@ -34,16 +35,6 @@ class _AddProfilePageState extends State<AddProfilePage> {
     super.initState();
   }
 
-  @override
-  void dispose() {
-    // Dispose of the controllers when the widget is disposed
-    nameController.dispose();
-    ageController.dispose();
-    contactNumberController.dispose();
-    physicianController.dispose();
-    super.dispose();
-  }
-
   final CollectionReference patientsCollection =
       FirebaseFirestore.instance.collection('patients');
   final CollectionReference followUpCollection =
@@ -51,13 +42,19 @@ class _AddProfilePageState extends State<AddProfilePage> {
 
   Future<void> addProfileToFirebase() async {
     try {
+      if (!isValidPhilippinePhoneNumber(contactNumberController.text)) {
+        showErrorNotification(
+            "Please enter a valid phone number starting with '09'");
+        return;
+      }
+
       if (_validateInput()) {
         setState(() {
           isAddingProfile = true;
         });
 
         // All fields are non-empty, proceed with adding to Firebase
-        String id = await getHighestIdDocument();
+        String id = generateRandomNumber().toString();
         DocumentReference profileReference =
             await patientsCollection.add(getProfileData(id));
 
@@ -96,49 +93,53 @@ class _AddProfilePageState extends State<AddProfilePage> {
 
   Future<void> updateMedicationInventory(
       Map<String, dynamic> medicationDetails) async {
-    String medName = medicationDetails['med_name'];
-    int requestedQuantity = medicationDetails['med_quan'];
-
-    // Get the available quantity from the medication inventory
-    QuerySnapshot<Map<String, dynamic>> inventorySnapshot =
-        await FirebaseFirestore.instance
-            .collection('medication_inventory')
-            .where('med_name', isEqualTo: medName)
-            .limit(1)
-            .get();
-
-    int availableQuantity =
-        inventorySnapshot.docs.first.data()['med_quan'] as int;
-    DocumentReference docRef = inventorySnapshot.docs.first.reference;
-
-    // Check if the requested quantity is greater thanS the available quantity
-    await docRef.update({'med_quan': availableQuantity - requestedQuantity});
-  }
-
-  //
-
-  Future<String> getHighestIdDocument() async {
     try {
-      // Replace 'patients' with your collection name
-      QuerySnapshot querySnapshot = await patientsCollection
-          .orderBy('id', descending: true)
-          .limit(1)
-          .get();
+      String medName = medicationDetails['med_name'];
+      int requestedQuantity = medicationDetails['med_quan'];
 
-      // Check if there are any documents
-      if (querySnapshot.docs.isNotEmpty) {
-        // Access the document with the highest 'id' value
-        DocumentSnapshot highestIdDocument = querySnapshot.docs.first;
+      // Get the available quantity from the medication inventory
+      QuerySnapshot<Map<String, dynamic>> inventorySnapshot =
+          await FirebaseFirestore.instance
+              .collection('medication_inventory')
+              .where('med_name', isEqualTo: medName)
+              .limit(1)
+              .get();
 
-        // Access the 'id' field value from the document
-        String highestIdValue =
-            (int.parse(highestIdDocument['id']) + 1).toString();
-        return highestIdValue;
+      if (inventorySnapshot.docs.isNotEmpty) {
+        int availableQuantity =
+            inventorySnapshot.docs.first.data()['med_quan'] as int;
+        DocumentReference docRef = inventorySnapshot.docs.first.reference;
+
+        // Check if the requested quantity is greater than the available quantity
+        await docRef
+            .update({'med_quan': availableQuantity - requestedQuantity});
       } else {
-        return '1'; // Return a default value if no documents are found
+        // Handle the case where the medication is not found in the inventory
+        showErrorNotification('Medication not found in the inventory.');
+        return;
       }
     } catch (e) {
-      return ''; // Return a default value in case of an error
+      // Handle any potential exceptions or errors
+      showErrorNotification('Error updating medication inventory: $e');
+      // You can choose to rethrow the error or handle it gracefully based on your use case
+      // throw e;
+    }
+  }
+
+  int generateRandomNumber() {
+    Random random = Random();
+    return random.nextInt(900000) + 100000;
+  }
+
+  bool isValidPhilippinePhoneNumber(String phoneNumber) {
+    // Remove any non-digit characters from the phone number
+    String cleanedNumber = phoneNumber.replaceAll(RegExp(r'\D'), '');
+
+    // Check if the cleaned number has the correct length and starts with a valid prefix
+    if (cleanedNumber.length == 11 && (cleanedNumber.startsWith('09'))) {
+      return true;
+    } else {
+      return false;
     }
   }
 
@@ -150,6 +151,8 @@ class _AddProfilePageState extends State<AddProfilePage> {
       'contact_number': contactNumberController.text,
       'physician': physicianController.text,
       'id': id,
+      'addedDate':
+          DateTime.now().toString(), // or use the appropriate date format
     };
   }
 
@@ -237,9 +240,9 @@ class _AddProfilePageState extends State<AddProfilePage> {
             children: [
               Custom_Appbar(
                 titleFontSize: 21,
-                hasBrgy: false,
-                Baranggay: "Profile",
-                Apptitle: "Add Profile",
+                hasBrgy: true,
+                Baranggay: "Add Profile",
+                Apptitle: "Patient",
                 hasbackIcon: true,
                 hasRightIcon: false,
                 iconColor: Colors.white,
@@ -247,6 +250,7 @@ class _AddProfilePageState extends State<AddProfilePage> {
                     ? null
                     : () => goToPage(context, const Dashboard()),
               ),
+              const Divider(),
               Expanded(
                 child: SingleChildScrollView(
                   child: Column(
@@ -261,7 +265,7 @@ class _AddProfilePageState extends State<AddProfilePage> {
                         child: Column(
                           children: [
                             const SizedBox(
-                              height: 10,
+                              height: 5,
                             ),
                             CustomTextField(
                               controller: nameController,
@@ -328,7 +332,7 @@ class _AddProfilePageState extends State<AddProfilePage> {
                                   'Medication:',
                                   style: TextStyle(
                                     color: periwinkleColor,
-                                    fontSize: 20,
+                                    fontSize: 17,
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
@@ -390,16 +394,19 @@ class _AddProfilePageState extends State<AddProfilePage> {
                                   onTap: () {
                                     _showMyDialog(context);
                                   },
-                                  child: const Text(
-                                    'Add Medication',
-                                    style: TextStyle(
-                                      color:
-                                          periwinkleColor, // Set the text color
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 18,
+                                  child: Container(
+                                    height: 40,
+                                    width: 40,
+                                    decoration: BoxDecoration(
+                                    color: periwinkleColor, // Change to your desired color
+                                    borderRadius: BorderRadius.circular(30.0),
+                                  ),
+                                    child: const Icon(
+                                      Icons.add,
+                                      color: Colors.white, // Set the color of the icon)
                                     ),
                                   ),
-                                ),
+                                )
                               ],
                             ),
                             const SizedBox(
@@ -419,24 +426,25 @@ class _AddProfilePageState extends State<AddProfilePage> {
                             const SizedBox(
                               height: 10,
                             ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: [
-                                CustomActionButton(
-                                  onPressed: () {
-                                    addProfileToFirebase();
-                                  },
-                                  buttonText:
-                                      isAddingProfile ? 'Adding...' : 'Add',
-                                ),
-                              ],
-                            )
                           ],
                         ),
                       ),
                     ],
                   ),
                 ),
+              ),
+              const Divider(),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  CustomActionButton(
+                    custom_width: 320,
+                    onPressed: () {
+                      addProfileToFirebase();
+                    },
+                    buttonText: isAddingProfile ? 'Adding...' : 'Add',
+                  ),
+                ],
               )
             ],
           ),

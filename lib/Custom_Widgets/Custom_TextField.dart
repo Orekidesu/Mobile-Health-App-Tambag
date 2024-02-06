@@ -12,6 +12,7 @@ class CustomTextField extends StatefulWidget {
   final bool obscureText;
   final int? maxLines;
   final bool readOnly;
+  final Color labelColor;
 
   const CustomTextField({
     super.key,
@@ -22,7 +23,8 @@ class CustomTextField extends StatefulWidget {
     this.borderRadius = 15.0,
     this.obscureText = false,
     this.maxLines = 1,
-    this.readOnly = false
+    this.readOnly = false,
+    this.labelColor = periwinkleColor
   });
 
   @override
@@ -63,8 +65,8 @@ class _CustomTextFieldState extends State<CustomTextField> {
             fillColor: Colors.white,
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(widget.borderRadius),
-              borderSide: const BorderSide(
-                color: periwinkleColor,
+              borderSide: BorderSide(
+                color: widget.labelColor,
                 width: 4,
               ),
             ),

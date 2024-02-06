@@ -81,7 +81,7 @@ class _MasterlistState extends State<Masterlist> {
           child: Container(
         height: MediaQuery.of(context).size.height, // Adjust as needed
         color: backgroundColor,
-        padding: const EdgeInsets.all(30.0),
+        padding: const EdgeInsets.all(20.0),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -98,7 +98,8 @@ class _MasterlistState extends State<Masterlist> {
                 _showMyDialog(context);
               },
             ),
-            const SizedBox(height: 25),
+            const Divider(),
+            const SizedBox(height:5),
             Expanded(
               child: SingleChildScrollView(
                 child: Column(
@@ -233,10 +234,17 @@ class _MasterlistState extends State<Masterlist> {
                     const SizedBox(
                       height: 15,
                     ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
+                    
+                  ],
+                ),
+              ),
+            ),
+            Divider(),
+            Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         CustomActionButton(
+                          custom_width: 320,
                           onPressed: ()  {
                             
                           
@@ -245,10 +253,6 @@ class _MasterlistState extends State<Masterlist> {
                         ),
                       ],
                     )
-                  ],
-                ),
-              ),
-            ),
           ],
         ),
       )),

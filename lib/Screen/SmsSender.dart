@@ -24,7 +24,7 @@ class _smsSenderState extends State<smsSender> {
   TextEditingController messageController = TextEditingController();
   List<String> Brgy = ['Guadalupe', 'Patag', 'Gabas'];
   bool isSending = false;
-  
+
   @override
   void dispose() {
     // Dispose of the messageController when the widget is disposed
@@ -61,47 +61,47 @@ class _smsSenderState extends State<smsSender> {
     }
   }
 
-void sendMessage() async {
-  try {
-    if (messageController.text.isEmpty) {
-      showErrorNotification('Message is Empty');
-      return;
+  void sendMessage() async {
+    try {
+      if (messageController.text.isEmpty) {
+        showErrorNotification('Message is Empty');
+        return;
+      }
+
+      setState(() {
+        isSending = true;
+      });
+
+      List<String?> numbers = await getContactNumbersWithBaranggay();
+      print(numbers);
+
+      if (numbers.isEmpty) {
+        showErrorNotification('No contact numbers available');
+        return;
+      }
+
+      String commaSeparatedNumbers =
+          numbers.where((number) => number != null).join(', ');
+
+      await sendSMS(messageController.text, commaSeparatedNumbers);
+    } catch (e) {
+      // Handle exceptions appropriately
+      showErrorNotification('Failed to send message');
+    } finally {
+      setState(() {
+        isSending = false;
+      });
     }
-
-    setState(() {
-      isSending = true;
-    });
-
-    List<String?> numbers = await getContactNumbersWithBaranggay();
-
-    if (numbers.isEmpty) {
-      showErrorNotification('No contact numbers available');
-      return;
-    }
-
-    String commaSeparatedNumbers = numbers
-        .where((number) => number != null)
-        .join(', ');
-
-    await sendSMS(messageController.text, commaSeparatedNumbers);
-
-  } catch (e) {
-    // Handle exceptions appropriately
-    showErrorNotification('Failed to send message');
-  } finally {
-    setState(() {
-      isSending = false;
-    });
   }
-}
-
 
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
         body: Container(
-          padding: const EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 0.0),
+          color: backgroundColor,
+          height: MediaQuery.of(context).size.height, // Adjust as needed
+          padding: const EdgeInsets.all(20),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -112,8 +112,12 @@ void sendMessage() async {
                 hasbackIcon: true,
                 hasRightIcon: false,
                 iconColor: Colors.white,
-                DistinationBack: isSending ? null :  () => goToPage(context, const Dashboard()),
+                DistinationBack: isSending
+                    ? null
+                    : () => goToPage(context, const Dashboard()),
               ),
+              const Divider(),
+              const SizedBox(height:5),
               Expanded(
                 child: Padding(
                   padding: const EdgeInsets.fromLTRB(16.0, 10.0, 16.0, 0.0),
@@ -149,19 +153,23 @@ void sendMessage() async {
                       const SizedBox(
                         height: 10,
                       ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          CustomActionButton(
-                            onPressed: () {sendMessage();},
-                            buttonText: isSending? 'Sending...':'Send',
-                          ),
-                        ],
-                      )
                     ],
                   ),
                 ),
               ),
+              const Divider(),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  CustomActionButton(
+                    custom_width: 320,
+                    onPressed: () {
+                      sendMessage();
+                    },
+                    buttonText: isSending ? 'Sending...' : 'Send',
+                  ),
+                ],
+              )
             ],
           ),
         ),
