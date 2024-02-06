@@ -7,7 +7,7 @@ import 'package:pdf/widgets.dart' as pw;
 import 'package:pdf/widgets.dart';
 import '../model/patient_info.dart';
 
-class CustomBoldText extends pw.StatelessWidget {
+/*class CustomBoldText extends pw.StatelessWidget {
   final String label;
   final String boldText;
 
@@ -29,6 +29,29 @@ class CustomBoldText extends pw.StatelessWidget {
       ],
     );
   }
+}*/
+
+class CustomBoldText extends pw.StatelessWidget {
+  final String label;
+  final String boldText;
+
+  CustomBoldText({required this.label, required this.boldText});
+
+  @override
+  pw.Widget build(pw.Context context) {
+    return pw.RichText(
+      text: pw.TextSpan(
+        text: '$label: ',
+        style: pw.TextStyle(fontSize: 12),
+        children: <pw.TextSpan>[
+          pw.TextSpan(
+            text: boldText,
+            style: pw.TextStyle(fontSize: 12, fontWeight: pw.FontWeight.bold),
+          ),
+        ],
+      ),
+    );
+  }
 }
 
 class PdfTrackerApi {
@@ -46,7 +69,7 @@ class PdfTrackerApi {
     );
 
     final patientData = await patientInfo.patientData;
-    return PdfApi.saveDocument(name: patientData['name'], pdf: pdf);
+    return PdfApi.saveDocument(name: '${patientData['name']}.pdf', pdf: pdf);
   }
 
   Future<Widget> buildHeader(PatientInfo patientInfo) async {

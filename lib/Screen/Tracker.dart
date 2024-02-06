@@ -321,17 +321,17 @@ class _TrackerState extends State<Tracker> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           CustomActionButton(
-                            custom_width: 320,
-                            onPressed: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) =>
-                                      TrackerPDF(patientId: widget.patientId),
-                                ),
-                              );
-                            },
-                            /*async {
+                            onPressed: ()
+                                //{
+                                //   Navigator.push(
+                                //     context,
+                                //     MaterialPageRoute(
+                                //       builder: (context) =>
+                                //           TrackerPDF(patientId: widget.patientId),
+                                //     ),
+                                //   );
+                                // },
+                                async {
                               try {
                                 Map<String, dynamic> patientData =
                                     await DataService.getPatientData(
@@ -362,7 +362,6 @@ class _TrackerState extends State<Tracker> {
                                 print('Error: $e');
                               }
                             },
-                            */
                             buttonText: "Save as PDF",
                           ),
                         ],
