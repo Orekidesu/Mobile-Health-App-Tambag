@@ -7,30 +7,6 @@ import 'package:pdf/widgets.dart' as pw;
 import 'package:pdf/widgets.dart';
 import '../model/patient_info.dart';
 
-/*class CustomBoldText extends pw.StatelessWidget {
-  final String label;
-  final String boldText;
-
-  CustomBoldText({required this.label, required this.boldText});
-
-  @override
-  pw.Widget build(pw.Context context) {
-    return pw.Column(
-      crossAxisAlignment: pw.CrossAxisAlignment.start,
-      children: [
-        pw.Text(
-          label,
-          style: pw.TextStyle(fontSize: 12),
-        ),
-        pw.Text(
-          boldText,
-          style: pw.TextStyle(fontSize: 12, fontWeight: pw.FontWeight.bold),
-        ),
-      ],
-    );
-  }
-}*/
-
 class CustomBoldText extends pw.StatelessWidget {
   final String label;
   final String boldText;
