@@ -18,11 +18,11 @@ class CustomBoldText extends pw.StatelessWidget {
     return pw.RichText(
       text: pw.TextSpan(
         text: '$label: ',
-        style: pw.TextStyle(fontSize: 12),
+        style: pw.TextStyle(fontSize: 10),
         children: <pw.TextSpan>[
           pw.TextSpan(
             text: boldText,
-            style: pw.TextStyle(fontSize: 12, fontWeight: pw.FontWeight.bold),
+            style: pw.TextStyle(fontSize: 10, fontWeight: pw.FontWeight.bold),
           ),
         ],
       ),
@@ -107,7 +107,7 @@ class PdfTrackerApi {
               pw.Text(
                 'PATIENT PROFILE',
                 style: pw.TextStyle(
-                  fontSize: 12,
+                  fontSize: 10,
                   fontWeight: pw.FontWeight.bold,
                 ),
               ),
@@ -119,14 +119,14 @@ class PdfTrackerApi {
                 mainAxisAlignment: pw.MainAxisAlignment.start,
                 children: [
                   CustomBoldText(
-                      label: 'Pangan:', boldText: patientData['name']),
-                  CustomBoldText(label: 'Edad:', boldText: patientData['age']),
+                      label: 'Pangan', boldText: patientData['name']),
+                  CustomBoldText(label: 'Edad', boldText: patientData['age']),
                   CustomBoldText(
-                      label: 'Puy-anan:', boldText: patientData['address']),
+                      label: 'Puy-anan', boldText: patientData['address']),
                   CustomBoldText(
-                      label: 'Doktor:', boldText: patientData['physician']),
+                      label: 'Doktor', boldText: patientData['physician']),
                   CustomBoldText(
-                      label: 'Numero sa Selpon:',
+                      label: 'Numero sa Selpon',
                       boldText: patientData['contact_number']),
                 ],
               ),
@@ -151,7 +151,7 @@ class PdfTrackerApi {
         pw.Center(
             child: pw.Text('MGA TAMBAL',
                 style: pw.TextStyle(
-                    fontSize: 12, fontWeight: pw.FontWeight.bold))),
+                    fontSize: 10, fontWeight: pw.FontWeight.bold))),
         pw.SizedBox(
           height: 20,
         ),
@@ -173,25 +173,39 @@ class PdfTrackerApi {
             children: [
               pw.TableRow(
                 children: [
-                  pw.Center(
-                      child: pw.Text('ORAS',
-                          style: pw.TextStyle(fontWeight: pw.FontWeight.bold))),
-                  pw.Center(
-                      child: pw.Text('TUKMA',
-                          style: pw.TextStyle(fontWeight: pw.FontWeight.bold))),
+                  pw.Padding(
+                    padding: pw.EdgeInsets.all(4.0),
+                    child: pw.Center(
+                        child: pw.Text('ORAS',
+                            style: pw.TextStyle(
+                                fontWeight: pw.FontWeight.bold,
+                                fontSize: 10.0))),
+                  ),
+                  pw.Padding(
+                    padding: pw.EdgeInsets.all(4.0),
+                    child: pw.Center(
+                        child: pw.Text('TUKMA',
+                            style: pw.TextStyle(
+                                fontWeight: pw.FontWeight.bold,
+                                fontSize: 10.0))),
+                  ),
                   for (var day in [
                     'LUNES',
                     'MARTES',
                     'MIYERKULES',
                     'HUWEBES',
-                    'BIYERNES',
+                    'BIRNES',
                     'SABADO',
                     'DOMINGO'
                   ])
-                    pw.Center(
-                        child: pw.Text(day,
-                            style:
-                                pw.TextStyle(fontWeight: pw.FontWeight.bold))),
+                    pw.Padding(
+                      padding: pw.EdgeInsets.all(4.0),
+                      child: pw.Center(
+                          child: pw.Text(day,
+                              style: pw.TextStyle(
+                                  fontWeight: pw.FontWeight.bold,
+                                  fontSize: 10.0))),
+                    )
                 ],
               ),
               for (var timeSlot in ['Buntag', 'Udto', 'Gabie'])
@@ -201,18 +215,20 @@ class PdfTrackerApi {
                       pw.Padding(
                         padding: pw.EdgeInsets.all(4.0),
                         child: pw.Text(
-                            tukma == 'Sa dili pa mukaon' ? timeSlot : ''),
+                            tukma == 'Sa dili pa mukaon' ? timeSlot : '',
+                            style: pw.TextStyle(fontSize: 10.0)),
                       ),
                       pw.Padding(
                         padding: pw.EdgeInsets.all(4.0),
-                        child: pw.Text(tukma),
+                        child:
+                            pw.Text(tukma, style: pw.TextStyle(fontSize: 10.0)),
                       ),
                       pw.Padding(
                         padding: pw.EdgeInsets.all(4.0),
                         child: pw.Center(
-                            child: pw.Text(processedMedications[timeSlot]
-                                    ?[tukma] ??
-                                'N/A')),
+                            child: pw.Text(
+                                processedMedications[timeSlot]?[tukma] ?? 'N/A',
+                                style: pw.TextStyle(fontSize: 10.0))),
                       ),
                     ],
                   ),
