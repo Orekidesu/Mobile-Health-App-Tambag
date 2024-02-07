@@ -15,7 +15,11 @@ class Patient {
   final String name;
   final String address;
   final String addedDate;
-  Patient({required this.id, required this.name, required this.address, required this.addedDate});
+  Patient(
+      {required this.id,
+      required this.name,
+      required this.address,
+      required this.addedDate});
 }
 
 class Dashboard extends StatefulWidget {
@@ -108,8 +112,7 @@ class _DashboardState extends State<Dashboard> {
                 const Divider(),
                 Expanded(
                   child: baranggay == null
-                      ? const Center(
-                          child: CupertinoActivityIndicator())
+                      ? const Center(child: CupertinoActivityIndicator())
                       : DashboardListFirebase(
                           Baranggay: baranggay ?? '',
                         ),
@@ -127,4 +130,3 @@ class _DashboardState extends State<Dashboard> {
     );
   }
 }
-

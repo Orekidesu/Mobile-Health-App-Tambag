@@ -35,11 +35,13 @@ class PdfTrackerApi {
     final pdf = Document();
 
     final header = await buildHeader(patientInfo);
+    final table = await buildTable(patientInfo);
 
     pdf.addPage(
       MultiPage(
         build: (Context context) => [
           header,
+          table!,
         ],
       ),
     );
@@ -55,7 +57,7 @@ class PdfTrackerApi {
       crossAxisAlignment: pw.CrossAxisAlignment.start,
       children: [
         pw.Padding(
-          padding: pw.EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 16.0),
+          padding: pw.EdgeInsets.fromLTRB(8.0, 0.0, 8.0, 16.0),
           child: pw.Row(
             children: [
               pw.Image(
@@ -97,7 +99,7 @@ class PdfTrackerApi {
           ),
         ),
         pw.Padding(
-          padding: pw.EdgeInsets.fromLTRB(8.0, 0.0, 8.0, 0.0),
+          padding: pw.EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 0.0),
           child: pw.Column(
             mainAxisAlignment: pw.MainAxisAlignment.start,
             crossAxisAlignment: pw.CrossAxisAlignment.start,
@@ -117,14 +119,14 @@ class PdfTrackerApi {
                 mainAxisAlignment: pw.MainAxisAlignment.start,
                 children: [
                   CustomBoldText(
-                      label: 'Pangan', boldText: patientData['name']),
-                  CustomBoldText(label: 'Edad', boldText: patientData['age']),
+                      label: 'Pangan:', boldText: patientData['name']),
+                  CustomBoldText(label: 'Edad:', boldText: patientData['age']),
                   CustomBoldText(
-                      label: 'Puy-anan', boldText: patientData['address']),
+                      label: 'Puy-anan:', boldText: patientData['address']),
                   CustomBoldText(
-                      label: 'Doktor', boldText: patientData['physician']),
+                      label: 'Doktor:', boldText: patientData['physician']),
                   CustomBoldText(
-                      label: 'Numero sa Selpon',
+                      label: 'Numero sa Selpon:',
                       boldText: patientData['contact_number']),
                 ],
               ),
@@ -133,5 +135,91 @@ class PdfTrackerApi {
         ),
       ],
     );
+  }
+
+  Future<Widget?> buildTable(PatientInfo patientInfo) async {
+    final processedMedications = await patientInfo.processedMedications;
+    int rowCounter = 0;
+    return pw.Container(
+        child: pw.Column(
+      mainAxisAlignment: pw.MainAxisAlignment.start,
+      crossAxisAlignment: pw.CrossAxisAlignment.start,
+      children: [
+        pw.SizedBox(
+          height: 20,
+        ),
+        pw.Center(
+            child: pw.Text('MGA TAMBAL',
+                style: pw.TextStyle(
+                    fontSize: 12, fontWeight: pw.FontWeight.bold))),
+        pw.SizedBox(
+          height: 20,
+        ),
+        pw.Container(
+          child: pw.Table(
+            columnWidths: {
+              0: pw.FlexColumnWidth(1),
+              1: pw.FlexColumnWidth(1),
+              2: pw.FlexColumnWidth(1),
+              3: pw.FlexColumnWidth(1),
+              4: pw.FlexColumnWidth(1),
+              5: pw.FlexColumnWidth(1),
+              6: pw.FlexColumnWidth(1),
+              7: pw.FlexColumnWidth(1),
+              8: pw.FlexColumnWidth(1),
+              9: pw.FlexColumnWidth(1),
+            },
+            border: pw.TableBorder.all(),
+            children: [
+              pw.TableRow(
+                children: [
+                  pw.Center(
+                      child: pw.Text('ORAS',
+                          style: pw.TextStyle(fontWeight: pw.FontWeight.bold))),
+                  pw.Center(
+                      child: pw.Text('TUKMA',
+                          style: pw.TextStyle(fontWeight: pw.FontWeight.bold))),
+                  for (var day in [
+                    'LUNES',
+                    'MARTES',
+                    'MIYERKULES',
+                    'HUWEBES',
+                    'BIYERNES',
+                    'SABADO',
+                    'DOMINGO'
+                  ])
+                    pw.Center(
+                        child: pw.Text(day,
+                            style:
+                                pw.TextStyle(fontWeight: pw.FontWeight.bold))),
+                ],
+              ),
+              for (var timeSlot in ['Buntag', 'Udto', 'Gabie'])
+                for (var tukma in ['Sa dili pa mukaon', 'Human ug kaon'])
+                  pw.TableRow(
+                    children: [
+                      pw.Padding(
+                        padding: pw.EdgeInsets.all(4.0),
+                        child: pw.Text(
+                            tukma == 'Sa dili pa mukaon' ? timeSlot : ''),
+                      ),
+                      pw.Padding(
+                        padding: pw.EdgeInsets.all(4.0),
+                        child: pw.Text(tukma),
+                      ),
+                      pw.Padding(
+                        padding: pw.EdgeInsets.all(4.0),
+                        child: pw.Center(
+                            child: pw.Text(processedMedications[timeSlot]
+                                    ?[tukma] ??
+                                'N/A')),
+                      ),
+                    ],
+                  ),
+            ],
+          ),
+        )
+      ],
+    ));
   }
 }

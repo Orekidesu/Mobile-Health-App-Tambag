@@ -16,7 +16,8 @@ Future<List<Patient>> getAllPatients(String userBaranggay) async {
           id: document['id'],
           name: document['name'],
           address: document['address'],
-          addedDate: DateTime.parse(document['addedDate']).toString(), // Parse addedDate as DateTime
+          addedDate: DateTime.parse(document['addedDate'])
+              .toString(), // Parse addedDate as DateTime
         );
       })
       .where((patient) => patient.address == userBaranggay)
@@ -27,7 +28,6 @@ Future<List<Patient>> getAllPatients(String userBaranggay) async {
 
   return patients;
 }
-
 
 Future<List<medication_inventory>> getAllMedicalInventory() async {
   QuerySnapshot querySnapshot = await medicationInventoryCollection.get();
