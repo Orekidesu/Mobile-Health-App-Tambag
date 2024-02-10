@@ -31,17 +31,49 @@ class CustomBoldText extends pw.StatelessWidget {
 }
 
 class PdfTrackerApi {
+  List<pw.TableRow> _buildTableRows(List<Map<String, dynamic>> dataList,
+      List<String> columnNames, List<String> keyNames) {
+    return [
+      pw.TableRow(
+        children: columnNames.map((columnName) {
+          return pw.Padding(
+            padding: pw.EdgeInsets.all(4.0),
+            child: pw.Center(
+              child: pw.Text(
+                columnName,
+                style:
+                    pw.TextStyle(fontWeight: pw.FontWeight.bold, fontSize: 9.5),
+              ),
+            ),
+          );
+        }).toList(),
+      ),
+      for (var data in dataList)
+        pw.TableRow(
+          children: keyNames.map((keyName) {
+            return pw.Padding(
+              padding: pw.EdgeInsets.all(4.0),
+              child: pw.Text(data[keyName] ?? 'N/A',
+                  style: pw.TextStyle(fontSize: 9.5)),
+            );
+          }).toList(),
+        ),
+    ];
+  }
+
   Future<File> generate(PatientInfo patientInfo) async {
     final pdf = Document();
 
     final header = await buildHeader(patientInfo);
     final table = await buildTable(patientInfo);
+    final interactionTable = await buildInteractionTable(patientInfo);
 
     pdf.addPage(
       MultiPage(
         build: (Context context) => [
           header,
           table!,
+          interactionTable != null ? interactionTable : Container(),
         ],
       ),
     );
@@ -107,7 +139,7 @@ class PdfTrackerApi {
               pw.Text(
                 'PATIENT PROFILE',
                 style: pw.TextStyle(
-                  fontSize: 10,
+                  fontSize: 12,
                   fontWeight: pw.FontWeight.bold,
                 ),
               ),
@@ -139,19 +171,22 @@ class PdfTrackerApi {
 
   Future<Widget?> buildTable(PatientInfo patientInfo) async {
     final processedMedications = await patientInfo.processedMedications;
-    int rowCounter = 0;
+    final medications = await patientInfo.medications;
+
     return pw.Container(
         child: pw.Column(
       mainAxisAlignment: pw.MainAxisAlignment.start,
       crossAxisAlignment: pw.CrossAxisAlignment.start,
       children: [
+        // ====================MGA TAMBAL AREA ================= //
+        // #############FIRST TABLE############# //
         pw.SizedBox(
           height: 20,
         ),
         pw.Center(
             child: pw.Text('MGA TAMBAL',
                 style: pw.TextStyle(
-                    fontSize: 10, fontWeight: pw.FontWeight.bold))),
+                    fontSize: 12, fontWeight: pw.FontWeight.bold))),
         pw.SizedBox(
           height: 20,
         ),
@@ -167,7 +202,6 @@ class PdfTrackerApi {
               6: pw.FlexColumnWidth(1),
               7: pw.FlexColumnWidth(1),
               8: pw.FlexColumnWidth(1),
-              9: pw.FlexColumnWidth(1),
             },
             border: pw.TableBorder.all(),
             children: [
@@ -179,7 +213,7 @@ class PdfTrackerApi {
                         child: pw.Text('ORAS',
                             style: pw.TextStyle(
                                 fontWeight: pw.FontWeight.bold,
-                                fontSize: 10.0))),
+                                fontSize: 9.5))),
                   ),
                   pw.Padding(
                     padding: pw.EdgeInsets.all(4.0),
@@ -187,7 +221,7 @@ class PdfTrackerApi {
                         child: pw.Text('TUKMA',
                             style: pw.TextStyle(
                                 fontWeight: pw.FontWeight.bold,
-                                fontSize: 10.0))),
+                                fontSize: 9.5))),
                   ),
                   for (var day in [
                     'LUNES',
@@ -204,7 +238,7 @@ class PdfTrackerApi {
                           child: pw.Text(day,
                               style: pw.TextStyle(
                                   fontWeight: pw.FontWeight.bold,
-                                  fontSize: 10.0))),
+                                  fontSize: 9.5))),
                     )
                 ],
               ),
@@ -216,26 +250,93 @@ class PdfTrackerApi {
                         padding: pw.EdgeInsets.all(4.0),
                         child: pw.Text(
                             tukma == 'Sa dili pa mukaon' ? timeSlot : '',
-                            style: pw.TextStyle(fontSize: 10.0)),
+                            style: pw.TextStyle(fontSize: 9.5)),
                       ),
                       pw.Padding(
                         padding: pw.EdgeInsets.all(4.0),
                         child:
-                            pw.Text(tukma, style: pw.TextStyle(fontSize: 10.0)),
+                            pw.Text(tukma, style: pw.TextStyle(fontSize: 9.5)),
                       ),
-                      pw.Padding(
-                        padding: pw.EdgeInsets.all(4.0),
-                        child: pw.Center(
-                            child: pw.Text(
-                                processedMedications[timeSlot]?[tukma] ?? 'N/A',
-                                style: pw.TextStyle(fontSize: 10.0))),
-                      ),
+                      for (var i = 0; i < 7; i++)
+                        pw.Padding(
+                          padding: pw.EdgeInsets.all(4.0),
+                          child: pw.Center(
+                              child: pw.Text(
+                                  processedMedications[timeSlot]?[tukma] ??
+                                      'N/A',
+                                  style: pw.TextStyle(fontSize: 9.5))),
+                        ),
                     ],
                   ),
             ],
           ),
-        )
+        ),
+
+        // #############SECOND TABLE############# //
+        pw.SizedBox(
+          height: 20,
+        ),
+
+        pw.Container(
+          child: pw.Table(
+            border: pw.TableBorder.all(),
+            columnWidths: {
+              0: pw.FlexColumnWidth(1),
+              1: pw.FlexColumnWidth(2),
+              2: pw.FlexColumnWidth(2),
+              3: pw.FlexColumnWidth(3),
+            },
+            children: _buildTableRows(
+              medications,
+              ['TAMBAL', 'GIDAG-HANUN', 'PARA ASA KINI', 'PAHINUMDOM'],
+              ['name', 'dosage', 'indication', 'special_reminder'],
+            ),
+          ),
+        ),
       ],
     ));
+  }
+
+  Future<Widget?> buildInteractionTable(PatientInfo patientInfo) async {
+    final medicationInteractions = await patientInfo.medicationInteractions;
+    return pw.Container(
+      child: pw.Column(
+        mainAxisAlignment: pw.MainAxisAlignment.start,
+        crossAxisAlignment: pw.CrossAxisAlignment.start,
+        children: [
+          // ====================DRUG INTERACTION AREA ================= //
+          pw.SizedBox(
+            height: 20,
+          ),
+          pw.Center(
+              child: pw.Text('INTERAKSYON SA MGA TAMBAL',
+                  style: pw.TextStyle(
+                      fontSize: 12, fontWeight: pw.FontWeight.bold))),
+          pw.SizedBox(
+            height: 20,
+          ),
+          medicationInteractions == null || medicationInteractions.isEmpty
+              ? pw.Center(
+                  child: pw.Text('Walay Interaksyon sa Tambal',
+                      style: pw.TextStyle(fontSize: 9.5)),
+                )
+              : pw.Container(
+                  child: pw.Table(
+                    border: pw.TableBorder.all(),
+                    columnWidths: {
+                      0: pw.FlexColumnWidth(1),
+                      1: pw.FlexColumnWidth(1),
+                      2: pw.FlexColumnWidth(2),
+                    },
+                    children: _buildTableRows(
+                      medicationInteractions,
+                      ['TAMBAL 1', 'TAMBAL 2', 'INTERAKSYON'],
+                      ['medicine1', 'medicine2', 'interactionDetails'],
+                    ),
+                  ),
+                ),
+        ],
+      ),
+    );
   }
 }
