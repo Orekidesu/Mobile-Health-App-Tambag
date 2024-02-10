@@ -8,7 +8,8 @@ import 'CustomActionButton.dart';
 import '../Screen/Masterlist.dart';
 
 class AddMedication extends StatefulWidget {
-  const AddMedication({super.key});
+  final String Barangay;
+  const AddMedication({super.key, required this.Barangay});
 
   @override
   _AddMedicationState createState() => _AddMedicationState();
@@ -61,62 +62,60 @@ class _AddMedicationState extends State<AddMedication> {
 
   Future<void> updateMedicationInventory(String medName, int newMedQuan) async {
     try {
-      // Reference to the medication_inventory collection
-      CollectionReference<Map<String, dynamic>> collectionReference =
-          FirebaseFirestore.instance.collection('medication_inventory');
+      if (newMedQuan >= 0) {
+        // Reference to the medication_inventory collection
+        CollectionReference<Map<String, dynamic>> collectionReference =
+            FirebaseFirestore.instance.collection('medication_inventory');
 
-      // Query for documents with a specific med_name
-      QuerySnapshot<Map<String, dynamic>> querySnapshot =
-          await collectionReference.where('med_name', isEqualTo: medName).get();
+        // Query for documents with a specific med_name
+        QuerySnapshot<Map<String, dynamic>> querySnapshot =
+            await collectionReference
+                .where('med_name', isEqualTo: medName)
+                .get();
 
-      // Check if there are documents with the specified med_name
-      if (querySnapshot.docs.isNotEmpty) {
-        // Iterate through the query results and update each document
-        for (QueryDocumentSnapshot<Map<String, dynamic>> documentSnapshot
-            in querySnapshot.docs) {
-          // Reference to the specific document
-          DocumentReference<Map<String, dynamic>> documentReference =
-              collectionReference.doc(documentSnapshot.id);
+        // Check if there are documents with the specified med_name
+        if (querySnapshot.docs.isNotEmpty) {
+          // Iterate through the query results and update each document
+          for (QueryDocumentSnapshot<Map<String, dynamic>> documentSnapshot
+              in querySnapshot.docs) {
+            // Reference to the specific document
+            DocumentReference<Map<String, dynamic>> documentReference =
+                collectionReference.doc(documentSnapshot.id);
 
-          // Use the update method to set the med_quan field to the new value
-          await documentReference.update({
-            'med_quan': newMedQuan,
-          });
+            // Use the update method to set the med_quan field to the new value
+            await documentReference.update({
+              'med_quan': newMedQuan,
+            });
+          }
+
+          showSuccessNotification('Medication Inventory updated successfully.');
+          goToPage(
+              context,
+              Masterlist(
+                Barangay: widget.Barangay,
+              ));
+        } else {
+          // If there are no documents with the specified med_name, handle accordingly
+          showErrorNotification('Invalid Input');
+          goToPage(
+              context,
+              Masterlist(
+                Barangay: widget.Barangay,
+              ));
         }
-
-        showSuccessNotification('Medication Inventory updated successfully.');
-        goToPage(context, const Masterlist());
       } else {
-        // If there are no documents with the specified med_name, handle accordingly
-        showErrorNotification('No medication found with the specified name.');
-        goToPage(context, const Masterlist());
+        showErrorNotification('Error: Invalid quantity');
       }
     } catch (error) {
       // Show error notification
       showErrorNotification('Error updating Medication Inventory: $error');
-      goToPage(context, const Masterlist());
+      goToPage(
+          context,
+          Masterlist(
+            Barangay: widget.Barangay,
+          ));
     }
   }
-
-  /* Future<void> addNewMedication(String medName, int medQuan) async {
-    try {
-      // Reference to the medication_inventory collection
-      CollectionReference<Map<String, dynamic>> collectionReference =
-          FirebaseFirestore.instance.collection('medication_inventory');
-
-      // Use the set method to add a new document with med_name and med_quan
-      await collectionReference.add({
-        'med_name': medName,
-        'med_quan': medQuan,
-      });
-
-      showSuccessNotification('New Medication added successfully.');
-      goToPage(context, const Masterlist());
-    } catch (error) {
-      showErrorNotification('Error adding new Medication: $error');
-      goToPage(context, const Masterlist());
-    }
-  }*/
 
   bool _validateInput() {
     if (newMedication) {
@@ -213,26 +212,6 @@ class _AddMedicationState extends State<AddMedication> {
               ),
             ],
           ),
-        /*Row(
-          children: [
-            Checkbox(
-              value: newMedication,
-              onChanged: (bool? value) {
-                setState(() {
-                  newMedication = value ?? false;
-                });
-              },
-            ),
-            const Text(
-              'A new medication?',
-              style: TextStyle(
-                fontSize: 15,
-                color: periwinkleColor,
-                fontWeight: FontWeight.bold,
-              ),
-            )
-          ],
-        ),*/
         const SizedBox(
           height: 10,
         ),
@@ -274,13 +253,6 @@ class _AddMedicationState extends State<AddMedication> {
               custom_width: 200,
               onPressed: () {
                 if (_validateInput()) {
-                  // if (newMedication) {
-                  //   addNewMedication(
-                  //     medicationController.text,
-                  //     int.tryParse(quantityController.text) ?? 0,
-                  //   );
-                  // }
-                  //  else {
                   updateMedicationInventory(
                     selectedMedication!,
                     int.tryParse(quantityController.text) ?? 0,

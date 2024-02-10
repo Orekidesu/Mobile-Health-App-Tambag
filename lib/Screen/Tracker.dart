@@ -230,65 +230,50 @@ class _TrackerState extends State<Tracker> {
                       const SizedBox(
                         height: 5,
                       ),
-                      
+
                       const SizedBox(
                         height: 5,
                       ),
-                      
                     ],
                   ),
                 ),
               ),
               const Divider(),
               Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          CustomActionButton(
-                            onPressed: ()
-                                //{
-                                //   Navigator.push(
-                                //     context,
-                                //     MaterialPageRoute(
-                                //       builder: (context) =>
-                                //           TrackerPDF(patientId: widget.patientId),
-                                //     ),
-                                //   );
-                                // },
-                                async {
-                              try {
-                                Map<String, dynamic> patientData =
-                                    await DataService.getPatientData(
-                                        widget.patientId);
-                                List<Map<String, dynamic>> medications =
-                                    await DataService.getMedications(
-                                        widget.patientId);
-                                List<Map<String, dynamic>>
-                                    medicationInteractions =
-                                    await _initializeMedicationInteractions();
-                                Map<String, Map<String, String>>
-                                    processedMedications =
-                                    await _initializeProcessedMedications();
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  CustomActionButton(
+                    onPressed: () async {
+                      try {
+                        Map<String, dynamic> patientData =
+                            await DataService.getPatientData(widget.patientId);
+                        List<Map<String, dynamic>> medications =
+                            await DataService.getMedications(widget.patientId);
+                        List<Map<String, dynamic>> medicationInteractions =
+                            await _initializeMedicationInteractions();
+                        Map<String, Map<String, String>> processedMedications =
+                            await _initializeProcessedMedications();
 
-                                PatientInfo patientInfo = PatientInfo(
-                                  patientData: Future.value(patientData),
-                                  medications: Future.value(medications),
-                                  medicationInteractions:
-                                      Future.value(medicationInteractions),
-                                  processedMedications:
-                                      Future.value(processedMedications),
-                                );
+                        PatientInfo patientInfo = PatientInfo(
+                          patientData: Future.value(patientData),
+                          medications: Future.value(medications),
+                          medicationInteractions:
+                              Future.value(medicationInteractions),
+                          processedMedications:
+                              Future.value(processedMedications),
+                        );
 
-                                PdfTrackerApi api = PdfTrackerApi();
-                                final pdfFile = await api.generate(patientInfo);
-                                await PdfApi.openFile(pdfFile);
-                              } catch (e) {
-                                print('Error: $e');
-                              }
-                            },
-                            buttonText: "Save as PDF",
-                          ),
-                        ],
-                      )
+                        PdfTrackerApi api = PdfTrackerApi();
+                        final pdfFile = await api.generate(patientInfo);
+                        await PdfApi.openFile(pdfFile);
+                      } catch (e) {
+                        print('Error: $e');
+                      }
+                    },
+                    buttonText: "Save as PDF",
+                  ),
+                ],
+              )
             ],
           ),
         ),

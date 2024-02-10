@@ -1,5 +1,6 @@
 // ignore_for_file: non_constant_identifier_names, camel_case_types, file_names, library_private_types_in_public_api, use_build_context_synchronously
 
+import 'package:Tambag_Health_App/model/inventory_info.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import '../Custom_Widgets/Add_Medication_Dialog.dart';
@@ -18,15 +19,15 @@ class medication_inventory {
 }
 
 class Masterlist extends StatefulWidget {
-  const Masterlist({super.key});
+  final String Barangay;
+  const Masterlist({super.key, required this.Barangay});
 
   @override
   State<Masterlist> createState() => _MasterlistState();
 }
 
 class _MasterlistState extends State<Masterlist> {
-  final Future<Map<String, int>> _medicationQuantitiesFuture =
-      getMedicationQuantities();
+  late final Future<Map<String, int>> _medicationQuantitiesFuture;
   final Future<List<medication_inventory>> _allMedicalInventoryFuture =
       getAllMedicalInventory();
 
@@ -66,12 +67,18 @@ class _MasterlistState extends State<Masterlist> {
                 ],
               ),
               const SizedBox(height: 10),
-              const AddMedication(),
+              AddMedication(Barangay: widget.Barangay),
             ],
           ),
         );
       },
     );
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _medicationQuantitiesFuture = getMedicationQuantities(widget.Barangay);
   }
 
   @override
@@ -99,7 +106,7 @@ class _MasterlistState extends State<Masterlist> {
               },
             ),
             const Divider(),
-            const SizedBox(height:5),
+            const SizedBox(height: 5),
             Expanded(
               child: SingleChildScrollView(
                 child: Column(
@@ -234,30 +241,41 @@ class _MasterlistState extends State<Masterlist> {
                     const SizedBox(
                       height: 15,
                     ),
-                    
                   ],
                 ),
               ),
             ),
             Divider(),
             Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        CustomActionButton(
-                          custom_width: 320,
-                          onPressed: ()  {
-                            
-                          
-                          },
-                          buttonText: 'Save as PDF',
-                        ),
-                      ],
-                    )
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                CustomActionButton(
+                  custom_width: 320,
+                  onPressed: () async {
+                    try {
+                      List<medication_inventory> inventory =
+                          await getAllMedicalInventory();
+                      Map<String, int> medicationQuantitiesFuture =
+                          await getMedicationQuantities(widget.Barangay);
+                      String barangay = widget.Barangay;
+
+                      Inventory_info inventoryInfo = Inventory_info(
+                        allMedicalInventoryFuture: Future.value(inventory),
+                        medicationQuantitiesFuture:
+                            Future.value(medicationQuantitiesFuture),
+                        barangay: barangay,
+                      );
+                    } catch (e) {
+                      print(e);
+                    }
+                  },
+                  buttonText: 'Save as PDF',
+                ),
+              ],
+            )
           ],
         ),
       )),
     );
   }
-
-  
 }
