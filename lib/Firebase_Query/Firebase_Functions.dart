@@ -151,6 +151,35 @@ class DataService {
 }
 
 class PdfTableMap {
+  // Future<List<Map<String, dynamic>>> clientMedicationSummary(
+  //     String baranggay) async {
+  //   final QuerySnapshot<Map<String, dynamic>> patientSnapshot =
+  //       await FirebaseFirestore.instance
+  //           .collection('patients')
+  //           .where('address', isEqualTo: baranggay)
+  //           .get();
+
+  //   final List<Map<String, dynamic>> medicationQuantities = [];
+
+  //   for (final QueryDocumentSnapshot<Map<String, dynamic>> patientDoc
+  //       in patientSnapshot.docs) {
+  //     final QuerySnapshot<Map<String, dynamic>> medicationSnapshot =
+  //         await patientDoc.reference.collection('medications').get();
+
+  //     for (final QueryDocumentSnapshot<Map<String, dynamic>> medDoc
+  //         in medicationSnapshot.docs) {
+  //       final String medName = medDoc.data()['med_name'] as String;
+  //       final String medQuan = medDoc.data()['med_quan'].toString();
+
+  //       medicationQuantities.add({
+  //         'med_name': medName,
+  //         'med_quan': medQuan,
+  //       });
+  //     }
+  //   }
+  //   print(medicationQuantities);
+  //   return medicationQuantities;
+  // }
   Future<List<Map<String, dynamic>>> clientMedicationSummary(
       String baranggay) async {
     final QuerySnapshot<Map<String, dynamic>> patientSnapshot =
@@ -159,7 +188,7 @@ class PdfTableMap {
             .where('address', isEqualTo: baranggay)
             .get();
 
-    final List<Map<String, dynamic>> medicationQuantities = [];
+    final Map<String, int> medicationQuantities = {};
 
     for (final QueryDocumentSnapshot<Map<String, dynamic>> patientDoc
         in patientSnapshot.docs) {
@@ -169,16 +198,27 @@ class PdfTableMap {
       for (final QueryDocumentSnapshot<Map<String, dynamic>> medDoc
           in medicationSnapshot.docs) {
         final String medName = medDoc.data()['med_name'] as String;
-        final String medQuan = medDoc.data()['med_quan'].toString();
+        final int medQuan = medDoc.data()['med_quan'] as int;
 
-        medicationQuantities.add({
-          'med_name': medName,
-          'med_quan': medQuan,
-        });
+        if (medicationQuantities.containsKey(medName)) {
+          medicationQuantities[medName] =
+              (medicationQuantities[medName] ?? 0) + medQuan;
+        } else {
+          medicationQuantities[medName] = medQuan;
+        }
       }
     }
-    print(medicationQuantities);
-    return medicationQuantities;
+
+    final List<Map<String, dynamic>> result =
+        medicationQuantities.entries.map((entry) {
+      return {
+        'med_name': entry.key,
+        'med_quan': entry.value,
+      };
+    }).toList();
+
+    // print(result);
+    return result;
   }
 
   Future<List<Map<String, dynamic>>> allMedicalInventory() async {

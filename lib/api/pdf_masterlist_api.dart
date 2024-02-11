@@ -161,7 +161,7 @@ class PdfMasterListApi {
               style:
                   pw.TextStyle(fontSize: 11, fontWeight: pw.FontWeight.bold)),
           pw.Text(
-              '   Dinhi makita ang tanan nga tambal nga gigamit sa mga “geriatric client” ug ang gidaghanun nga gikinahanglan para sa matag tambal',
+              '   Dinhi makita ang tanan nga tambal nga gigamit sa mga geriatric client ug ang gidaghanun nga gikinahanglan para sa matag tambal',
               style: pw.TextStyle(
                 fontSize: 10,
               )),
@@ -192,7 +192,7 @@ class PdfMasterListApi {
               style:
                   pw.TextStyle(fontSize: 11, fontWeight: pw.FontWeight.bold)),
           pw.Text(
-              '   Dri makita ang mga pondo nga tambal sa Barangay Health Station',
+              '   Dinhi makita ang mga pondo nga tambal sa Barangay Health Station',
               style: pw.TextStyle(
                 fontSize: 10,
               )),

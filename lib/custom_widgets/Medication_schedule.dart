@@ -92,7 +92,7 @@ class MedicationProcessor {
       return parsedResult;
     }
 
-    print(parseMedicationsToString(result));
+    // print(parseMedicationsToString(result));
 
     return parseMedicationsToString(result);
   }
