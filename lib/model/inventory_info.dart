@@ -1,13 +1,13 @@
 import 'package:Tambag_Health_App/Screen/Masterlist.dart';
 
 class Inventory_info {
-  final Future<List<medication_inventory>> allMedicalInventoryFuture;
-  final Future<Map<String, int>> medicationQuantitiesFuture;
+  final Future<List<Map<String, dynamic>>> allMedicalInventory;
+  final Future<List<Map<String, dynamic>>> medicationSummary;
   final String barangay;
 
   const Inventory_info({
-    required this.allMedicalInventoryFuture,
-    required this.medicationQuantitiesFuture,
+    required this.allMedicalInventory,
+    required this.medicationSummary,
     required this.barangay,
   });
 }

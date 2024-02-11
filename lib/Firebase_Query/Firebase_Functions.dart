@@ -149,3 +149,45 @@ class DataService {
     }
   }
 }
+
+class PdfTableMap {
+  Future<List<Map<String, dynamic>>> clientMedicationSummary(
+      String baranggay) async {
+    final QuerySnapshot<Map<String, dynamic>> patientSnapshot =
+        await FirebaseFirestore.instance
+            .collection('patients')
+            .where('address', isEqualTo: baranggay)
+            .get();
+
+    final List<Map<String, dynamic>> medicationQuantities = [];
+
+    for (final QueryDocumentSnapshot<Map<String, dynamic>> patientDoc
+        in patientSnapshot.docs) {
+      final QuerySnapshot<Map<String, dynamic>> medicationSnapshot =
+          await patientDoc.reference.collection('medications').get();
+
+      for (final QueryDocumentSnapshot<Map<String, dynamic>> medDoc
+          in medicationSnapshot.docs) {
+        final String medName = medDoc.data()['med_name'] as String;
+        final String medQuan = medDoc.data()['med_quan'].toString();
+
+        medicationQuantities.add({
+          'med_name': medName,
+          'med_quan': medQuan,
+        });
+      }
+    }
+    print(medicationQuantities);
+    return medicationQuantities;
+  }
+
+  Future<List<Map<String, dynamic>>> allMedicalInventory() async {
+    QuerySnapshot querySnapshot = await medicationInventoryCollection.get();
+    return querySnapshot.docs.map((DocumentSnapshot document) {
+      return {
+        'med_name': document['med_name'],
+        'med_quan': document['med_quan'],
+      };
+    }).toList();
+  }
+}
