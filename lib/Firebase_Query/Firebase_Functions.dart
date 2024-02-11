@@ -16,7 +16,8 @@ Future<List<Patient>> getAllPatients(String userBaranggay) async {
           id: document['id'],
           name: document['name'],
           address: document['address'],
-          addedDate: DateTime.parse(document['addedDate']).toString(), // Parse addedDate as DateTime
+          addedDate: DateTime.parse(document['addedDate'])
+              .toString(), // Parse addedDate as DateTime
         );
       })
       .where((patient) => patient.address == userBaranggay)
@@ -28,7 +29,6 @@ Future<List<Patient>> getAllPatients(String userBaranggay) async {
   return patients;
 }
 
-
 Future<List<medication_inventory>> getAllMedicalInventory() async {
   QuerySnapshot querySnapshot = await medicationInventoryCollection.get();
   return querySnapshot.docs.map((DocumentSnapshot document) {
@@ -39,21 +39,51 @@ Future<List<medication_inventory>> getAllMedicalInventory() async {
   }).toList();
 }
 
-Future<Map<String, int>> getMedicationQuantities() async {
-  final QuerySnapshot<Map<String, dynamic>> querySnapshot =
-      await FirebaseFirestore.instance.collectionGroup('medications').get();
+// Future<Map<String, int>> getMedicationQuantities(String baranggay) async {
+//   final QuerySnapshot<Map<String, dynamic>> querySnapshot =
+//       await FirebaseFirestore.instance.collectionGroup('medications').get();
+
+//   final Map<String, int> medicationQuantities = {};
+
+//   for (final QueryDocumentSnapshot<Map<String, dynamic>> doc
+//       in querySnapshot.docs) {
+//     final String medName = doc.data()['med_name'] as String;
+//     final int medQuan = doc.data()['med_quan'] as int;
+
+//     if (medicationQuantities.containsKey(medName)) {
+//       medicationQuantities[medName] = medicationQuantities[medName]! + medQuan;
+//     } else {
+//       medicationQuantities[medName] = medQuan;
+//     }
+//   }
+
+//   return medicationQuantities;
+// }
+Future<Map<String, int>> getMedicationQuantities(String baranggay) async {
+  final QuerySnapshot<Map<String, dynamic>> patientSnapshot =
+      await FirebaseFirestore.instance
+          .collection('patients')
+          .where('address', isEqualTo: baranggay)
+          .get();
 
   final Map<String, int> medicationQuantities = {};
 
-  for (final QueryDocumentSnapshot<Map<String, dynamic>> doc
-      in querySnapshot.docs) {
-    final String medName = doc.data()['med_name'] as String;
-    final int medQuan = doc.data()['med_quan'] as int;
+  for (final QueryDocumentSnapshot<Map<String, dynamic>> patientDoc
+      in patientSnapshot.docs) {
+    final QuerySnapshot<Map<String, dynamic>> medicationSnapshot =
+        await patientDoc.reference.collection('medications').get();
 
-    if (medicationQuantities.containsKey(medName)) {
-      medicationQuantities[medName] = medicationQuantities[medName]! + medQuan;
-    } else {
-      medicationQuantities[medName] = medQuan;
+    for (final QueryDocumentSnapshot<Map<String, dynamic>> medDoc
+        in medicationSnapshot.docs) {
+      final String medName = medDoc.data()['med_name'] as String;
+      final int medQuan = medDoc.data()['med_quan'] as int;
+
+      if (medicationQuantities.containsKey(medName)) {
+        medicationQuantities[medName] =
+            medicationQuantities[medName]! + medQuan;
+      } else {
+        medicationQuantities[medName] = medQuan;
+      }
     }
   }
 
@@ -117,5 +147,58 @@ class DataService {
       print('Error fetching medications: $e');
       return [];
     }
+  }
+}
+
+class PdfTableMap {
+  Future<List<Map<String, dynamic>>> clientMedicationSummary(
+      String baranggay) async {
+    final QuerySnapshot<Map<String, dynamic>> patientSnapshot =
+        await FirebaseFirestore.instance
+            .collection('patients')
+            .where('address', isEqualTo: baranggay)
+            .get();
+
+    final Map<String, int> medicationQuantities = {};
+
+    for (final QueryDocumentSnapshot<Map<String, dynamic>> patientDoc
+        in patientSnapshot.docs) {
+      final QuerySnapshot<Map<String, dynamic>> medicationSnapshot =
+          await patientDoc.reference.collection('medications').get();
+
+      for (final QueryDocumentSnapshot<Map<String, dynamic>> medDoc
+          in medicationSnapshot.docs) {
+        final String medName = medDoc.data()['med_name'] as String;
+        final int medQuan = medDoc.data()['med_quan'] as int;
+
+        if (medicationQuantities.containsKey(medName)) {
+          medicationQuantities[medName] =
+              (medicationQuantities[medName] ?? 0) + medQuan;
+        } else {
+          medicationQuantities[medName] = medQuan;
+        }
+      }
+    }
+
+    final List<Map<String, dynamic>> result =
+        medicationQuantities.entries.map((entry) {
+      return {
+        'med_name': entry.key,
+        'med_quan': entry.value,
+      };
+    }).toList();
+
+    // print(result);
+    return result;
+  }
+
+  Future<List<Map<String, dynamic>>> allMedicalInventory() async {
+    QuerySnapshot querySnapshot = await medicationInventoryCollection.get();
+    return querySnapshot.docs.map((DocumentSnapshot document) {
+      return {
+        'med_name': document['med_name'],
+        'med_quan': document['med_quan'],
+      };
+    }).toList();
   }
 }

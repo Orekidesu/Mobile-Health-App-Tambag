@@ -227,7 +227,8 @@ class _Patient_ProfileState extends State<Patient_Profile> {
                         Container(
                           height: 140.0,
                           width: 400.0,
-                          padding: const EdgeInsets.fromLTRB(8.0, 0.0, 8.0, 0.0),
+                          padding:
+                              const EdgeInsets.fromLTRB(8.0, 0.0, 8.0, 0.0),
                           child: Card(
                             shape: RoundedRectangleBorder(
                               side: const BorderSide(
@@ -245,7 +246,8 @@ class _Patient_ProfileState extends State<Patient_Profile> {
                                       if (snapshot.connectionState ==
                                           ConnectionState.waiting) {
                                         return const Center(
-                                            child: CupertinoActivityIndicator());
+                                            child:
+                                                CupertinoActivityIndicator());
                                       } else if (snapshot.hasError) {
                                         return Text('Error: ${snapshot.error}');
                                       } else if (!snapshot.hasData ||
@@ -377,7 +379,8 @@ class CardWithIcon extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.fromLTRB(0.0, 10, 0, 0),
       child: SizedBox(
-        height: MediaQuery.of(context).size.width < 600 ? 125.0 : 150.0,
+        // height: MediaQuery.of(context).size.width < 600 ? 125.0 : 150.0,
+        height: MediaQuery.of(context).size.width < 600 ? 150.0 : 140.0,
         child: Card(
           shape: RoundedRectangleBorder(
             side: BorderSide(

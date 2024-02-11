@@ -1,5 +1,8 @@
 // ignore_for_file: non_constant_identifier_names, camel_case_types, file_names, library_private_types_in_public_api, use_build_context_synchronously
 
+import 'package:Tambag_Health_App/api/pdf_api.dart';
+import 'package:Tambag_Health_App/api/pdf_masterlist_api.dart';
+import 'package:Tambag_Health_App/model/inventory_info.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import '../Custom_Widgets/Add_Medication_Dialog.dart';
@@ -18,15 +21,15 @@ class medication_inventory {
 }
 
 class Masterlist extends StatefulWidget {
-  const Masterlist({super.key});
+  final String Barangay;
+  const Masterlist({super.key, required this.Barangay});
 
   @override
   State<Masterlist> createState() => _MasterlistState();
 }
 
 class _MasterlistState extends State<Masterlist> {
-  final Future<Map<String, int>> _medicationQuantitiesFuture =
-      getMedicationQuantities();
+  late final Future<Map<String, int>> _medicationQuantitiesFuture;
   final Future<List<medication_inventory>> _allMedicalInventoryFuture =
       getAllMedicalInventory();
 
@@ -66,12 +69,18 @@ class _MasterlistState extends State<Masterlist> {
                 ],
               ),
               const SizedBox(height: 10),
-              const AddMedication(),
+              AddMedication(Barangay: widget.Barangay),
             ],
           ),
         );
       },
     );
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _medicationQuantitiesFuture = getMedicationQuantities(widget.Barangay);
   }
 
   @override
@@ -99,7 +108,7 @@ class _MasterlistState extends State<Masterlist> {
               },
             ),
             const Divider(),
-            const SizedBox(height:5),
+            const SizedBox(height: 5),
             Expanded(
               child: SingleChildScrollView(
                 child: Column(
@@ -116,7 +125,7 @@ class _MasterlistState extends State<Masterlist> {
                       ),
                     ),
                     const Text(
-                      'Diri nga seksyon makita ang tanang\ntambal nga ginagamit sa mga geriatic\nclient ug ang kadaghanon nga\ngikinahanglan matag tambal.',
+                      'Diri nga seksyon makita ang tanang tambal nga ginagamit sa mga geriatic client ug ang kadaghanon nga gikinahanglan matag tambal.',
                       style: TextStyle(
                         fontWeight: FontWeight.normal,
                         color: periwinkleColor,
@@ -234,30 +243,44 @@ class _MasterlistState extends State<Masterlist> {
                     const SizedBox(
                       height: 15,
                     ),
-                    
                   ],
                 ),
               ),
             ),
             Divider(),
             Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        CustomActionButton(
-                          custom_width: 320,
-                          onPressed: ()  {
-                            
-                          
-                          },
-                          buttonText: 'Save as PDF',
-                        ),
-                      ],
-                    )
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                CustomActionButton(
+                  custom_width: 320,
+                  onPressed: () async {
+                    try {
+                      PdfTableMap pdfTableMap = PdfTableMap();
+                      List<Map<String, dynamic>> medicationSummary =
+                          await pdfTableMap
+                              .clientMedicationSummary(widget.Barangay);
+                      List<Map<String, dynamic>> inventory =
+                          await pdfTableMap.allMedicalInventory();
+                      String barangay = widget.Barangay;
+
+                      Inventory_info inventoryInfo = Inventory_info(
+                          allMedicalInventory: Future.value(inventory),
+                          medicationSummary: Future.value(medicationSummary),
+                          barangay: barangay);
+                      PdfMasterListApi api = PdfMasterListApi();
+                      final pdfFile = await api.generate(inventoryInfo);
+                      await PdfApi.openFile(pdfFile);
+                    } catch (e) {
+                      print(e);
+                    }
+                  },
+                  buttonText: 'Save as PDF',
+                ),
+              ],
+            )
           ],
         ),
       )),
     );
   }
-
-  
 }

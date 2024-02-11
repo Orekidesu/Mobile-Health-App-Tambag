@@ -31,7 +31,7 @@ class ProfileAndMasterlistRow extends StatelessWidget {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => const Masterlist(),
+                      builder: (context) => Masterlist(Barangay: Barangay!),
                     ),
                   );
                 },
