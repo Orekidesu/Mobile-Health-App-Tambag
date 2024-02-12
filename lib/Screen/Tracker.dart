@@ -253,6 +253,7 @@ class _TrackerState extends State<Tracker> {
                             await DataService.getMedications(widget.patientId);
                         List<Map<String, dynamic>> medicationInteractions =
                             await _initializeMedicationInteractions();
+                        //Error: Expected a value of type 'int', but got one of type 'String' //
                         Map<String, Map<String, String>> processedMedications =
                             await _initializeProcessedMedications();
 

@@ -51,9 +51,11 @@ class PdfTrackerApi {
       for (var data in dataList)
         pw.TableRow(
           children: keyNames.map((keyName) {
+            var value = data[keyName];
+            var textValue = value is int ? value.toString() : value;
             return pw.Padding(
               padding: pw.EdgeInsets.all(4.0),
-              child: pw.Text(data[keyName] ?? 'N/A',
+              child: pw.Text(textValue ?? 'N/A',
                   style: pw.TextStyle(fontSize: 9.5)),
             );
           }).toList(),
