@@ -2,6 +2,7 @@
 
 import 'dart:async';
 import 'package:Tambag_Health_App/Custom_Widgets/Cutom_table.dart';
+import 'package:Tambag_Health_App/Custom_Widgets/Drug_interaction.dart';
 import 'package:Tambag_Health_App/constants/light_constants.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
@@ -34,15 +35,37 @@ class _ReminderState extends State<Reminder> {
   bool isSending = false;
   bool isLoading = false;
   String targetOras = '';
-  List<String> list = <String>['Buntag', 'Hapon', 'Gabie'];
+  List<String> list = <String>['Buntag', 'Udto', 'Gabie', 'Lapsed'];
   List<String> columns = ['Name', 'Contact Number', 'Medication'];
   List<List<String>> rows = [];
+  List<List<String>> PatientData = [];
 
   @override
   void initState() {
     super.initState();
     _initializePatientList();
-    targetOras = list.first;
+    setTime();
+  }
+
+  void setTime() {
+    int currentHour = DateTime.now().hour;
+    if (currentHour >= 6 && currentHour < 10) {
+      setState(() {
+        targetOras = 'Buntag';
+      });
+    } else if (currentHour >= 10 && currentHour < 14) {
+      setState(() {
+        targetOras = 'Udto';
+      });
+    } else if (currentHour >= 15 && currentHour < 22) {
+      setState(() {
+        targetOras = 'Gabie'; 
+      });
+    } else {
+      setState(() {
+        targetOras = 'Lapsed';
+      });
+    }
   }
 
   Future<void> _initializePatientList() async {
@@ -58,16 +81,38 @@ class _ReminderState extends State<Reminder> {
       for (var patient in patientData) {
         List<Map<String, dynamic>> Medication =
             await DataService.getMedications(patient['id']);
+        //print(Medication);
 
-        List<String> matchingNames =
-            Medication.where((medicine) => medicine['oras'] == targetOras)
-                .map((medicine) => medicine['name'] as String)
-                .toList();
+        List<String> matchingNames = Medication.where(
+                (medicine) => (medicine['oras'] as String).contains(targetOras))
+            .map((medicine) => medicine['name'] as String)
+            .toList();
+
+        List<Map<String, String>> dosageIndicationAndName = Medication.where(
+                (medicine) => (medicine['oras'] as String).contains(targetOras))
+            .map((medicine) => {
+                  'name': (medicine['name'] as String).toUpperCase(),
+                  'dosage': medicine['dosage'] as String,
+                  'indication': medicine['indication'] as String
+                })
+            .toList();
+
+        if (matchingNames.isEmpty) {
+          continue;
+        }
+
+        MedicationInteractionChecker interactionChecker =
+            MedicationInteractionChecker(allInteractions);
+        List<String> DrugtoDrug =
+            interactionChecker.getInteractionsDetails(matchingNames).toList();
 
         patientsWithMedications.add({
           'name': patient['name'],
           'contact_number': patient['contact_number'],
           'medication': matchingNames,
+          'dosageIndicationAndName': dosageIndicationAndName,
+          'reminder': Medication[0]['special_reminder'],
+          'drugtodrug': DrugtoDrug,
         });
       }
 
@@ -79,10 +124,20 @@ class _ReminderState extends State<Reminder> {
                   patient['medication'].join(', ') as String,
                 ])
             .toList();
+        PatientData = patientsWithMedications
+            .map((patient) => [
+                  patient['name'] as String,
+                  patient['contact_number'] as String,
+                  patient['dosageIndicationAndName'].join(', ') as String,
+                  patient['reminder'] as String,
+                  patient['drugtodrug'].join(', ') as String,
+                ])
+            .toList();
         isLoading = false;
       });
     } catch (error) {
       showErrorNotification('Error: $error');
+      //print(error);
     }
   }
 
@@ -117,25 +172,35 @@ class _ReminderState extends State<Reminder> {
 
   void sendMessage() async {
     try {
-      if (messageController.text.isEmpty) {
-        showErrorNotification('Message is Empty');
-        return;
-      }
-
       setState(() {
         isSending = true;
       });
-
-      List<String?> numbers = await getContactNumbersWithBaranggay();
-      if (numbers.isEmpty) {
-        showErrorNotification('No contact numbers available');
-        return;
+      for (var patient in PatientData) {
+        String message = '';
+        String number = patient[1];
+        String patientString = patient[2];
+        patientString = patientString
+            .replaceAll('{ ', '')
+            .replaceAll('} ', '')
+            .replaceAll('name: ', '')
+            .replaceAll('dosage: ', '')
+            .replaceAll('indication: ', '')
+            .replaceAll(': ', '');
+        patientString = patientString
+            .replaceAll('{', '')
+            .replaceAll('}', '')
+            .replaceAll(' ,', ',');
+        String reminder = patient[3];
+        String drugtodrug = patient[4];
+        if (drugtodrug == '') {
+          drugtodrug = 'Walay Interaction sa Tambal.';
+        }
+        message =
+            'Maayong Adlaw! Kini ang imong pang-adlaw-adlaw na pahinumdom nga mutumar karon ${targetOras.toString()}:\n\n$patientString. $reminder\n\nInteraction sa mga Tambal:$drugtodrug \n\nTAMBAG, kanunay andam moabang!!';
+        await sendSMS(message, number);
       }
 
-      String commaSeparatedNumbers =
-          numbers.where((number) => number != null).join(', ');
-
-      await sendSMS(messageController.text, commaSeparatedNumbers);
+      //await sendSMS(Message, Number);
     } catch (e) {
       // Handle exceptions appropriately
       showErrorNotification('Failed to send message');
@@ -174,13 +239,10 @@ class _ReminderState extends State<Reminder> {
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   DropdownButton<String>(
+                    style:
+                        const TextStyle(color: periwinkleColor, fontSize: 15),
                     value: targetOras,
-                    onChanged: (String? newValue) {
-                      setState(() {
-                        targetOras = newValue!;
-                        _initializePatientList();
-                      });
-                    },
+                    onChanged: null,
                     items: list.map<DropdownMenuItem<String>>((String value) {
                       return DropdownMenuItem<String>(
                         value: value,
@@ -195,15 +257,17 @@ class _ReminderState extends State<Reminder> {
                   padding: const EdgeInsets.fromLTRB(16.0, 10.0, 16.0, 0.0),
                   child: isLoading
                       ? const Center(child: CupertinoActivityIndicator())
-                      : SingleChildScrollView(
-                          child: Column(
-                            children: [
-                              const SizedBox(
-                                height: 10,
+                      : Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisAlignment: targetOras != 'Lapsed' ? MainAxisAlignment.start: MainAxisAlignment.center,
+                          children: [
+                            if (targetOras != 'Lapsed')
+                              SingleChildScrollView(
+                                child: MyTable(columns: columns, rows: rows),
                               ),
-                              MyTable(columns: columns, rows: rows)
-                            ],
-                          ),
+                            if (targetOras == 'Lapsed')
+                              const Center(child: Text("Can't Remind Anymore",style: TextStyle(color: periwinkleColor, fontWeight: FontWeight.w600))),
+                          ],
                         ),
                 ),
               ),
@@ -213,7 +277,7 @@ class _ReminderState extends State<Reminder> {
                 children: [
                   CustomActionButton(
                     custom_width: 320,
-                    onPressed: (isSending || isLoading)
+                    onPressed: (isSending || isLoading || targetOras == 'Lapsed')
                         ? null
                         : () {
                             sendMessage();
