@@ -138,6 +138,7 @@ class DataService {
             'frequency': medicationDoc['frequency'].toString(),
             'quantity': medicationDoc['med_quan'].toString(),
             'count': count,
+            'oras': medicationDoc['oras'].toString(),
           };
         }).toList();
       } else {

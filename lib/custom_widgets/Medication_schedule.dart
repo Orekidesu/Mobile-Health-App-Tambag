@@ -44,7 +44,7 @@ class MedicationProcessor {
 
     // Process medications as before
     for (var medication in medications) {
-      String frequency = medication['frequency'];
+      String frequency = medication['frequency'].toString();
       String tukma = medication['tukma'].toString();
       String medicationName = medication['name'].toString();
       String oras = medication['oras'].toString();
@@ -57,8 +57,7 @@ class MedicationProcessor {
         } else {
           result['Gabie']?[tukma]?.add(medicationName);
         }
-      }
-      if (frequency == '2') {
+      } else if (frequency == '2') {
         if (oras.contains('Buntag ug Udto')) {
           result['Buntag']?[tukma]?.add(medicationName);
           result['Udto']?[tukma]?.add(medicationName);
@@ -69,8 +68,7 @@ class MedicationProcessor {
           result['Buntag']?[tukma]?.add(medicationName);
           result['Gabie']?[tukma]?.add(medicationName);
         }
-      }
-      if (frequency == '3') {
+      } else {
         result['Buntag']?[tukma]?.add(medicationName);
         result['Udto']?[tukma]?.add(medicationName);
         result['Gabie']?[tukma]?.add(medicationName);
@@ -92,7 +90,7 @@ class MedicationProcessor {
       return parsedResult;
     }
 
-    // print(parseMedicationsToString(result));
+    print(parseMedicationsToString(result));
 
     return parseMedicationsToString(result);
   }
