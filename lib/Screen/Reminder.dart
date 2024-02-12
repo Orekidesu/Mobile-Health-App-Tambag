@@ -43,8 +43,10 @@ class _ReminderState extends State<Reminder> {
   @override
   void initState() {
     super.initState();
-    _initializePatientList();
     setTime();
+    if (targetOras != 'Lapsed') {
+        _initializePatientList();
+    }
   }
 
   void setTime() {
@@ -57,9 +59,9 @@ class _ReminderState extends State<Reminder> {
       setState(() {
         targetOras = 'Udto';
       });
-    } else if (currentHour >= 15 && currentHour < 22) {
+    } else if (currentHour >= 15 && currentHour < 18) {
       setState(() {
-        targetOras = 'Gabie'; 
+        targetOras = 'Gabie';
       });
     } else {
       setState(() {
@@ -253,36 +255,58 @@ class _ReminderState extends State<Reminder> {
                   )
                 ],
               ),
+              targetOras != 'Lapsed'?
               Expanded(
                 child: Padding(
                   padding: const EdgeInsets.fromLTRB(16.0, 10.0, 16.0, 0.0),
                   child: isLoading
                       ? const Center(child: CupertinoActivityIndicator())
-                      : Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          mainAxisAlignment: targetOras != 'Lapsed' ? MainAxisAlignment.start: MainAxisAlignment.center,
-                          children: [
-                            if (targetOras != 'Lapsed')
-                              SingleChildScrollView(
-                                child: MyTable(columns: columns, rows: rows),
-                              ),
-                            if (targetOras == 'Lapsed')
-                              const Center(child: Text("Can't Remind Anymore",style: TextStyle(color: periwinkleColor, fontWeight: FontWeight.w600))),
-                          ],
-                        ),
+                      : SingleChildScrollView(
+                          child: targetOras != 'Lapsed'
+                              ? MyTable(columns: columns, rows: rows)
+                              : Container()),
                 ),
-              ),
+              ):
+              const Expanded(child: Padding(
+                padding: EdgeInsets.fromLTRB(16.0, 10.0, 16.0, 0.0),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Center(
+                                  child: Column(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.center,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: [
+                                      SizedBox(height: 20),
+                                      Text(
+                                        'Lapsed na ang oras, walay pay pahinumdom nga ipadala.',
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(
+                                          color: periwinkleColor,
+                                          fontSize: 15,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                )
+                  ],
+                ),
+              )),
               const Divider(),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   CustomActionButton(
                     custom_width: 320,
-                    onPressed: (isSending || isLoading || targetOras == 'Lapsed')
-                        ? null
-                        : () {
-                            sendMessage();
-                          },
+                    onPressed:
+                        (isSending || isLoading || targetOras == 'Lapsed')
+                            ? null
+                            : () {
+                                sendMessage();
+                              },
                     buttonText: isSending ? 'Sending...' : 'Send',
                   ),
                 ],

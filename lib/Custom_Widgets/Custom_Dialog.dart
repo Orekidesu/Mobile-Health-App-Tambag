@@ -22,7 +22,7 @@ class CustomDialog extends StatelessWidget {
       content: Text(
         message,
         style: const TextStyle(
-          fontWeight: FontWeight.bold, // Set the content text to bold
+          fontWeight: FontWeight.w500, // Set the content text to bold
           fontSize: 17,
         ),
       ),
