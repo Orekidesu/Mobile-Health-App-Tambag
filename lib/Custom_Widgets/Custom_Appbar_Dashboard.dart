@@ -99,15 +99,33 @@ class _Custom_AppbarState extends State<Custom_Appbar> {
                 return <PopupMenuEntry<String>>[
                   const PopupMenuItem<String>(
                     value: 'Announcement',
-                    child: Text('Announcement', style: TextStyle(color: periwinkleColor, fontWeight: FontWeight.w400)),
+                    child: Row(
+                      children: [
+                        Icon(Icons.add_alert,color: periwinkleColor,),
+                        SizedBox(width: 10,),
+                        Text('Announcement', style: TextStyle(color: periwinkleColor, fontWeight: FontWeight.w400)),
+                      ],
+                    ),
                   ),
                   const PopupMenuItem<String>(
                     value: 'Reminder',
-                    child: Text('Reminder',style: TextStyle(color: periwinkleColor, fontWeight: FontWeight.w400)),
+                    child: Row(
+                      children: [
+                        Icon(Icons.alarm,color: periwinkleColor,),
+                        SizedBox(width: 10,),
+                        Text('Reminder',style: TextStyle(color: periwinkleColor, fontWeight: FontWeight.w400)),
+                      ],
+                    ),
                   ),
                   const PopupMenuItem<String>(
                     value: 'Signout',
-                    child: Text('Signout',style: TextStyle(color: periwinkleColor, fontWeight: FontWeight.w400)),
+                    child: Row(
+                      children: [
+                        Icon(Icons.logout,color: periwinkleColor,),
+                        SizedBox(width: 10,),
+                        Text('Signout',style: TextStyle(color: periwinkleColor, fontWeight: FontWeight.w400)),
+                      ],
+                    ),
                   ),
                 ];
               },
