@@ -127,7 +127,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
 
   Map<String, dynamic> getProfileData(String id) {
     return {
-      'age' : ageController.text,
+      'age': ageController.text,
       'contact_number': contactNumberController.text,
       'physician': physicianController.text,
       'id': id,
@@ -142,32 +142,33 @@ class _EditProfilePageState extends State<EditProfilePage> {
   }
 
   Future<void> getPatientNameById(String patientId) async {
-  try {
-    CollectionReference patientsCollection = FirebaseFirestore.instance.collection('patients');
-    QuerySnapshot querySnapshot = await patientsCollection.where('id', isEqualTo: patientId).get();
+    try {
+      CollectionReference patientsCollection =
+          FirebaseFirestore.instance.collection('patients');
+      QuerySnapshot querySnapshot =
+          await patientsCollection.where('id', isEqualTo: patientId).get();
 
-    if (querySnapshot.docs.isNotEmpty) {
-      DocumentSnapshot documentSnapshot = querySnapshot.docs.first;
-      Map<String, dynamic> data = documentSnapshot.data() as Map<String, dynamic>;
-      
-      // Assuming the name field is stored in the 'name' field in the document
-      String name = data['name'] as String;
-      
-      nameController.text = name;
-    } 
-  } catch (e) {
-    // Handle any errors that may occur during the process
-    showErrorNotification('Error getting patient name: $e');
+      if (querySnapshot.docs.isNotEmpty) {
+        DocumentSnapshot documentSnapshot = querySnapshot.docs.first;
+        Map<String, dynamic> data =
+            documentSnapshot.data() as Map<String, dynamic>;
+
+        // Assuming the name field is stored in the 'name' field in the document
+        String name = data['name'] as String;
+
+        nameController.text = name;
+      }
+    } catch (e) {
+      // Handle any errors that may occur during the process
+      showErrorNotification('Error getting patient name: $e');
+    }
   }
-}
-
 
   List<String> Brgy = ['Guadalupe', 'Patag', 'Gabas'];
 
   bool _validateInput() {
     // Check if any of the text fields are empty
-    return 
-        ageController.text.isNotEmpty &&
+    return ageController.text.isNotEmpty &&
         contactNumberController.text.isNotEmpty &&
         physicianController.text.isNotEmpty &&
         medicationList.isNotEmpty;
@@ -249,7 +250,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                     : () => goToPage(context, const Dashboard()),
               ),
               const Divider(),
-              const SizedBox(height:5),
+              const SizedBox(height: 5),
               Expanded(
                 child: SingleChildScrollView(
                   child: Column(
@@ -349,16 +350,21 @@ class _EditProfilePageState extends State<EditProfilePage> {
                                   onTap: () {
                                     _showMyDialog(context);
                                   },
-                                  child: const Text(
-                                    'Add Medication',
-                                    style: TextStyle(
+                                  child: Container(
+                                    height: 40,
+                                    width: 40,
+                                    decoration: BoxDecoration(
                                       color:
-                                          periwinkleColor, // Set the text color
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 18,
+                                          periwinkleColor, // Change to your desired color
+                                      borderRadius: BorderRadius.circular(30.0),
+                                    ),
+                                    child: const Icon(
+                                      Icons.add,
+                                      color: Colors
+                                          .white, // Set the color of the icon)
                                     ),
                                   ),
-                                ),
+                                )
                               ],
                             ),
                             const SizedBox(
@@ -378,7 +384,6 @@ class _EditProfilePageState extends State<EditProfilePage> {
                             const SizedBox(
                               height: 10,
                             ),
-                            
                           ],
                         ),
                       ),
@@ -386,21 +391,18 @@ class _EditProfilePageState extends State<EditProfilePage> {
                   ),
                 ),
               ),
-              Divider(),
+              const Divider(),
               Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                CustomActionButton(
-                                  onPressed: () {
-                                    updateProfileToFirebase(
-                                        widget.selectedPatient);
-                                  },
-                                  buttonText:
-                                      isAddingProfile ? 'Updating...' : 'Update',
-                                ),
-                              ],
-                            )
-
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  CustomActionButton(
+                    onPressed: () {
+                      updateProfileToFirebase(widget.selectedPatient);
+                    },
+                    buttonText: isAddingProfile ? 'Updating...' : 'Update',
+                  ),
+                ],
+              )
             ],
           ),
         ),
