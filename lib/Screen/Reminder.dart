@@ -197,6 +197,7 @@ class _ReminderState extends State<Reminder> {
         }
         message =
             'Maayong Adlaw! Kini ang imong pang-adlaw-adlaw na pahinumdom nga mutumar karon ${targetOras.toString()}:\n\n$patientString. $reminder\n\nInteraction sa mga Tambal:$drugtodrug \n\nTAMBAG, kanunay andam moabang!!';
+        //print(message);
         await sendSMS(message, number);
       }
 
