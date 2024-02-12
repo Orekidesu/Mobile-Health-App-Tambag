@@ -4,7 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import '../Custom_Widgets/Custom_Footer.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import '../Custom_Widgets/Custom_Appbar.dart';
+import '../Custom_Widgets/Custom_Appbar_Dashboard.dart';
 import '../constants/light_constants.dart';
 import '../Custom_Widgets/Dashboard_List_Firebase.dart';
 import '../functions/custom_functions.dart';
@@ -73,7 +73,6 @@ class _DashboardState extends State<Dashboard> {
     } catch (e) {
       if (_isMounted) {
         showErrorNotification('Error fetching Baranggay: $e');
-        print(e);
       }
     }
   }
@@ -92,6 +91,7 @@ class _DashboardState extends State<Dashboard> {
               children: [
                 Custom_Appbar(
                   Baranggay: 'Baranggay ${baranggay ?? 'Loading...'}',
+                  selectedBrgy: '$baranggay',
                   Apptitle: "TAMBAG",
                   icon: Icons.logout,
                   hasbackIcon: false,

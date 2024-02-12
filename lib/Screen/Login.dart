@@ -1,5 +1,5 @@
 // ignore: file_names
-// ignore_for_file: depend_on_referenced_packages, file_names, duplicate_ignore
+// ignore_for_file: depend_on_referenced_packages, file_names, duplicate_ignore, use_build_context_synchronously
 
 import 'package:flutter/material.dart';
 import '../functions/custom_functions.dart';

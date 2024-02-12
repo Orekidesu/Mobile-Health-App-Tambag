@@ -4,6 +4,7 @@ import 'package:Tambag_Health_App/api/pdf_tracker_api.dart';
 import 'package:Tambag_Health_App/custom_widgets/Custom_Tile.dart';
 import 'package:Tambag_Health_App/custom_widgets/Drug_interaction.dart';
 import 'package:Tambag_Health_App/custom_widgets/Medication_schedule.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:intl/intl.dart';
 
 import '../Firebase_Query/Firebase_Functions.dart';
@@ -107,7 +108,7 @@ class _TrackerState extends State<Tracker> {
                           if (snapshot.connectionState ==
                               ConnectionState.waiting) {
                             return const Center(
-                                child: CircularProgressIndicator());
+                                child: CupertinoActivityIndicator());
                           } else if (snapshot.hasError) {
                             return Text('Error: ${snapshot.error}');
                           } else if (!snapshot.hasData ||
@@ -193,7 +194,7 @@ class _TrackerState extends State<Tracker> {
                                       if (snapshot.connectionState ==
                                           ConnectionState.waiting) {
                                         return const Center(
-                                            child: CircularProgressIndicator());
+                                            child: CupertinoActivityIndicator());
                                         //  child: Text('Please wait...'),);
                                       } else if (snapshot.hasError) {
                                         return Text('Error: ${snapshot.error}');
@@ -243,6 +244,7 @@ class _TrackerState extends State<Tracker> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   CustomActionButton(
+                    custom_width: 320,
                     onPressed: () async {
                       try {
                         Map<String, dynamic> patientData =
