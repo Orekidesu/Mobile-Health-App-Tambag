@@ -1,60 +1,47 @@
+// ignore_for_file: file_names
+
 import 'package:flutter/material.dart';
 
-class MyIconButtonWithDropdown extends StatelessWidget {
-  const MyIconButtonWithDropdown({super.key});
+class CustomDropdownButton extends StatefulWidget {
+  final List<String> list;
+
+  const CustomDropdownButton({super.key, required this.list});
+
+  @override
+  State<CustomDropdownButton> createState() => _CustomDropdownButtonState();
+}
+
+class _CustomDropdownButtonState extends State<CustomDropdownButton> {
+  late String dropdownValue;
+
+  @override
+  void initState() {
+    super.initState();
+    dropdownValue = widget.list.first;
+  }
 
   @override
   Widget build(BuildContext context) {
-    return PopupMenuButton<String>(
-      icon: Icon(Icons.arrow_drop_down),
-      onSelected: (String value) {
-        // Handle menu item selection
-        print('Selected: $value');
+    return DropdownButton<String>(
+      value: dropdownValue,
+      icon: const Icon(Icons.arrow_downward),
+      elevation: 16,
+      style: const TextStyle(color: Colors.deepPurple),
+      underline: Container(
+        height: 2,
+        color: Colors.deepPurpleAccent,
+      ),
+      onChanged: (String? newValue) {
+        setState(() {
+          dropdownValue = newValue!;
+        });
       },
-      itemBuilder: (BuildContext context) {
-        return <PopupMenuEntry<String>>[
-          PopupMenuItem<String>(
-            value: 'Option 1',
-            child: Row(
-              children: [
-                Icon(Icons.star),
-                SizedBox(width: 8),
-                Text('Option 1'),
-              ],
-            ),
-          ),
-          PopupMenuItem<String>(
-            value: 'Option 2',
-            child: Row(
-              children: [
-                Icon(Icons.star),
-                SizedBox(width: 8),
-                Text('Option 2'),
-              ],
-            ),
-          ),
-          PopupMenuItem<String>(
-            value: 'Option 3',
-            child: Row(
-              children: [
-                Icon(Icons.star),
-                SizedBox(width: 8),
-                Text('Option 3'),
-              ],
-            ),
-          ),
-          PopupMenuItem<String>(
-            value: 'Option 4',
-            child: Row(
-              children: [
-                Icon(Icons.star),
-                SizedBox(width: 8),
-                Text('Option 4'),
-              ],
-            ),
-          ),
-        ];
-      },
+      items: widget.list.map<DropdownMenuItem<String>>((String value) {
+        return DropdownMenuItem<String>(
+          value: value,
+          child: Text(value),
+        );
+      }).toList(),
     );
   }
 }

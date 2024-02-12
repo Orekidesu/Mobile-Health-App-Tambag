@@ -1,4 +1,6 @@
 //Function to return all patients
+import 'package:Tambag_Health_App/functions/custom_functions.dart';
+
 import '../Screen/Masterlist.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../Screen/Dashboard.dart';
@@ -29,6 +31,27 @@ Future<List<Patient>> getAllPatients(String userBaranggay) async {
   return patients;
 }
 
+Future<List<Map<String, dynamic>>> getAllPatientNamesAndIds(String userBaranggay) async {
+  QuerySnapshot querySnapshot = await patientsCollection.get();
+  List<Map<String, dynamic>> patientData = querySnapshot.docs
+      .where((document) => document['address'] == userBaranggay)
+      .map((DocumentSnapshot document) {
+        return {
+          'name': document['name'] as String,
+          'id': document['id'],
+          'contact_number': document['contact_number'],
+
+        };
+      })
+      .toList();
+
+  // Sort the list if needed (comment or remove if not necessary)
+  patientData.sort((a, b) => a['name'].compareTo(b['name']));
+
+  return patientData;
+}
+
+
 Future<List<medication_inventory>> getAllMedicalInventory() async {
   QuerySnapshot querySnapshot = await medicationInventoryCollection.get();
   return querySnapshot.docs.map((DocumentSnapshot document) {
@@ -39,26 +62,6 @@ Future<List<medication_inventory>> getAllMedicalInventory() async {
   }).toList();
 }
 
-// Future<Map<String, int>> getMedicationQuantities(String baranggay) async {
-//   final QuerySnapshot<Map<String, dynamic>> querySnapshot =
-//       await FirebaseFirestore.instance.collectionGroup('medications').get();
-
-//   final Map<String, int> medicationQuantities = {};
-
-//   for (final QueryDocumentSnapshot<Map<String, dynamic>> doc
-//       in querySnapshot.docs) {
-//     final String medName = doc.data()['med_name'] as String;
-//     final int medQuan = doc.data()['med_quan'] as int;
-
-//     if (medicationQuantities.containsKey(medName)) {
-//       medicationQuantities[medName] = medicationQuantities[medName]! + medQuan;
-//     } else {
-//       medicationQuantities[medName] = medQuan;
-//     }
-//   }
-
-//   return medicationQuantities;
-// }
 Future<Map<String, int>> getMedicationQuantities(String baranggay) async {
   final QuerySnapshot<Map<String, dynamic>> patientSnapshot =
       await FirebaseFirestore.instance
@@ -138,13 +141,14 @@ class DataService {
             'frequency': medicationDoc['frequency'].toString(),
             'quantity': medicationDoc['med_quan'].toString(),
             'count': count,
+            'oras': medicationDoc['oras'].toString()
           };
         }).toList();
       } else {
         return [];
       }
     } catch (e) {
-      print('Error fetching medications: $e');
+      showErrorNotification('Error fetching medications: $e');
       return [];
     }
   }

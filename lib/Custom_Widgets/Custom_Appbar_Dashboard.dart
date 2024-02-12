@@ -1,6 +1,7 @@
 // ignore_for_file: camel_case_types, non_constant_identifier_names, prefer_typing_uninitialized_variables, file_names
 import 'package:flutter/material.dart';
 import '../Screen/SmsSender.dart';
+import '../Screen/Reminder.dart';
 import '../constants/light_constants.dart';
 import '../functions/custom_functions.dart';
 import 'Custom_ButtonRound.dart';
@@ -86,11 +87,9 @@ class _Custom_AppbarState extends State<Custom_Appbar> {
               onSelected: (value) {
                 // You can add specific actions for each item here
                 if (value == 'Announcement') {
-                  print(widget.selectedBrgy);
                   goToPage(context, smsSender(selectedBrgy: widget.selectedBrgy));
                 } else if (value == 'Reminder') {
-                  // Handle Patient Reminder click
-                  // Add your code here
+                  goToPage(context, Reminder(selectedBrgy: widget.selectedBrgy));
                 } else if (value == 'Signout') {
                   showSignOutDialog(context);
                 }

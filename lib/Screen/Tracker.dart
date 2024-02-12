@@ -244,6 +244,7 @@ class _TrackerState extends State<Tracker> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   CustomActionButton(
+                    custom_width: 320,
                     onPressed: () async {
                       try {
                         Map<String, dynamic> patientData =

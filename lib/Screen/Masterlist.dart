@@ -247,7 +247,7 @@ class _MasterlistState extends State<Masterlist> {
                 ),
               ),
             ),
-            Divider(),
+            const Divider(),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
