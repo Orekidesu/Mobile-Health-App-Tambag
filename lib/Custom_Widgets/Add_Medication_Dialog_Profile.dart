@@ -102,6 +102,68 @@ class _AddMedicationProfileState extends State<AddMedicationProfile> {
     return '';
   }
 
+  bool isValidQuantity(String quantity) {
+    try {
+      int requestedQuantity = int.parse(quantity);
+      if (requestedQuantity <= 0) {
+        return false;
+      }
+      return true; // quantity is a valid integer
+    } catch (e) {
+      return false; // quantity is not a valid integer
+    }
+  }
+
+  bool isValidDosage(String dosage) {
+    try {
+      int requestedDosage = int.parse(dosage);
+      if (requestedDosage <= 0) {
+        return false;
+      }
+      return true; // quantity is a valid integer
+    } catch (e) {
+      return false; // quantity is not a valid integer
+    }
+  }
+
+  bool isValidFrequencyAndQuantity(String quantity, String frequency) {
+    try {
+      int requestedFrequency = int.parse(frequency);
+      int requestedQuantity = int.parse(quantity);
+      if (requestedFrequency > requestedQuantity) {
+        return false;
+      }
+      return true; // quantity is a valid integer
+    } catch (e) {
+      return false; // quantity is not a valid integer
+    }
+  }
+
+  Future<bool> isValidRequestedQuantity(String quant, String medName) async {
+    try {
+      int requestedQuantity = int.parse(quant);
+      // Get the available quantity from the medication inventory
+      QuerySnapshot<Map<String, dynamic>> inventorySnapshot =
+          await FirebaseFirestore.instance
+              .collection('medication_inventory')
+              .where('med_name', isEqualTo: medName)
+              .limit(1)
+              .get();
+
+      int availableQuantity =
+          inventorySnapshot.docs.first.data()['med_quan'] as int;
+      DocumentReference docRef = inventorySnapshot.docs.first.reference;
+
+      // Check if the requested quantity is greater than the available quantity
+      if (requestedQuantity > availableQuantity) {
+        return false;
+      }
+      return true;
+    } catch (e) {
+      return false; // quantity is not a valid integer
+    }
+  }
+
   Future<void> addNewMedication(
     String medName,
     String medInd,
@@ -112,57 +174,59 @@ class _AddMedicationProfileState extends State<AddMedicationProfile> {
     String Oras,
   ) async {
     try {
-      int requestedQuantity = int.parse(quantity);
-      if (requestedQuantity > 0) {
-        // Get the available quantity from the medication inventory
-        QuerySnapshot<Map<String, dynamic>> inventorySnapshot =
+      // int requestedQuantity = int.parse(quantity);
+      // if (requestedQuantity > 0) {
+      // Get the available quantity from the medication inventory
+      /*QuerySnapshot<Map<String, dynamic>> inventorySnapshot =
             await FirebaseFirestore.instance
                 .collection('medication_inventory')
                 .where('med_name', isEqualTo: medName)
                 .limit(1)
                 .get();
+        */
 
-        int availableQuantity =
+      /*int availableQuantity =
             inventorySnapshot.docs.first.data()['med_quan'] as int;
-        DocumentReference docRef = inventorySnapshot.docs.first.reference;
+        DocumentReference docRef = inventorySnapshot.docs.first.reference;*/
 
-        medicationInfo = MedicationInfoProvider.getMedicationInfo(medName);
+      medicationInfo = MedicationInfoProvider.getMedicationInfo(medName);
 
-        // Check if the requested quantity is greater than the available quantity
-        if (requestedQuantity > availableQuantity) {
+      // Check if the requested quantity is greater than the available quantity
+      /* if (requestedQuantity > availableQuantity) {
           showErrorNotification(
               'Requested quantity exceeds available quantity.');
           return;
-        } else {
-          if (int.parse(frequency) <= int.parse(quantity)) {
-            Map<String, dynamic> medicationDetails = {
-              'med_name': medName,
-              'med_ind': medInd,
-              'med_quan': int.parse(quantity),
-              'dosage': '$dosage mg, tumaron ka-$frequency kada adlaw ',
-              'frequency': int.parse(frequency),
-              'reminder': medicationInfo['reminder'],
-              'tukma': Tukma,
-              'oras': Oras,
-              // 'contraindication': medicationInfo['contraindication'],
-              // 'diet': medicationInfo['diet'],
-            };
+        } */
 
-            widget.addMedicationCallback(medicationDetails);
+      // else {
+      // if (int.parse(frequency) <= int.parse(quantity)) {
+      Map<String, dynamic> medicationDetails = {
+        'med_name': medName,
+        'med_ind': medInd,
+        'med_quan': int.parse(quantity),
+        'dosage': '$dosage mg, tumaron ka-$frequency kada adlaw ',
+        'frequency': int.parse(frequency),
+        'reminder': medicationInfo['reminder'],
+        'tukma': Tukma,
+        'oras': Oras,
+      };
 
-            showSuccessNotification('Medication added successfully.');
+      widget.addMedicationCallback(medicationDetails);
 
-            // frequencyController.clear();
-            dosageController.clear();
-            quantityController.clear();
-          } else {
-            showErrorNotification('Invalid input for quantity and frequency.');
-          }
-        }
-      } else {
-        showErrorNotification(
-            'Invalid quantity. Please enter a valid quantity.');
-      }
+      showSuccessNotification('Medication added successfully.');
+
+      dosageController.clear();
+      quantityController.clear();
+      // }
+      // else {
+      //   showErrorNotification('Invalid input for quantity and frequency.');
+      // }
+      // }
+      // }
+      // else {
+      //   showErrorNotification(
+      //       'Invalid quantity. Please enter a valid quantity.');
+      // }
     } catch (error) {
       showErrorNotification('Error adding new Medication: $error');
     }
@@ -537,18 +601,39 @@ class _AddMedicationProfileState extends State<AddMedicationProfile> {
               custom_height: 30,
             ),
             CustomActionButton(
-              onPressed: () {
+              onPressed: () async {
                 if (_validateInput()) {
-                  addNewMedication(
-                    selectedMedName!,
-                    selectedMedInd,
-                    dosageController.text,
-                    quantityController.text,
-                    selectedFrequency!,
-                    selectedTukma!,
-                    selectedOras!,
-                  );
-                  Navigator.pop(context);
+                  if (isValidDosage(dosageController.text)) {
+                    if (isValidQuantity(quantityController.text)) {
+                      //
+                      if (isValidFrequencyAndQuantity(
+                          quantityController.text, selectedFrequency!)) {
+                        if (await isValidRequestedQuantity(
+                            quantityController.text, selectedMedName!)) {
+                          addNewMedication(
+                            selectedMedName!,
+                            selectedMedInd,
+                            dosageController.text,
+                            quantityController.text,
+                            selectedFrequency!,
+                            selectedTukma!,
+                            selectedOras!,
+                          );
+                          Navigator.pop(context);
+                        } else {
+                          showErrorNotification(
+                              'Requested quantity exceeds available quantity. Check your Inventory.');
+                        }
+                      } else {
+                        showErrorNotification(
+                            'Invalid input for quantity and frequency.');
+                      }
+                    } else {
+                      showErrorNotification('Invalid input for  quantity.');
+                    }
+                  } else {
+                    showErrorNotification('Invalid input for dosage.');
+                  }
                 } else {
                   // Show an error message if any field is empty
                   showErrorNotification('Please fill in all fields.');
