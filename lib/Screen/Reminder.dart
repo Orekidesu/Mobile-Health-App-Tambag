@@ -45,7 +45,7 @@ class _ReminderState extends State<Reminder> {
     super.initState();
     setTime();
     if (targetOras != 'Lapsed') {
-        _initializePatientList();
+      _initializePatientList();
     }
   }
 
@@ -59,7 +59,7 @@ class _ReminderState extends State<Reminder> {
       setState(() {
         targetOras = 'Udto';
       });
-    } else if (currentHour >= 15 && currentHour < 18) {
+    } else if (currentHour >= 15 && currentHour < 23) {
       setState(() {
         targetOras = 'Gabie';
       });
@@ -255,46 +255,46 @@ class _ReminderState extends State<Reminder> {
                   )
                 ],
               ),
-              targetOras != 'Lapsed'?
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.fromLTRB(16.0, 10.0, 16.0, 0.0),
-                  child: isLoading
-                      ? const Center(child: CupertinoActivityIndicator())
-                      : SingleChildScrollView(
-                          child: targetOras != 'Lapsed'
-                              ? MyTable(columns: columns, rows: rows)
-                              : Container()),
-                ),
-              ):
-              const Expanded(child: Padding(
-                padding: EdgeInsets.fromLTRB(16.0, 10.0, 16.0, 0.0),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Center(
-                                  child: Column(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.center,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    children: [
-                                      SizedBox(height: 20),
-                                      Text(
-                                        'Lapsed na ang oras, walay pay pahinumdom nga ipadala.',
-                                        textAlign: TextAlign.center,
-                                        style: TextStyle(
-                                          color: periwinkleColor,
-                                          fontSize: 15,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                    ],
+              targetOras != 'Lapsed'
+                  ? Expanded(
+                      child: Padding(
+                        padding:
+                            const EdgeInsets.fromLTRB(16.0, 10.0, 16.0, 0.0),
+                        child: isLoading
+                            ? const Center(child: CupertinoActivityIndicator())
+                            : SingleChildScrollView(
+                                child: targetOras != 'Lapsed'
+                                    ? MyTable(columns: columns, rows: rows)
+                                    : Container()),
+                      ),
+                    )
+                  : const Expanded(
+                      child: Padding(
+                      padding: EdgeInsets.fromLTRB(16.0, 10.0, 16.0, 0.0),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Center(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                SizedBox(height: 20),
+                                Text(
+                                  'Lapsed na ang oras, walay pay pahinumdom nga ipadala.',
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                    color: periwinkleColor,
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.bold,
                                   ),
-                                )
-                  ],
-                ),
-              )),
+                                ),
+                              ],
+                            ),
+                          )
+                        ],
+                      ),
+                    )),
               const Divider(),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,

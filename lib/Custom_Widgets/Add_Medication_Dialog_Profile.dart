@@ -116,7 +116,7 @@ class _AddMedicationProfileState extends State<AddMedicationProfile> {
 
   bool isValidDosage(String dosage) {
     try {
-      int requestedDosage = int.parse(dosage);
+      double requestedDosage = double.parse(dosage);
       if (requestedDosage <= 0) {
         return false;
       }
